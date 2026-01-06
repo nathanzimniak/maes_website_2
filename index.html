@@ -142,7 +142,7 @@
                 <div class="chart__axis-header">
                   <label class="chart__select-label" for="x-axis-select">Axe X</label>
                   <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe X">
-                    <button type="button" class="chart__scale-button" data-scale-toggle="x" aria-pressed="false">Axe X : Linéaire</button>
+                    <button type="button" class="chart__scale-button" data-scale-toggle="x" aria-pressed="false">Linéaire</button>
                   </div>
                 </div>
                 <select id="x-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe X">
@@ -162,7 +162,7 @@
                 <div class="chart__axis-header">
                   <label class="chart__select-label" for="y-axis-select">Axe Y</label>
                   <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe Y">
-                    <button type="button" class="chart__scale-button" data-scale-toggle="y" aria-pressed="false">Axe Y : Linéaire</button>
+                    <button type="button" class="chart__scale-button" data-scale-toggle="y" aria-pressed="false">Linéaire</button>
                   </div>
                 </div>
                 <select id="y-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe Y">
@@ -639,9 +639,8 @@
       const button = scaleButtons.find((btn) => btn.dataset.scaleToggle === axis);
       if (!button) return;
 
-      const axisLabel = axis === 'x' ? 'Axe X' : 'Axe Y';
       const isLog = scaleType === 'log';
-      button.textContent = `${axisLabel} : ${isLog ? 'Logarithmique' : 'Linéaire'}`;
+      button.textContent = isLog ? 'Logarithmique' : 'Linéaire';
       button.classList.toggle('chart__scale-button--active', isLog);
       button.setAttribute('aria-pressed', String(isLog));
     }
