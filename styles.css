@@ -298,7 +298,7 @@ section {
 }
 
 .chart__card {
-  width: min(960px, 100%);
+  width: min(1120px, 100%);
   background: var(--card-bg);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius);
