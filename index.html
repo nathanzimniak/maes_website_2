@@ -24,8 +24,163 @@
     </div>
   </main>
 
+  <section class="chart" aria-labelledby="chart-title">
+    <div class="chart__card">
+      <div class="chart__header">
+        <p class="chart__eyebrow">Données fictives</p>
+        <h2 id="chart-title">Un petit nuage de points</h2>
+        <p class="chart__description">Un graphe minimaliste qui montre comment quelques points peuvent raconter une tendance.</p>
+      </div>
+      <div class="chart__figure" role="img" aria-label="Graphique en nuage de points"></div>
+      <div class="chart__legend">
+        <span class="chart__legend-dot"></span>
+        <span>Chaque cercle représente une mesure simulée.</span>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer">
     <p>Créé avec ❤️ pour démarrer rapidement.</p>
   </footer>
+
+  <script>
+    const dataPoints = [
+      { x: 5, y: 35 },
+      { x: 12, y: 22 },
+      { x: 18, y: 48 },
+      { x: 25, y: 28 },
+      { x: 32, y: 55 },
+      { x: 38, y: 40 },
+      { x: 45, y: 62 },
+      { x: 52, y: 47 },
+      { x: 60, y: 70 },
+      { x: 68, y: 53 },
+      { x: 75, y: 78 },
+      { x: 83, y: 65 },
+      { x: 90, y: 88 }
+    ];
+
+    const chartContainer = document.querySelector('.chart__figure');
+    const width = chartContainer.clientWidth || 720;
+    const height = 360;
+    const margin = { top: 24, right: 24, bottom: 48, left: 48 };
+
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    svg.setAttribute('role', 'presentation');
+
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+
+    const minX = 0;
+    const maxX = 100;
+    const minY = 0;
+    const maxY = 100;
+
+    const scaleX = (x) => margin.left + (x - minX) / (maxX - minX) * innerWidth;
+    const scaleY = (y) => margin.top + innerHeight - (y - minY) / (maxY - minY) * innerHeight;
+
+    const axes = document.createElementNS(svgNS, 'g');
+    axes.setAttribute('stroke', 'rgba(226, 232, 240, 0.4)');
+    axes.setAttribute('stroke-width', '1.5');
+    axes.setAttribute('shape-rendering', 'crispEdges');
+
+    const xAxis = document.createElementNS(svgNS, 'line');
+    xAxis.setAttribute('x1', margin.left);
+    xAxis.setAttribute('x2', margin.left + innerWidth);
+    xAxis.setAttribute('y1', margin.top + innerHeight);
+    xAxis.setAttribute('y2', margin.top + innerHeight);
+    axes.appendChild(xAxis);
+
+    const yAxis = document.createElementNS(svgNS, 'line');
+    yAxis.setAttribute('x1', margin.left);
+    yAxis.setAttribute('x2', margin.left);
+    yAxis.setAttribute('y1', margin.top);
+    yAxis.setAttribute('y2', margin.top + innerHeight);
+    axes.appendChild(yAxis);
+
+    const tickCount = 5;
+    for (let i = 0; i <= tickCount; i++) {
+      const xValue = minX + (maxX - minX) * (i / tickCount);
+      const xPos = scaleX(xValue);
+      const xTick = document.createElementNS(svgNS, 'line');
+      xTick.setAttribute('x1', xPos);
+      xTick.setAttribute('x2', xPos);
+      xTick.setAttribute('y1', margin.top + innerHeight);
+      xTick.setAttribute('y2', margin.top + innerHeight + 6);
+      xTick.setAttribute('stroke', 'rgba(226, 232, 240, 0.4)');
+      axes.appendChild(xTick);
+
+      const xLabel = document.createElementNS(svgNS, 'text');
+      xLabel.textContent = Math.round(xValue);
+      xLabel.setAttribute('x', xPos);
+      xLabel.setAttribute('y', margin.top + innerHeight + 22);
+      xLabel.setAttribute('fill', 'var(--muted)');
+      xLabel.setAttribute('font-size', '12');
+      xLabel.setAttribute('text-anchor', 'middle');
+      axes.appendChild(xLabel);
+    }
+
+    for (let i = 0; i <= tickCount; i++) {
+      const yValue = minY + (maxY - minY) * (i / tickCount);
+      const yPos = scaleY(yValue);
+      const yTick = document.createElementNS(svgNS, 'line');
+      yTick.setAttribute('x1', margin.left - 6);
+      yTick.setAttribute('x2', margin.left);
+      yTick.setAttribute('y1', yPos);
+      yTick.setAttribute('y2', yPos);
+      yTick.setAttribute('stroke', 'rgba(226, 232, 240, 0.4)');
+      axes.appendChild(yTick);
+
+      const yLabel = document.createElementNS(svgNS, 'text');
+      yLabel.textContent = Math.round(yValue);
+      yLabel.setAttribute('x', margin.left - 12);
+      yLabel.setAttribute('y', yPos + 4);
+      yLabel.setAttribute('fill', 'var(--muted)');
+      yLabel.setAttribute('font-size', '12');
+      yLabel.setAttribute('text-anchor', 'end');
+      axes.appendChild(yLabel);
+    }
+
+    svg.appendChild(axes);
+
+    const pointsGroup = document.createElementNS(svgNS, 'g');
+    dataPoints.forEach(point => {
+      const circle = document.createElementNS(svgNS, 'circle');
+      circle.setAttribute('cx', scaleX(point.x));
+      circle.setAttribute('cy', scaleY(point.y));
+      circle.setAttribute('r', 7);
+      circle.setAttribute('fill', 'url(#pointGradient)');
+      circle.setAttribute('stroke', 'rgba(226, 232, 240, 0.2)');
+      circle.setAttribute('stroke-width', '1.5');
+      pointsGroup.appendChild(circle);
+    });
+
+    svg.appendChild(pointsGroup);
+
+    const defs = document.createElementNS(svgNS, 'defs');
+    const gradient = document.createElementNS(svgNS, 'linearGradient');
+    gradient.setAttribute('id', 'pointGradient');
+    gradient.setAttribute('x1', '0%');
+    gradient.setAttribute('y1', '0%');
+    gradient.setAttribute('x2', '100%');
+    gradient.setAttribute('y2', '100%');
+
+    const stop1 = document.createElementNS(svgNS, 'stop');
+    stop1.setAttribute('offset', '0%');
+    stop1.setAttribute('stop-color', '#38bdf8');
+    gradient.appendChild(stop1);
+
+    const stop2 = document.createElementNS(svgNS, 'stop');
+    stop2.setAttribute('offset', '100%');
+    stop2.setAttribute('stop-color', '#6366f1');
+    gradient.appendChild(stop2);
+
+    defs.appendChild(gradient);
+    svg.insertBefore(defs, svg.firstChild);
+
+    chartContainer.appendChild(svg);
+  </script>
 </body>
 </html>

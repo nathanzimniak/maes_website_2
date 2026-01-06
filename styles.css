@@ -129,12 +129,90 @@ body {
   font-size: 0.95rem;
 }
 
+.chart {
+  padding: 0 24px 96px;
+  display: flex;
+  justify-content: center;
+}
+
+.chart__card {
+  width: min(960px, 100%);
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+  backdrop-filter: blur(8px);
+  display: grid;
+  gap: 18px;
+}
+
+.chart__header h2 {
+  margin: 6px 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.chart__eyebrow {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  color: #bae6fd;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.chart__description {
+  color: var(--muted);
+  margin: 0;
+}
+
+.chart__figure {
+  width: 100%;
+  height: 360px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.07), transparent 35%),
+    radial-gradient(circle at 80% 30%, rgba(99, 102, 241, 0.07), transparent 40%),
+    rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.chart__figure svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.chart__legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.chart__legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
 @media (max-width: 640px) {
   .hero {
     padding: 96px 18px 72px;
   }
 
   .intro__card {
+    padding: 24px;
+  }
+
+  .chart__card {
     padding: 24px;
   }
 }
