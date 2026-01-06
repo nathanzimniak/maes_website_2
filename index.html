@@ -163,24 +163,6 @@
         </div>
       </div>
 
-      <div class="chart__insights" aria-live="polite">
-        <div class="chart__insight">
-          <div class="chart__insight-label">Énergie simulée</div>
-          <div id="insight-energy" class="chart__insight-value">—</div>
-          <p class="chart__insight-hint">Moyenne pondérée p1/p2</p>
-        </div>
-        <div class="chart__insight">
-          <div class="chart__insight-label">Balance thermique</div>
-          <div id="insight-thermal" class="chart__insight-value">—</div>
-          <p class="chart__insight-hint">Comparaison p3 ↔ p4</p>
-        </div>
-        <div class="chart__insight">
-          <div class="chart__insight-label">Tolérance milieu</div>
-          <div id="insight-tolerance" class="chart__insight-value">—</div>
-          <p class="chart__insight-hint">Influence de p5</p>
-        </div>
-      </div>
-
       <div class="chart__profiles" aria-live="polite">
         <div class="chart__profiles-header">
           <div>
@@ -224,10 +206,6 @@
     ];
     const xAxisSelect = document.getElementById('x-axis-select');
     const yAxisSelect = document.getElementById('y-axis-select');
-    const insightEnergy = document.getElementById('insight-energy');
-    const insightThermal = document.getElementById('insight-thermal');
-    const insightTolerance = document.getElementById('insight-tolerance');
-
     let currentSolutions = [];
     let selectedSolutionIndex = null;
 
@@ -587,16 +565,6 @@
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 
-    function updateInsights(baseParams) {
-      const energy = Math.round(baseParams.p1 * 0.55 + baseParams.p2 * 0.45);
-      const thermal = Math.round(100 - Math.abs(baseParams.p3 - baseParams.p4) * 0.9);
-      const tolerance = Math.round(40 + baseParams.p5 * 0.6);
-
-      insightEnergy.textContent = `${energy}%`;
-      insightThermal.textContent = `${Math.max(0, Math.min(thermal, 100))}%`;
-      insightTolerance.textContent = `${Math.max(0, Math.min(tolerance, 100))}%`;
-    }
-
     function updateChart() {
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
@@ -610,7 +578,6 @@
       const solutions = buildSolutions(baseParams);
       currentSolutions = solutions;
       resetProfiles();
-      updateInsights(baseParams);
 
       const xDomain = getDomain(solutions.map(solution => solution[xKey]));
       const yDomain = getDomain(solutions.map(solution => solution[yKey]));

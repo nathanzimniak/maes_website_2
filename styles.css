@@ -531,39 +531,6 @@ section {
   font-size: 0.95rem;
 }
 
-.chart__insights {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px;
-}
-
-.chart__insight {
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(168, 85, 247, 0.05));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  display: grid;
-  gap: 6px;
-}
-
-.chart__insight-label {
-  color: var(--muted);
-  font-size: 0.92rem;
-  letter-spacing: 0.02em;
-}
-
-.chart__insight-value {
-  font-weight: 800;
-  font-size: 1.3rem;
-}
-
-.chart__insight-hint {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
 .chart__legend {
   display: inline-flex;
   align-items: center;
