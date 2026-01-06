@@ -142,8 +142,7 @@
                 <div class="chart__axis-header">
                   <label class="chart__select-label" for="x-axis-select">Axe X</label>
                   <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe X">
-                    <button type="button" class="chart__scale-button chart__scale-button--active" data-axis-scale="x" data-scale-type="linear">Linéaire</button>
-                    <button type="button" class="chart__scale-button" data-axis-scale="x" data-scale-type="log">Logarithmique</button>
+                    <button type="button" class="chart__scale-button" data-scale-toggle="x" aria-pressed="false">Axe X : Linéaire</button>
                   </div>
                 </div>
                 <select id="x-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe X">
@@ -163,8 +162,7 @@
                 <div class="chart__axis-header">
                   <label class="chart__select-label" for="y-axis-select">Axe Y</label>
                   <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe Y">
-                    <button type="button" class="chart__scale-button chart__scale-button--active" data-axis-scale="y" data-scale-type="linear">Linéaire</button>
-                    <button type="button" class="chart__scale-button" data-axis-scale="y" data-scale-type="log">Logarithmique</button>
+                    <button type="button" class="chart__scale-button" data-scale-toggle="y" aria-pressed="false">Axe Y : Linéaire</button>
                   </div>
                 </div>
                 <select id="y-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe Y">
@@ -218,7 +216,7 @@
     const profileContent = document.getElementById('profile-content');
     const profileBadge = document.getElementById('profile-badge');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
-    const scaleButtons = Array.from(document.querySelectorAll('[data-axis-scale]'));
+    const scaleButtons = Array.from(document.querySelectorAll('[data-scale-toggle]'));
 
     const sliders = [
       { id: 'p1', element: document.getElementById('p1-slider'), display: document.getElementById('p1-value') },
@@ -638,12 +636,15 @@
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 
-    function updateScaleButtons(axis, scaleType) {
-      scaleButtons
-        .filter((button) => button.dataset.axisScale === axis)
-        .forEach((button) => {
-          button.classList.toggle('chart__scale-button--active', button.dataset.scaleType === scaleType);
-        });
+    function updateScaleButton(axis, scaleType) {
+      const button = scaleButtons.find((btn) => btn.dataset.scaleToggle === axis);
+      if (!button) return;
+
+      const axisLabel = axis === 'x' ? 'Axe X' : 'Axe Y';
+      const isLog = scaleType === 'log';
+      button.textContent = `${axisLabel} : ${isLog ? 'Logarithmique' : 'Linéaire'}`;
+      button.classList.toggle('chart__scale-button--active', isLog);
+      button.setAttribute('aria-pressed', String(isLog));
     }
 
     function updateChart() {
@@ -676,22 +677,24 @@
 
     scaleButtons.forEach((button) => {
       button.addEventListener('click', () => {
-        const axis = button.dataset.axisScale;
-        const scaleType = button.dataset.scaleType;
+        const axis = button.dataset.scaleToggle;
 
-        if (axis === 'x' && scaleType !== xScaleType) {
-          xScaleType = scaleType;
-          updateScaleButtons('x', xScaleType);
-          updateChart();
+        if (axis === 'x') {
+          xScaleType = xScaleType === 'linear' ? 'log' : 'linear';
+          updateScaleButton('x', xScaleType);
         }
 
-        if (axis === 'y' && scaleType !== yScaleType) {
-          yScaleType = scaleType;
-          updateScaleButtons('y', yScaleType);
-          updateChart();
+        if (axis === 'y') {
+          yScaleType = yScaleType === 'linear' ? 'log' : 'linear';
+          updateScaleButton('y', yScaleType);
         }
+
+        updateChart();
       });
     });
+
+    updateScaleButton('x', xScaleType);
+    updateScaleButton('y', yScaleType);
 
     scenarioButtons.forEach((button) => {
       button.addEventListener('click', () => {
