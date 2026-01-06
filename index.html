@@ -31,7 +31,28 @@
         <h2 id="chart-title">Un petit nuage de points</h2>
         <p class="chart__description">Un graphe minimaliste qui montre comment quelques points peuvent raconter une tendance.</p>
       </div>
-      <div class="chart__figure" role="img" aria-label="Graphique en nuage de points"></div>
+      <div class="chart__body">
+        <div class="chart__figure" role="img" aria-label="Graphique en nuage de points"></div>
+        <div class="chart__controls" aria-label="Réglages du nuage de points">
+          <div class="chart__control">
+            <div class="chart__control-header">
+              <label for="slope-slider">Inclinaison</label>
+              <span id="slope-value" class="chart__pill">0.7</span>
+            </div>
+            <input id="slope-slider" type="range" min="0.2" max="1.2" step="0.1" value="0.7">
+            <p class="chart__control-hint">Ajustez la pente pour rapprocher ou éloigner les points de la diagonale.</p>
+          </div>
+          <div class="chart__control">
+            <div class="chart__control-header">
+              <label for="spread-slider">Dispersion</label>
+              <span id="spread-value" class="chart__pill">8</span>
+            </div>
+            <input id="spread-slider" type="range" min="2" max="18" step="1" value="8">
+            <p class="chart__control-hint">Faites varier la dispersion pour obtenir un nuage plus serré ou plus diffus.</p>
+          </div>
+          <p class="chart__controls-note">Les curseurs mettent à jour instantanément les points générés aléatoirement.</p>
+        </div>
+      </div>
       <div class="chart__legend">
         <span class="chart__legend-dot"></span>
         <span>Chaque cercle représente une mesure simulée.</span>
@@ -44,23 +65,12 @@
   </footer>
 
   <script>
-    const dataPoints = [
-      { x: 5, y: 35 },
-      { x: 12, y: 22 },
-      { x: 18, y: 48 },
-      { x: 25, y: 28 },
-      { x: 32, y: 55 },
-      { x: 38, y: 40 },
-      { x: 45, y: 62 },
-      { x: 52, y: 47 },
-      { x: 60, y: 70 },
-      { x: 68, y: 53 },
-      { x: 75, y: 78 },
-      { x: 83, y: 65 },
-      { x: 90, y: 88 }
-    ];
-
     const chartContainer = document.querySelector('.chart__figure');
+    const slopeSlider = document.getElementById('slope-slider');
+    const spreadSlider = document.getElementById('spread-slider');
+    const slopeValue = document.getElementById('slope-value');
+    const spreadValue = document.getElementById('spread-value');
+
     const width = chartContainer.clientWidth || 720;
     const height = 360;
     const margin = { top: 24, right: 24, bottom: 48, left: 48 };
@@ -146,17 +156,6 @@
     svg.appendChild(axes);
 
     const pointsGroup = document.createElementNS(svgNS, 'g');
-    dataPoints.forEach(point => {
-      const circle = document.createElementNS(svgNS, 'circle');
-      circle.setAttribute('cx', scaleX(point.x));
-      circle.setAttribute('cy', scaleY(point.y));
-      circle.setAttribute('r', 7);
-      circle.setAttribute('fill', 'url(#pointGradient)');
-      circle.setAttribute('stroke', 'rgba(226, 232, 240, 0.2)');
-      circle.setAttribute('stroke-width', '1.5');
-      pointsGroup.appendChild(circle);
-    });
-
     svg.appendChild(pointsGroup);
 
     const defs = document.createElementNS(svgNS, 'defs');
@@ -181,6 +180,47 @@
     svg.insertBefore(defs, svg.firstChild);
 
     chartContainer.appendChild(svg);
+
+    function generatePoints(slope, spread) {
+      const count = 13;
+      const points = [];
+      for (let i = 0; i < count; i++) {
+        const x = 8 + (84 / (count - 1)) * i;
+        const baseY = 12 + slope * x * 0.8;
+        const noise = (Math.random() - 0.5) * spread * 2;
+        const y = Math.max(minY + 4, Math.min(maxY - 4, baseY + noise));
+        points.push({ x, y });
+      }
+      return points;
+    }
+
+    function renderPoints(points) {
+      pointsGroup.innerHTML = '';
+      points.forEach(point => {
+        const circle = document.createElementNS(svgNS, 'circle');
+        circle.setAttribute('cx', scaleX(point.x));
+        circle.setAttribute('cy', scaleY(point.y));
+        circle.setAttribute('r', 7);
+        circle.setAttribute('fill', 'url(#pointGradient)');
+        circle.setAttribute('stroke', 'rgba(226, 232, 240, 0.2)');
+        circle.setAttribute('stroke-width', '1.5');
+        pointsGroup.appendChild(circle);
+      });
+    }
+
+    function updateChart() {
+      const slope = Number(slopeSlider.value);
+      const spread = Number(spreadSlider.value);
+      slopeValue.textContent = slope.toFixed(1);
+      spreadValue.textContent = spread.toFixed(0);
+      const newPoints = generatePoints(slope, spread);
+      renderPoints(newPoints);
+    }
+
+    slopeSlider.addEventListener('input', updateChart);
+    spreadSlider.addEventListener('input', updateChart);
+
+    updateChart();
   </script>
 </body>
 </html>
