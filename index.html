@@ -82,27 +82,7 @@
         <p class="chart__eyebrow">Données fictives</p>
         <h2 id="chart-title">Explorer un modèle physique</h2>
         <p class="chart__description">Ajustez les paramètres p1 à p5 puis choisissez quelles grandeurs g1 à g10 visualiser sur les axes.</p>
-        <p class="chart__helper">Survolez le nuage pour comparer les grandeurs, puis appliquez un préréglage pour observer des profils contrastés.</p>
-      </div>
-      <div class="chart__status" aria-live="polite">
-        <div class="chart__status-item">
-          <span class="chart__status-label">Axes actifs</span>
-          <span id="axes-status" class="chart__status-value">g1 ↔ g2</span>
-        </div>
-        <div class="chart__status-item">
-          <span class="chart__status-label">Réglages rapides</span>
-          <span id="params-status" class="chart__status-value">p1 50 • p2 40 • p3 30 • p4 60 • p5 20</span>
-        </div>
-        <div class="chart__status-item chart__status-item--accent">
-          <span class="chart__status-label">Focus interaction</span>
-          <span class="chart__status-value" id="selection-status">Aucun point sélectionné</span>
-        </div>
-      </div>
-      <div class="chart__presets" aria-label="Préréglages des paramètres">
-        <button class="chart__chip" type="button" id="preset-balanced">Profil équilibré</button>
-        <button class="chart__chip" type="button" id="preset-dynamic">Excitation dynamique</button>
-        <button class="chart__chip" type="button" id="preset-cooldown">Refroidissement</button>
-        <button class="chart__chip chart__chip--ghost" type="button" id="reset-chart">Réinitialiser</button>
+        <p class="chart__helper">Survolez le nuage pour comparer les grandeurs et ajustez les paramètres pour observer des profils contrastés.</p>
       </div>
       <div class="chart__body">
         <div class="chart__figure" role="img" aria-label="Graphique en nuage de points"></div>
@@ -116,7 +96,6 @@
                   <span id="p1-value" class="chart__pill">50</span>
                 </div>
                 <input id="p1-slider" type="range" min="0" max="100" step="1" value="50">
-                <p class="chart__control-hint">Condition initiale ou intensité de la première variable.</p>
               </div>
               <div class="chart__control">
                 <div class="chart__control-header">
@@ -124,7 +103,6 @@
                   <span id="p2-value" class="chart__pill">40</span>
                 </div>
                 <input id="p2-slider" type="range" min="0" max="100" step="1" value="40">
-                <p class="chart__control-hint">Coefficient d'interaction principal.</p>
               </div>
               <div class="chart__control">
                 <div class="chart__control-header">
@@ -132,7 +110,6 @@
                   <span id="p3-value" class="chart__pill">30</span>
                 </div>
                 <input id="p3-slider" type="range" min="0" max="100" step="1" value="30">
-                <p class="chart__control-hint">Paramètre lié au terme oscillatoire.</p>
               </div>
               <div class="chart__control">
                 <div class="chart__control-header">
@@ -140,7 +117,6 @@
                   <span id="p4-value" class="chart__pill">60</span>
                 </div>
                 <input id="p4-slider" type="range" min="0" max="100" step="1" value="60">
-                <p class="chart__control-hint">Facteur d'atténuation ou de gain.</p>
               </div>
               <div class="chart__control">
                 <div class="chart__control-header">
@@ -148,7 +124,6 @@
                   <span id="p5-value" class="chart__pill">20</span>
                 </div>
                 <input id="p5-slider" type="range" min="0" max="100" step="1" value="20">
-                <p class="chart__control-hint">Paramètre résiduel ou environnemental.</p>
               </div>
             </div>
           </div>
@@ -239,7 +214,6 @@
 
     const profileContent = document.getElementById('profile-content');
     const profileBadge = document.getElementById('profile-badge');
-    const selectionStatus = document.getElementById('selection-status');
 
     const sliders = [
       { id: 'p1', element: document.getElementById('p1-slider'), display: document.getElementById('p1-value') },
@@ -564,7 +538,6 @@
     function renderProfiles(solution, index) {
       const { profiles } = solution;
       profileBadge.textContent = `Point ${index + 1}`;
-      selectionStatus.textContent = `Point ${index + 1} sélectionné`;
 
       const series = [
         { label: 'Pression P(x)', key: 'pressure', unit: 'kPa', color: '#38bdf8' },
@@ -611,32 +584,8 @@
     function resetProfiles() {
       selectedSolutionIndex = null;
       profileBadge.textContent = 'Aucun point sélectionné';
-      selectionStatus.textContent = 'Aucun point sélectionné';
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
-
-    function setPreset(values) {
-      sliders.forEach(({ id, element }) => {
-        element.value = values[id];
-      });
-      updateChart();
-    }
-
-    document.getElementById('preset-balanced').addEventListener('click', () => {
-      setPreset({ p1: 48, p2: 52, p3: 36, p4: 50, p5: 42 });
-    });
-
-    document.getElementById('preset-dynamic').addEventListener('click', () => {
-      setPreset({ p1: 72, p2: 65, p3: 62, p4: 58, p5: 30 });
-    });
-
-    document.getElementById('preset-cooldown').addEventListener('click', () => {
-      setPreset({ p1: 32, p2: 40, p3: 22, p4: 68, p5: 70 });
-    });
-
-    document.getElementById('reset-chart').addEventListener('click', () => {
-      setPreset({ p1: 50, p2: 40, p3: 30, p4: 60, p5: 20 });
-    });
 
     function updateInsights(baseParams) {
       const energy = Math.round(baseParams.p1 * 0.55 + baseParams.p2 * 0.45);
@@ -658,9 +607,6 @@
 
       const xKey = xAxisSelect.value;
       const yKey = yAxisSelect.value;
-      document.getElementById('axes-status').textContent = `${xKey.toUpperCase()} ↔ ${yKey.toUpperCase()}`;
-      document.getElementById('params-status').textContent =
-        `p1 ${baseParams.p1} • p2 ${baseParams.p2} • p3 ${baseParams.p3} • p4 ${baseParams.p4} • p5 ${baseParams.p5}`;
       const solutions = buildSolutions(baseParams);
       currentSolutions = solutions;
       resetProfiles();
