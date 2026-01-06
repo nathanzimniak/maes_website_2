@@ -512,14 +512,14 @@ section {
 .chart__slider-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .chart__control-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .chart__control-row--toggles {
