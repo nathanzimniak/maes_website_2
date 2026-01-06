@@ -323,6 +323,11 @@ section {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
+.chart__status-item--accent {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(99, 102, 241, 0.08));
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
 .chart__status-label {
   display: block;
   color: var(--muted);
@@ -358,6 +363,12 @@ section {
   margin: 0;
 }
 
+.chart__helper {
+  color: var(--muted);
+  margin: 6px 0 0;
+  font-size: 0.98rem;
+}
+
 .chart__figure {
   width: 100%;
   height: 360px;
@@ -371,6 +382,16 @@ section {
   position: relative;
 }
 
+.chart__figure::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px, 56px 56px;
+  pointer-events: none;
+}
+
 .chart__figure svg {
   width: 100%;
   height: 100%;
@@ -382,6 +403,34 @@ section {
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 20px;
   align-items: stretch;
+}
+
+.chart__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chart__chip {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.chart__chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(99, 102, 241, 0.14);
+}
+
+.chart__chip--ghost {
+  background: transparent;
+  border-style: dashed;
 }
 
 .chart__controls {
@@ -479,6 +528,39 @@ section {
   background: rgba(15, 23, 42, 0.6);
   color: var(--text);
   font-size: 0.95rem;
+}
+
+.chart__insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.chart__insight {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(168, 85, 247, 0.05));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  display: grid;
+  gap: 6px;
+}
+
+.chart__insight-label {
+  color: var(--muted);
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+}
+
+.chart__insight-value {
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.chart__insight-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .chart__legend {
