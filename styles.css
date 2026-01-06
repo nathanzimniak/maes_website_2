@@ -451,7 +451,7 @@ section {
 .chart__control {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .chart__control-group {
@@ -471,11 +471,11 @@ section {
   gap: 10px;
 }
 
-.chart__control-header {
-  display: flex;
+.chart__control-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  gap: 12px;
 }
 
 .chart__control label {
