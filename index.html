@@ -28,29 +28,90 @@
     <div class="chart__card">
       <div class="chart__header">
         <p class="chart__eyebrow">Données fictives</p>
-        <h2 id="chart-title">Un petit nuage de points</h2>
-        <p class="chart__description">Un graphe minimaliste qui montre comment quelques points peuvent raconter une tendance.</p>
+        <h2 id="chart-title">Explorer un modèle physique</h2>
+        <p class="chart__description">Ajustez les paramètres p1 à p5 puis choisissez quelles grandeurs g1 à g10 visualiser sur les axes.</p>
       </div>
       <div class="chart__body">
         <div class="chart__figure" role="img" aria-label="Graphique en nuage de points"></div>
         <div class="chart__controls" aria-label="Réglages du nuage de points">
-          <div class="chart__control">
-            <div class="chart__control-header">
-              <label for="slope-slider">Inclinaison</label>
-              <span id="slope-value" class="chart__pill">0.7</span>
+          <div class="chart__control-group">
+            <div class="chart__group-title">Paramètres d'entrée</div>
+            <div class="chart__slider-grid">
+              <div class="chart__control">
+                <div class="chart__control-header">
+                  <label for="p1-slider">p1</label>
+                  <span id="p1-value" class="chart__pill">50</span>
+                </div>
+                <input id="p1-slider" type="range" min="0" max="100" step="1" value="50">
+                <p class="chart__control-hint">Condition initiale ou intensité de la première variable.</p>
+              </div>
+              <div class="chart__control">
+                <div class="chart__control-header">
+                  <label for="p2-slider">p2</label>
+                  <span id="p2-value" class="chart__pill">40</span>
+                </div>
+                <input id="p2-slider" type="range" min="0" max="100" step="1" value="40">
+                <p class="chart__control-hint">Coefficient d'interaction principal.</p>
+              </div>
+              <div class="chart__control">
+                <div class="chart__control-header">
+                  <label for="p3-slider">p3</label>
+                  <span id="p3-value" class="chart__pill">30</span>
+                </div>
+                <input id="p3-slider" type="range" min="0" max="100" step="1" value="30">
+                <p class="chart__control-hint">Paramètre lié au terme oscillatoire.</p>
+              </div>
+              <div class="chart__control">
+                <div class="chart__control-header">
+                  <label for="p4-slider">p4</label>
+                  <span id="p4-value" class="chart__pill">60</span>
+                </div>
+                <input id="p4-slider" type="range" min="0" max="100" step="1" value="60">
+                <p class="chart__control-hint">Facteur d'atténuation ou de gain.</p>
+              </div>
+              <div class="chart__control">
+                <div class="chart__control-header">
+                  <label for="p5-slider">p5</label>
+                  <span id="p5-value" class="chart__pill">20</span>
+                </div>
+                <input id="p5-slider" type="range" min="0" max="100" step="1" value="20">
+                <p class="chart__control-hint">Paramètre résiduel ou environnemental.</p>
+              </div>
             </div>
-            <input id="slope-slider" type="range" min="0.2" max="1.2" step="0.1" value="0.7">
-            <p class="chart__control-hint">Ajustez la pente pour rapprocher ou éloigner les points de la diagonale.</p>
           </div>
-          <div class="chart__control">
-            <div class="chart__control-header">
-              <label for="spread-slider">Dispersion</label>
-              <span id="spread-value" class="chart__pill">8</span>
+
+          <div class="chart__control-group">
+            <div class="chart__group-title">Axes du graphique</div>
+            <div class="chart__axis-selectors">
+              <label class="chart__select-label" for="x-axis-select">Axe X</label>
+              <select id="x-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe X">
+                <option value="g1">g1</option>
+                <option value="g2">g2</option>
+                <option value="g3">g3</option>
+                <option value="g4">g4</option>
+                <option value="g5">g5</option>
+                <option value="g6">g6</option>
+                <option value="g7">g7</option>
+                <option value="g8">g8</option>
+                <option value="g9">g9</option>
+                <option value="g10">g10</option>
+              </select>
+              <label class="chart__select-label" for="y-axis-select">Axe Y</label>
+              <select id="y-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe Y">
+                <option value="g2">g2</option>
+                <option value="g1">g1</option>
+                <option value="g3">g3</option>
+                <option value="g4">g4</option>
+                <option value="g5">g5</option>
+                <option value="g6">g6</option>
+                <option value="g7">g7</option>
+                <option value="g8">g8</option>
+                <option value="g9">g9</option>
+                <option value="g10">g10</option>
+              </select>
             </div>
-            <input id="spread-slider" type="range" min="2" max="18" step="1" value="8">
-            <p class="chart__control-hint">Faites varier la dispersion pour obtenir un nuage plus serré ou plus diffus.</p>
+            <p class="chart__controls-note">Les solutions simulées sont recalculées dès que vous bougez un slider ou changez d'axe.</p>
           </div>
-          <p class="chart__controls-note">Les curseurs mettent à jour instantanément les points générés aléatoirement.</p>
         </div>
       </div>
       <div class="chart__legend">
@@ -66,10 +127,15 @@
 
   <script>
     const chartContainer = document.querySelector('.chart__figure');
-    const slopeSlider = document.getElementById('slope-slider');
-    const spreadSlider = document.getElementById('spread-slider');
-    const slopeValue = document.getElementById('slope-value');
-    const spreadValue = document.getElementById('spread-value');
+    const sliders = [
+      { id: 'p1', element: document.getElementById('p1-slider'), display: document.getElementById('p1-value') },
+      { id: 'p2', element: document.getElementById('p2-slider'), display: document.getElementById('p2-value') },
+      { id: 'p3', element: document.getElementById('p3-slider'), display: document.getElementById('p3-value') },
+      { id: 'p4', element: document.getElementById('p4-slider'), display: document.getElementById('p4-value') },
+      { id: 'p5', element: document.getElementById('p5-slider'), display: document.getElementById('p5-value') },
+    ];
+    const xAxisSelect = document.getElementById('x-axis-select');
+    const yAxisSelect = document.getElementById('y-axis-select');
 
     const width = chartContainer.clientWidth || 720;
     const height = 360;
@@ -82,14 +148,6 @@
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
-
-    const minX = 0;
-    const maxX = 100;
-    const minY = 0;
-    const maxY = 100;
-
-    const scaleX = (x) => margin.left + (x - minX) / (maxX - minX) * innerWidth;
-    const scaleY = (y) => margin.top + innerHeight - (y - minY) / (maxY - minY) * innerHeight;
 
     const axes = document.createElementNS(svgNS, 'g');
     axes.setAttribute('stroke', 'rgba(226, 232, 240, 0.4)');
@@ -110,48 +168,26 @@
     yAxis.setAttribute('y2', margin.top + innerHeight);
     axes.appendChild(yAxis);
 
-    const tickCount = 5;
-    for (let i = 0; i <= tickCount; i++) {
-      const xValue = minX + (maxX - minX) * (i / tickCount);
-      const xPos = scaleX(xValue);
-      const xTick = document.createElementNS(svgNS, 'line');
-      xTick.setAttribute('x1', xPos);
-      xTick.setAttribute('x2', xPos);
-      xTick.setAttribute('y1', margin.top + innerHeight);
-      xTick.setAttribute('y2', margin.top + innerHeight + 6);
-      xTick.setAttribute('stroke', 'rgba(226, 232, 240, 0.4)');
-      axes.appendChild(xTick);
+    const xTicksGroup = document.createElementNS(svgNS, 'g');
+    const yTicksGroup = document.createElementNS(svgNS, 'g');
+    const xAxisLabel = document.createElementNS(svgNS, 'text');
+    const yAxisLabel = document.createElementNS(svgNS, 'text');
 
-      const xLabel = document.createElementNS(svgNS, 'text');
-      xLabel.textContent = Math.round(xValue);
-      xLabel.setAttribute('x', xPos);
-      xLabel.setAttribute('y', margin.top + innerHeight + 22);
-      xLabel.setAttribute('fill', 'var(--muted)');
-      xLabel.setAttribute('font-size', '12');
-      xLabel.setAttribute('text-anchor', 'middle');
-      axes.appendChild(xLabel);
-    }
+    xAxisLabel.setAttribute('fill', 'var(--muted)');
+    xAxisLabel.setAttribute('font-size', '12');
+    xAxisLabel.setAttribute('text-anchor', 'middle');
+    xAxisLabel.setAttribute('x', margin.left + innerWidth / 2);
+    xAxisLabel.setAttribute('y', margin.top + innerHeight + 36);
 
-    for (let i = 0; i <= tickCount; i++) {
-      const yValue = minY + (maxY - minY) * (i / tickCount);
-      const yPos = scaleY(yValue);
-      const yTick = document.createElementNS(svgNS, 'line');
-      yTick.setAttribute('x1', margin.left - 6);
-      yTick.setAttribute('x2', margin.left);
-      yTick.setAttribute('y1', yPos);
-      yTick.setAttribute('y2', yPos);
-      yTick.setAttribute('stroke', 'rgba(226, 232, 240, 0.4)');
-      axes.appendChild(yTick);
+    yAxisLabel.setAttribute('fill', 'var(--muted)');
+    yAxisLabel.setAttribute('font-size', '12');
+    yAxisLabel.setAttribute('text-anchor', 'middle');
+    yAxisLabel.setAttribute('transform', `translate(${margin.left - 36} ${margin.top + innerHeight / 2}) rotate(-90)`);
 
-      const yLabel = document.createElementNS(svgNS, 'text');
-      yLabel.textContent = Math.round(yValue);
-      yLabel.setAttribute('x', margin.left - 12);
-      yLabel.setAttribute('y', yPos + 4);
-      yLabel.setAttribute('fill', 'var(--muted)');
-      yLabel.setAttribute('font-size', '12');
-      yLabel.setAttribute('text-anchor', 'end');
-      axes.appendChild(yLabel);
-    }
+    axes.appendChild(xTicksGroup);
+    axes.appendChild(yTicksGroup);
+    axes.appendChild(xAxisLabel);
+    axes.appendChild(yAxisLabel);
 
     svg.appendChild(axes);
 
@@ -181,25 +217,134 @@
 
     chartContainer.appendChild(svg);
 
-    function generatePoints(slope, spread) {
-      const count = 13;
-      const points = [];
-      for (let i = 0; i < count; i++) {
-        const x = 8 + (84 / (count - 1)) * i;
-        const baseY = 12 + slope * x * 0.8;
-        const noise = (Math.random() - 0.5) * spread * 2;
-        const y = Math.max(minY + 4, Math.min(maxY - 4, baseY + noise));
-        points.push({ x, y });
-      }
-      return points;
+    const scaleX = (value, domain) => {
+      const range = domain.max - domain.min || 1;
+      return margin.left + (value - domain.min) / range * innerWidth;
+    };
+
+    const scaleY = (value, domain) => {
+      const range = domain.max - domain.min || 1;
+      return margin.top + innerHeight - (value - domain.min) / range * innerHeight;
+    };
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
     }
 
-    function renderPoints(points) {
+    function buildSolutions(baseParams) {
+      const solutions = [];
+      const sampleCount = 26;
+
+      for (let i = 0; i < sampleCount; i++) {
+        const jittered = Object.fromEntries(
+          Object.entries(baseParams).map(([key, base]) => [
+            key,
+            clamp(base + (Math.random() - 0.5) * 14, 0, 100)
+          ])
+        );
+
+        const { p1, p2, p3, p4, p5 } = jittered;
+        const noise = (span) => (Math.random() - 0.5) * span;
+
+        const g1 = 0.6 * p1 + 0.4 * p2 + 5 * Math.sin(p3 / 18) + noise(8);
+        const g2 = 1.05 * p2 + 0.25 * p3 + noise(10);
+        const g3 = 0.5 * p3 + 0.8 * p4 + 12 * Math.cos(p1 / 30) + noise(9);
+        const g4 = 0.9 * p4 + 0.2 * p1 + noise(7);
+        const g5 = 0.7 * p5 + 0.35 * p2 + noise(7);
+        const g6 = 0.8 * p1 + 0.5 * p3 - 0.3 * p5 + 40 + noise(12);
+        const g7 = 0.6 * p2 + 0.6 * p5 + noise(10);
+        const g8 = 0.4 * p3 + 0.9 * p4 + noise(8);
+        const g9 = 0.5 * p1 + 0.5 * p4 + noise(6);
+        const g10 = 0.7 * p2 + 0.2 * p3 + 0.4 * p5 + noise(10);
+
+        solutions.push({
+          ...jittered,
+          g1: clamp(g1, 0, 200),
+          g2: clamp(g2, 0, 200),
+          g3: clamp(g3, 0, 200),
+          g4: clamp(g4, 0, 200),
+          g5: clamp(g5, 0, 200),
+          g6: clamp(g6, 0, 200),
+          g7: clamp(g7, 0, 200),
+          g8: clamp(g8, 0, 200),
+          g9: clamp(g9, 0, 200),
+          g10: clamp(g10, 0, 200)
+        });
+      }
+
+      return solutions;
+    }
+
+    function getDomain(values) {
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const span = max - min;
+      const padding = Math.max(span * 0.08, 4);
+      return { min: min - padding, max: max + padding };
+    }
+
+    function formatTick(value) {
+      return Math.abs(value) >= 100 ? value.toFixed(0) : value.toFixed(1);
+    }
+
+    function renderAxes(xDomain, yDomain, xLabel, yLabel) {
+      xTicksGroup.innerHTML = '';
+      yTicksGroup.innerHTML = '';
+
+      const tickCount = 5;
+
+      for (let i = 0; i <= tickCount; i++) {
+        const xValue = xDomain.min + (xDomain.max - xDomain.min) * (i / tickCount);
+        const xPos = scaleX(xValue, xDomain);
+        const xTick = document.createElementNS(svgNS, 'line');
+        xTick.setAttribute('x1', xPos);
+        xTick.setAttribute('x2', xPos);
+        xTick.setAttribute('y1', margin.top + innerHeight);
+        xTick.setAttribute('y2', margin.top + innerHeight + 6);
+        xTick.setAttribute('stroke', 'rgba(226, 232, 240, 0.4)');
+        xTicksGroup.appendChild(xTick);
+
+        const xTickLabel = document.createElementNS(svgNS, 'text');
+        xTickLabel.textContent = formatTick(xValue);
+        xTickLabel.setAttribute('x', xPos);
+        xTickLabel.setAttribute('y', margin.top + innerHeight + 22);
+        xTickLabel.setAttribute('fill', 'var(--muted)');
+        xTickLabel.setAttribute('font-size', '12');
+        xTickLabel.setAttribute('text-anchor', 'middle');
+        xTicksGroup.appendChild(xTickLabel);
+      }
+
+      for (let i = 0; i <= tickCount; i++) {
+        const yValue = yDomain.min + (yDomain.max - yDomain.min) * (i / tickCount);
+        const yPos = scaleY(yValue, yDomain);
+        const yTick = document.createElementNS(svgNS, 'line');
+        yTick.setAttribute('x1', margin.left - 6);
+        yTick.setAttribute('x2', margin.left);
+        yTick.setAttribute('y1', yPos);
+        yTick.setAttribute('y2', yPos);
+        yTick.setAttribute('stroke', 'rgba(226, 232, 240, 0.4)');
+        yTicksGroup.appendChild(yTick);
+
+        const yTickLabel = document.createElementNS(svgNS, 'text');
+        yTickLabel.textContent = formatTick(yValue);
+        yTickLabel.setAttribute('x', margin.left - 12);
+        yTickLabel.setAttribute('y', yPos + 4);
+        yTickLabel.setAttribute('fill', 'var(--muted)');
+        yTickLabel.setAttribute('font-size', '12');
+        yTickLabel.setAttribute('text-anchor', 'end');
+        yTicksGroup.appendChild(yTickLabel);
+      }
+
+      xAxisLabel.textContent = xLabel;
+      yAxisLabel.textContent = yLabel;
+    }
+
+    function renderPoints(points, xKey, yKey, xDomain, yDomain) {
       pointsGroup.innerHTML = '';
       points.forEach(point => {
         const circle = document.createElementNS(svgNS, 'circle');
-        circle.setAttribute('cx', scaleX(point.x));
-        circle.setAttribute('cy', scaleY(point.y));
+        circle.setAttribute('cx', scaleX(point[xKey], xDomain));
+        circle.setAttribute('cy', scaleY(point[yKey], yDomain));
         circle.setAttribute('r', 7);
         circle.setAttribute('fill', 'url(#pointGradient)');
         circle.setAttribute('stroke', 'rgba(226, 232, 240, 0.2)');
@@ -209,16 +354,27 @@
     }
 
     function updateChart() {
-      const slope = Number(slopeSlider.value);
-      const spread = Number(spreadSlider.value);
-      slopeValue.textContent = slope.toFixed(1);
-      spreadValue.textContent = spread.toFixed(0);
-      const newPoints = generatePoints(slope, spread);
-      renderPoints(newPoints);
+      const baseParams = sliders.reduce((acc, slider) => {
+        const value = Number(slider.element.value);
+        slider.display.textContent = value.toFixed(0);
+        acc[slider.id] = value;
+        return acc;
+      }, {});
+
+      const xKey = xAxisSelect.value;
+      const yKey = yAxisSelect.value;
+      const solutions = buildSolutions(baseParams);
+
+      const xDomain = getDomain(solutions.map(solution => solution[xKey]));
+      const yDomain = getDomain(solutions.map(solution => solution[yKey]));
+
+      renderAxes(xDomain, yDomain, xKey.toUpperCase(), yKey.toUpperCase());
+      renderPoints(solutions, xKey, yKey, xDomain, yDomain);
     }
 
-    slopeSlider.addEventListener('input', updateChart);
-    spreadSlider.addEventListener('input', updateChart);
+    sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
+    xAxisSelect.addEventListener('change', updateChart);
+    yAxisSelect.addEventListener('change', updateChart);
 
     updateChart();
   </script>
