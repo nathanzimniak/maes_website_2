@@ -127,6 +127,10 @@
 
   <script>
     const chartContainer = document.querySelector('.chart__figure');
+    const tooltip = document.createElement('div');
+    tooltip.className = 'chart__tooltip';
+    chartContainer.appendChild(tooltip);
+
     const sliders = [
       { id: 'p1', element: document.getElementById('p1-slider'), display: document.getElementById('p1-value') },
       { id: 'p2', element: document.getElementById('p2-slider'), display: document.getElementById('p2-value') },
@@ -136,6 +140,8 @@
     ];
     const xAxisSelect = document.getElementById('x-axis-select');
     const yAxisSelect = document.getElementById('y-axis-select');
+
+    let currentSolutions = [];
 
     const width = chartContainer.clientWidth || 720;
     const height = 360;
@@ -339,9 +345,17 @@
       yAxisLabel.textContent = yLabel;
     }
 
+    function positionTooltip(event) {
+      const bounds = chartContainer.getBoundingClientRect();
+      const offsetX = event.clientX - bounds.left;
+      const offsetY = event.clientY - bounds.top;
+      tooltip.style.left = `${offsetX + 14}px`;
+      tooltip.style.top = `${offsetY + 14}px`;
+    }
+
     function renderPoints(points, xKey, yKey, xDomain, yDomain) {
       pointsGroup.innerHTML = '';
-      points.forEach(point => {
+      points.forEach((point, index) => {
         const circle = document.createElementNS(svgNS, 'circle');
         circle.setAttribute('cx', scaleX(point[xKey], xDomain));
         circle.setAttribute('cy', scaleY(point[yKey], yDomain));
@@ -349,6 +363,31 @@
         circle.setAttribute('fill', 'url(#pointGradient)');
         circle.setAttribute('stroke', 'rgba(226, 232, 240, 0.2)');
         circle.setAttribute('stroke-width', '1.5');
+        circle.dataset.solutionIndex = index;
+        circle.setAttribute('tabindex', '0');
+
+        circle.addEventListener('pointerenter', (event) => {
+          const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
+          const rows = Object.entries(hovered)
+            .filter(([key]) => key.startsWith('g'))
+            .map(([key, value]) => `<li><span class="chart__tooltip-key">${key}</span><span class="chart__tooltip-value">${value.toFixed(1)}</span></li>`) 
+            .join('');
+
+          tooltip.innerHTML = `<div class="chart__tooltip-title">Point simulé</div><ul class="chart__tooltip-list">${rows}</ul>`;
+          tooltip.classList.add('chart__tooltip--visible');
+          positionTooltip(event);
+        });
+
+        circle.addEventListener('pointermove', positionTooltip);
+
+        circle.addEventListener('pointerleave', () => {
+          tooltip.classList.remove('chart__tooltip--visible');
+        });
+
+        circle.addEventListener('blur', () => {
+          tooltip.classList.remove('chart__tooltip--visible');
+        });
+
         pointsGroup.appendChild(circle);
       });
     }
@@ -364,6 +403,7 @@
       const xKey = xAxisSelect.value;
       const yKey = yAxisSelect.value;
       const solutions = buildSolutions(baseParams);
+      currentSolutions = solutions;
 
       const xDomain = getDomain(solutions.map(solution => solution[xKey]));
       const yDomain = getDomain(solutions.map(solution => solution[yKey]));

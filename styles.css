@@ -179,6 +179,7 @@ body {
     rgba(255, 255, 255, 0.02);
   overflow: hidden;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
 }
 
 .chart__figure svg {
@@ -305,6 +306,53 @@ body {
   border-radius: 50%;
   background: linear-gradient(135deg, #38bdf8, #6366f1);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+.chart__tooltip {
+  position: absolute;
+  min-width: 220px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 2;
+}
+
+.chart__tooltip--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chart__tooltip-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.chart__tooltip-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 10px;
+}
+
+.chart__tooltip-key {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.chart__tooltip-value {
+  text-align: right;
+  display: inline-block;
+  min-width: 42px;
 }
 
 @media (max-width: 640px) {
