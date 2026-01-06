@@ -114,6 +114,21 @@
           </div>
         </div>
       </div>
+
+      <div class="chart__profiles" aria-live="polite">
+        <div class="chart__profiles-header">
+          <div>
+            <p class="chart__eyebrow chart__eyebrow--sub">Profils associés</p>
+            <h3 class="chart__profiles-title">Profils en fonction de x</h3>
+            <p class="chart__profiles-description">Cliquez sur un point pour afficher les profils de pression P(x), densité ρ(x) et température T(x) qui lui sont associés.</p>
+          </div>
+          <div id="profile-badge" class="chart__profiles-badge">Aucun point sélectionné</div>
+        </div>
+        <div id="profile-content" class="chart__profiles-grid">
+          <p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>
+        </div>
+      </div>
+
       <div class="chart__legend">
         <span class="chart__legend-dot"></span>
         <span>Chaque cercle représente une mesure simulée.</span>
@@ -131,6 +146,9 @@
     tooltip.className = 'chart__tooltip';
     chartContainer.appendChild(tooltip);
 
+    const profileContent = document.getElementById('profile-content');
+    const profileBadge = document.getElementById('profile-badge');
+
     const sliders = [
       { id: 'p1', element: document.getElementById('p1-slider'), display: document.getElementById('p1-value') },
       { id: 'p2', element: document.getElementById('p2-slider'), display: document.getElementById('p2-value') },
@@ -142,6 +160,7 @@
     const yAxisSelect = document.getElementById('y-axis-select');
 
     let currentSolutions = [];
+    let selectedSolutionIndex = null;
 
     const width = chartContainer.clientWidth || 720;
     const height = 360;
@@ -237,6 +256,25 @@
       return Math.min(Math.max(value, min), max);
     }
 
+    function buildProfiles(base) {
+      const sampleCount = 24;
+      const xValues = Array.from({ length: sampleCount }, (_, i) => Number(((i / (sampleCount - 1)) * 10).toFixed(2)));
+
+      const pressure = xValues.map((x) => {
+        return clamp(85 + 0.5 * base.p1 - 0.3 * base.p3 + Math.sin(x / 1.8 + base.p2 / 60) * 9 + (Math.random() - 0.5) * 2, 40, 180);
+      });
+
+      const density = xValues.map((x) => {
+        return clamp(0.9 + 0.012 * base.p2 + Math.cos(x / 2.4 + base.p5 / 35) * 0.25 + (Math.random() - 0.5) * 0.04, 0.6, 2.4);
+      });
+
+      const temperature = xValues.map((x) => {
+        return clamp(260 + 0.75 * base.p4 + Math.sin((x + base.p3 / 6) / 2.8) * 14 + (Math.random() - 0.5) * 4, 230, 420);
+      });
+
+      return { x: xValues, pressure, density, temperature };
+    }
+
     function buildSolutions(baseParams) {
       const solutions = [];
       const sampleCount = 26;
@@ -265,6 +303,7 @@
 
         solutions.push({
           ...jittered,
+          profiles: buildProfiles(jittered),
           g1: clamp(g1, 0, 200),
           g2: clamp(g2, 0, 200),
           g3: clamp(g3, 0, 200),
@@ -366,6 +405,10 @@
         circle.dataset.solutionIndex = index;
         circle.setAttribute('tabindex', '0');
 
+        if (index === selectedSolutionIndex) {
+          circle.classList.add('chart__point--selected');
+        }
+
         circle.addEventListener('pointerenter', (event) => {
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           const rows = Object.entries(hovered)
@@ -388,8 +431,91 @@
           tooltip.classList.remove('chart__tooltip--visible');
         });
 
+        circle.addEventListener('click', () => {
+          selectSolution(index);
+        });
+
+        circle.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            selectSolution(index);
+          }
+        });
+
         pointsGroup.appendChild(circle);
       });
+    }
+
+    function sparklinePath(xValues, yValues, width = 240, height = 80, padding = 6) {
+      const xMin = Math.min(...xValues);
+      const xMax = Math.max(...xValues);
+      const yMin = Math.min(...yValues);
+      const yMax = Math.max(...yValues);
+      const xRange = xMax - xMin || 1;
+      const yRange = yMax - yMin || 1;
+
+      const plotWidth = width - padding * 2;
+      const plotHeight = height - padding * 2;
+
+      return xValues
+        .map((x, idx) => {
+          const px = padding + ((x - xMin) / xRange) * plotWidth;
+          const py = padding + plotHeight - ((yValues[idx] - yMin) / yRange) * plotHeight;
+          return `${px},${py}`;
+        })
+        .join(' ');
+    }
+
+    function renderProfiles(solution, index) {
+      const { profiles } = solution;
+      profileBadge.textContent = `Point ${index + 1}`;
+
+      const series = [
+        { label: 'Pression P(x)', key: 'pressure', unit: 'kPa', color: '#38bdf8' },
+        { label: 'Densité ρ(x)', key: 'density', unit: 'kg/m³', color: '#fbbf24' },
+        { label: 'Température T(x)', key: 'temperature', unit: 'K', color: '#a78bfa' },
+      ];
+
+      profileContent.innerHTML = '';
+
+      series.forEach((serie) => {
+        const values = profiles[serie.key];
+        const path = sparklinePath(profiles.x, values);
+        const min = Math.min(...values).toFixed(1);
+        const max = Math.max(...values).toFixed(1);
+
+        const card = document.createElement('div');
+        card.className = 'chart__profile-card';
+        card.innerHTML = `
+          <div class="chart__profile-header">
+            <span class="chart__profile-dot" style="background:${serie.color}"></span>
+            <div>
+              <div class="chart__profile-title">${serie.label}</div>
+              <div class="chart__profile-meta">min ${min} · max ${max} ${serie.unit}</div>
+            </div>
+          </div>
+          <svg class="chart__sparkline" viewBox="0 0 240 80" role="img" aria-label="${serie.label}">
+            <polyline fill="none" stroke="${serie.color}" stroke-width="2" points="${path}" />
+          </svg>
+        `;
+
+        profileContent.appendChild(card);
+      });
+    }
+
+    function selectSolution(index) {
+      selectedSolutionIndex = index;
+      renderProfiles(currentSolutions[index], index);
+
+      Array.from(pointsGroup.children).forEach((circle, idx) => {
+        circle.classList.toggle('chart__point--selected', idx === index);
+      });
+    }
+
+    function resetProfiles() {
+      selectedSolutionIndex = null;
+      profileBadge.textContent = 'Aucun point sélectionné';
+      profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 
     function updateChart() {
@@ -404,6 +530,7 @@
       const yKey = yAxisSelect.value;
       const solutions = buildSolutions(baseParams);
       currentSolutions = solutions;
+      resetProfiles();
 
       const xDomain = getDomain(solutions.map(solution => solution[xKey]));
       const yDomain = getDomain(solutions.map(solution => solution[yKey]));
