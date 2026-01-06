@@ -7,29 +7,91 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="hero">
+  <header class="site-header">
+    <div class="site-header__bar">
+      <div class="site-header__brand">MAES Studio</div>
+      <nav class="site-header__nav" aria-label="Navigation principale">
+        <a href="#intro">Introduction</a>
+        <a href="#chart">Visualisation</a>
+        <a href="#profiles">Profils</a>
+      </nav>
+      <a class="site-header__pill" href="#chart">Lancer la démo</a>
+    </div>
+  </header>
+
+  <section class="hero">
     <div class="hero__overlay"></div>
     <div class="hero__content">
       <p class="hero__eyebrow">Projet en construction</p>
       <h1 class="hero__title">Hello World</h1>
-      <p class="hero__subtitle">Un premier pas vers un nouveau site web minimaliste.</p>
-      <a class="hero__cta" href="#intro">Découvrir</a>
+      <p class="hero__subtitle">Un premier pas vers un nouveau site web minimaliste, enrichi d'une expérience plus fluide.</p>
+      <div class="hero__actions">
+        <a class="hero__cta" href="#intro">Découvrir</a>
+        <a class="hero__ghost" href="#chart">Explorer les données</a>
+      </div>
+      <div class="hero__metrics" aria-label="Indicateurs clés">
+        <div class="metric-card">
+          <span class="metric-card__label">Paramètres ajustables</span>
+          <span class="metric-card__value">5 sliders</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-card__label">Solutions simulées</span>
+          <span class="metric-card__value">26 points</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-card__label">Profils détaillés</span>
+          <span class="metric-card__value">3 courbes</span>
+        </div>
+      </div>
     </div>
-  </header>
+  </section>
 
   <main id="intro" class="intro">
     <div class="intro__card">
       <h2>Bienvenue</h2>
       <p>Ce site simple affiche « Hello World » pour marquer le début du projet. Vous pourrez étoffer le contenu au fil du temps.</p>
+      <div class="intro__grid" aria-label="Atouts de la démo">
+        <div class="intro__tile">
+          <div class="intro__icon">✨</div>
+          <div>
+            <div class="intro__tile-title">Design soigné</div>
+            <p class="intro__tile-text">Palette contrastée, coins arrondis et ombres douces pour un rendu premium.</p>
+          </div>
+        </div>
+        <div class="intro__tile">
+          <div class="intro__icon">🎛️</div>
+          <div>
+            <div class="intro__tile-title">Contrôles guidés</div>
+            <p class="intro__tile-text">Des sliders annotés et des axes clairs pour comprendre chaque réglage.</p>
+          </div>
+        </div>
+        <div class="intro__tile">
+          <div class="intro__icon">📈</div>
+          <div>
+            <div class="intro__tile-title">Visualisation immédiate</div>
+            <p class="intro__tile-text">Les points et profils se mettent à jour dès que vous modifiez un paramètre.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
-  <section class="chart" aria-labelledby="chart-title">
+  <section id="chart" class="chart" aria-labelledby="chart-title">
     <div class="chart__card">
       <div class="chart__header">
         <p class="chart__eyebrow">Données fictives</p>
         <h2 id="chart-title">Explorer un modèle physique</h2>
         <p class="chart__description">Ajustez les paramètres p1 à p5 puis choisissez quelles grandeurs g1 à g10 visualiser sur les axes.</p>
+      </div>
+      <div class="chart__status" aria-live="polite">
+        <div class="chart__status-item">
+          <span class="chart__status-label">Axes actifs</span>
+          <span id="axes-status" class="chart__status-value">g1 ↔ g2</span>
+        </div>
+        <div class="chart__status-item">
+          <span class="chart__status-label">Réglages rapides</span>
+          <span id="params-status" class="chart__status-value">p1 50 • p2 40 • p3 30 • p4 60 • p5 20</span>
+        </div>
       </div>
       <div class="chart__body">
         <div class="chart__figure" role="img" aria-label="Graphique en nuage de points"></div>
@@ -136,9 +198,9 @@
     </div>
   </section>
 
-  <footer class="footer">
+  <section id="profiles" class="footer">
     <p>Créé avec ❤️ pour démarrer rapidement.</p>
-  </footer>
+  </section>
 
   <script>
     const chartContainer = document.querySelector('.chart__figure');
@@ -528,6 +590,9 @@
 
       const xKey = xAxisSelect.value;
       const yKey = yAxisSelect.value;
+      document.getElementById('axes-status').textContent = `${xKey.toUpperCase()} ↔ ${yKey.toUpperCase()}`;
+      document.getElementById('params-status').textContent =
+        `p1 ${baseParams.p1} • p2 ${baseParams.p2} • p3 ${baseParams.p3} • p4 ${baseParams.p4} • p5 ${baseParams.p5}`;
       const solutions = buildSolutions(baseParams);
       currentSolutions = solutions;
       resetProfiles();
