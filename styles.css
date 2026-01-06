@@ -403,7 +403,7 @@ section {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .chart__presets {
@@ -444,8 +444,8 @@ section {
   flex-direction: column;
   gap: 14px;
   height: 100%;
-  min-height: 360px;
-  max-height: 360px;
+  min-height: 400px;
+  max-height: none;
   overflow-y: auto;
 }
 
@@ -752,6 +752,8 @@ section {
   }
 
   .chart__controls {
+    height: auto;
+    min-height: 0;
     max-height: none;
   }
 }
