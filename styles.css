@@ -187,6 +187,72 @@ body {
   display: block;
 }
 
+.chart__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.chart__controls {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chart__control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chart__control-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.chart__control label {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.chart__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #e0f2fe;
+  font-weight: 700;
+}
+
+.chart__control input[type="range"] {
+  width: 100%;
+  accent-color: #38bdf8;
+}
+
+.chart__control-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.chart__controls-note {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .chart__legend {
   display: inline-flex;
   align-items: center;
@@ -214,5 +280,9 @@ body {
 
   .chart__card {
     padding: 24px;
+  }
+
+  .chart__body {
+    grid-template-columns: 1fr;
   }
 }
