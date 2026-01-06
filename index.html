@@ -138,32 +138,48 @@
           <div class="chart__control-group">
             <div class="chart__group-title">Axes du graphique</div>
             <div class="chart__axis-selectors">
-              <label class="chart__select-label" for="x-axis-select">Axe X</label>
-              <select id="x-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe X">
-                <option value="g1">g1</option>
-                <option value="g2">g2</option>
-                <option value="g3">g3</option>
-                <option value="g4">g4</option>
-                <option value="g5">g5</option>
-                <option value="g6">g6</option>
-                <option value="g7">g7</option>
-                <option value="g8">g8</option>
-                <option value="g9">g9</option>
-                <option value="g10">g10</option>
-              </select>
-              <label class="chart__select-label" for="y-axis-select">Axe Y</label>
-              <select id="y-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe Y">
-                <option value="g2">g2</option>
-                <option value="g1">g1</option>
-                <option value="g3">g3</option>
-                <option value="g4">g4</option>
-                <option value="g5">g5</option>
-                <option value="g6">g6</option>
-                <option value="g7">g7</option>
-                <option value="g8">g8</option>
-                <option value="g9">g9</option>
-                <option value="g10">g10</option>
-              </select>
+              <div class="chart__axis-control">
+                <div class="chart__axis-header">
+                  <label class="chart__select-label" for="x-axis-select">Axe X</label>
+                  <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe X">
+                    <button type="button" class="chart__scale-button chart__scale-button--active" data-axis-scale="x" data-scale-type="linear">Linéaire</button>
+                    <button type="button" class="chart__scale-button" data-axis-scale="x" data-scale-type="log">Logarithmique</button>
+                  </div>
+                </div>
+                <select id="x-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe X">
+                  <option value="g1">g1</option>
+                  <option value="g2">g2</option>
+                  <option value="g3">g3</option>
+                  <option value="g4">g4</option>
+                  <option value="g5">g5</option>
+                  <option value="g6">g6</option>
+                  <option value="g7">g7</option>
+                  <option value="g8">g8</option>
+                  <option value="g9">g9</option>
+                  <option value="g10">g10</option>
+                </select>
+              </div>
+              <div class="chart__axis-control">
+                <div class="chart__axis-header">
+                  <label class="chart__select-label" for="y-axis-select">Axe Y</label>
+                  <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe Y">
+                    <button type="button" class="chart__scale-button chart__scale-button--active" data-axis-scale="y" data-scale-type="linear">Linéaire</button>
+                    <button type="button" class="chart__scale-button" data-axis-scale="y" data-scale-type="log">Logarithmique</button>
+                  </div>
+                </div>
+                <select id="y-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe Y">
+                  <option value="g2">g2</option>
+                  <option value="g1">g1</option>
+                  <option value="g3">g3</option>
+                  <option value="g4">g4</option>
+                  <option value="g5">g5</option>
+                  <option value="g6">g6</option>
+                  <option value="g7">g7</option>
+                  <option value="g8">g8</option>
+                  <option value="g9">g9</option>
+                  <option value="g10">g10</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -202,6 +218,7 @@
     const profileContent = document.getElementById('profile-content');
     const profileBadge = document.getElementById('profile-badge');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
+    const scaleButtons = Array.from(document.querySelectorAll('[data-axis-scale]'));
 
     const sliders = [
       { id: 'p1', element: document.getElementById('p1-slider'), display: document.getElementById('p1-value') },
@@ -212,6 +229,8 @@
     ];
     const xAxisSelect = document.getElementById('x-axis-select');
     const yAxisSelect = document.getElementById('y-axis-select');
+    let xScaleType = 'linear';
+    let yScaleType = 'linear';
     let selectedScenario = 's1';
     let currentSolutions = [];
     let selectedSolutionIndex = null;
@@ -297,15 +316,22 @@
 
     chartContainer.appendChild(svg);
 
-    const scaleX = (value, domain) => {
-      const range = domain.max - domain.min || 1;
-      return margin.left + (value - domain.min) / range * innerWidth;
-    };
+    function createScale(domain, scaleType, axis) {
+      const normalize = scaleType === 'log'
+        ? (value) => Math.log10(Math.max(value, domain.min))
+        : (value) => value;
 
-    const scaleY = (value, domain) => {
-      const range = domain.max - domain.min || 1;
-      return margin.top + innerHeight - (value - domain.min) / range * innerHeight;
-    };
+      const start = normalize(domain.min);
+      const end = normalize(domain.max);
+      const span = end - start || 1;
+
+      return (value) => {
+        const position = (normalize(value) - start) / span;
+        return axis === 'x'
+          ? margin.left + position * innerWidth
+          : margin.top + innerHeight - position * innerHeight;
+      };
+    }
 
     function clamp(value, min, max) {
       return Math.min(Math.max(value, min), max);
@@ -382,27 +408,60 @@
       return solutions;
     }
 
-    function getDomain(values) {
+    function getDomain(values, scaleType = 'linear') {
       const min = Math.min(...values);
       const max = Math.max(...values);
+
+      if (scaleType === 'log') {
+        const positives = values.filter((value) => value > 0);
+        const smallestPositive = positives.length ? Math.min(...positives) : Math.max(min, 0.1);
+        const safeMin = Math.max(smallestPositive, 0.1);
+        const paddedMin = safeMin / 1.4;
+        const paddedMax = Math.max(max, safeMin * 10) * 1.05;
+        return { min: paddedMin, max: paddedMax };
+      }
+
       const span = max - min;
       const padding = Math.max(span * 0.08, 4);
       return { min: min - padding, max: max + padding };
+    }
+
+    function buildTicks(domain, scaleType = 'linear', tickCount = 5) {
+      if (scaleType === 'log') {
+        const ticks = [];
+        const startExp = Math.floor(Math.log10(domain.min));
+        const endExp = Math.ceil(Math.log10(domain.max));
+
+        for (let exp = startExp; exp <= endExp; exp++) {
+          const value = 10 ** exp;
+          if (value >= domain.min && value <= domain.max) {
+            ticks.push(value);
+          }
+        }
+
+        if (!ticks.includes(domain.max)) {
+          ticks.push(domain.max);
+        }
+
+        return ticks;
+      }
+
+      return Array.from({ length: tickCount + 1 }, (_, i) => domain.min + (domain.max - domain.min) * (i / tickCount));
     }
 
     function formatTick(value) {
       return Math.abs(value) >= 100 ? value.toFixed(0) : value.toFixed(1);
     }
 
-    function renderAxes(xDomain, yDomain, xLabel, yLabel) {
+    function renderAxes(xDomain, yDomain, xLabel, yLabel, xScale, yScale, xType, yType) {
       xTicksGroup.innerHTML = '';
       yTicksGroup.innerHTML = '';
 
-      const tickCount = 5;
+      const xTicks = buildTicks(xDomain, xType);
+      const yTicks = buildTicks(yDomain, yType);
 
-      for (let i = 0; i <= tickCount; i++) {
-        const xValue = xDomain.min + (xDomain.max - xDomain.min) * (i / tickCount);
-        const xPos = scaleX(xValue, xDomain);
+      xTicks.forEach((xValue) => {
+        const xPos = xScale(xValue);
         const xTick = document.createElementNS(svgNS, 'line');
         xTick.setAttribute('x1', xPos);
         xTick.setAttribute('x2', xPos);
@@ -419,11 +478,10 @@
         xTickLabel.setAttribute('font-size', '12');
         xTickLabel.setAttribute('text-anchor', 'middle');
         xTicksGroup.appendChild(xTickLabel);
-      }
+      });
 
-      for (let i = 0; i <= tickCount; i++) {
-        const yValue = yDomain.min + (yDomain.max - yDomain.min) * (i / tickCount);
-        const yPos = scaleY(yValue, yDomain);
+      yTicks.forEach((yValue) => {
+        const yPos = yScale(yValue);
         const yTick = document.createElementNS(svgNS, 'line');
         yTick.setAttribute('x1', margin.left - 6);
         yTick.setAttribute('x2', margin.left);
@@ -440,7 +498,7 @@
         yTickLabel.setAttribute('font-size', '12');
         yTickLabel.setAttribute('text-anchor', 'end');
         yTicksGroup.appendChild(yTickLabel);
-      }
+      });
 
       xAxisLabel.textContent = xLabel;
       yAxisLabel.textContent = yLabel;
@@ -454,12 +512,12 @@
       tooltip.style.top = `${offsetY + 14}px`;
     }
 
-    function renderPoints(points, xKey, yKey, xDomain, yDomain) {
+    function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       pointsGroup.innerHTML = '';
       points.forEach((point, index) => {
         const circle = document.createElementNS(svgNS, 'circle');
-        circle.setAttribute('cx', scaleX(point[xKey], xDomain));
-        circle.setAttribute('cy', scaleY(point[yKey], yDomain));
+        circle.setAttribute('cx', scaleX(point[xKey]));
+        circle.setAttribute('cy', scaleY(point[yKey]));
         circle.setAttribute('r', 7);
         circle.setAttribute('fill', 'url(#pointGradient)');
         circle.setAttribute('stroke', 'rgba(226, 232, 240, 0.2)');
@@ -580,6 +638,14 @@
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 
+    function updateScaleButtons(axis, scaleType) {
+      scaleButtons
+        .filter((button) => button.dataset.axisScale === axis)
+        .forEach((button) => {
+          button.classList.toggle('chart__scale-button--active', button.dataset.scaleType === scaleType);
+        });
+    }
+
     function updateChart() {
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
@@ -594,16 +660,38 @@
       currentSolutions = solutions;
       resetProfiles();
 
-      const xDomain = getDomain(solutions.map(solution => solution[xKey]));
-      const yDomain = getDomain(solutions.map(solution => solution[yKey]));
+      const xDomain = getDomain(solutions.map(solution => solution[xKey]), xScaleType);
+      const yDomain = getDomain(solutions.map(solution => solution[yKey]), yScaleType);
 
-      renderAxes(xDomain, yDomain, xKey.toUpperCase(), yKey.toUpperCase());
-      renderPoints(solutions, xKey, yKey, xDomain, yDomain);
+      const xScale = createScale(xDomain, xScaleType, 'x');
+      const yScale = createScale(yDomain, yScaleType, 'y');
+
+      renderAxes(xDomain, yDomain, xKey.toUpperCase(), yKey.toUpperCase(), xScale, yScale, xScaleType, yScaleType);
+      renderPoints(solutions, xKey, yKey, xScale, yScale);
     }
 
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
     xAxisSelect.addEventListener('change', updateChart);
     yAxisSelect.addEventListener('change', updateChart);
+
+    scaleButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const axis = button.dataset.axisScale;
+        const scaleType = button.dataset.scaleType;
+
+        if (axis === 'x' && scaleType !== xScaleType) {
+          xScaleType = scaleType;
+          updateScaleButtons('x', xScaleType);
+          updateChart();
+        }
+
+        if (axis === 'y' && scaleType !== yScaleType) {
+          yScaleType = scaleType;
+          updateScaleButtons('y', yScaleType);
+          updateChart();
+        }
+      });
+    });
 
     scenarioButtons.forEach((button) => {
       button.addEventListener('click', () => {
