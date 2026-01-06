@@ -216,6 +216,12 @@
     ];
     const xAxisSelect = document.getElementById('x-axis-select');
     const yAxisSelect = document.getElementById('y-axis-select');
+    const axisOptions = Array.from(xAxisSelect.options).map((option) => ({
+      value: option.value,
+      label: option.textContent,
+    }));
+    let inlineXSelect = null;
+    let inlineYSelect = null;
     let selectedScenario = 's1';
     let currentSolutions = [];
     let selectedSolutionIndex = null;
@@ -261,11 +267,19 @@
     xAxisLabel.setAttribute('text-anchor', 'middle');
     xAxisLabel.setAttribute('x', margin.left + innerWidth / 2);
     xAxisLabel.setAttribute('y', margin.top + innerHeight + 36);
+    xAxisLabel.setAttribute('role', 'button');
+    xAxisLabel.setAttribute('tabindex', '0');
+    xAxisLabel.classList.add('chart__axis-label');
+    xAxisLabel.setAttribute('title', 'Cliquer pour changer la grandeur de l\'axe X');
 
     yAxisLabel.setAttribute('fill', 'var(--muted)');
     yAxisLabel.setAttribute('font-size', '12');
     yAxisLabel.setAttribute('text-anchor', 'middle');
     yAxisLabel.setAttribute('transform', `translate(${margin.left - 36} ${margin.top + innerHeight / 2}) rotate(-90)`);
+    yAxisLabel.setAttribute('role', 'button');
+    yAxisLabel.setAttribute('tabindex', '0');
+    yAxisLabel.classList.add('chart__axis-label');
+    yAxisLabel.setAttribute('title', 'Cliquer pour changer la grandeur de l\'axe Y');
 
     axes.appendChild(xTicksGroup);
     axes.appendChild(yTicksGroup);
@@ -299,6 +313,35 @@
     svg.insertBefore(defs, svg.firstChild);
 
     chartContainer.appendChild(svg);
+
+    function createAxisEditor(axisLabel, axisId) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `chart__axis-editor chart__axis-editor--${axisId}`;
+
+      const label = document.createElement('span');
+      label.className = 'chart__axis-editor-label';
+      label.textContent = axisLabel;
+
+      const select = document.createElement('select');
+      select.className = 'chart__axis-editor-select';
+      select.setAttribute('aria-label', `${axisLabel} (raccourci sur le graphique)`);
+
+      axisOptions.forEach(({ value, label: text }) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = text;
+        select.appendChild(option);
+      });
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(select);
+      chartContainer.appendChild(wrapper);
+
+      return select;
+    }
+
+    inlineXSelect = createAxisEditor('Axe X', 'x');
+    inlineYSelect = createAxisEditor('Axe Y', 'y');
 
     const scaleX = (value, domain) => {
       const range = domain.max - domain.min || 1;
@@ -583,6 +626,24 @@
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 
+    function cycleAxis(selectElement) {
+      const { options } = selectElement;
+      const currentIndex = Array.from(options).findIndex((opt) => opt.value === selectElement.value);
+      const nextIndex = (currentIndex + 1) % options.length;
+      selectElement.value = options[nextIndex].value;
+      selectElement.dispatchEvent(new Event('change'));
+    }
+
+    function handleAxisLabelInteraction(labelElement, selectElement) {
+      labelElement.addEventListener('click', () => cycleAxis(selectElement));
+      labelElement.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          cycleAxis(selectElement);
+        }
+      });
+    }
+
     function updateChart() {
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
@@ -593,6 +654,8 @@
 
       const xKey = xAxisSelect.value;
       const yKey = yAxisSelect.value;
+      if (inlineXSelect) inlineXSelect.value = xKey;
+      if (inlineYSelect) inlineYSelect.value = yKey;
       const solutions = buildSolutions(baseParams, selectedScenario);
       currentSolutions = solutions;
       resetProfiles();
@@ -607,6 +670,17 @@
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
     xAxisSelect.addEventListener('change', updateChart);
     yAxisSelect.addEventListener('change', updateChart);
+    inlineXSelect.addEventListener('change', () => {
+      xAxisSelect.value = inlineXSelect.value;
+      updateChart();
+    });
+    inlineYSelect.addEventListener('change', () => {
+      yAxisSelect.value = inlineYSelect.value;
+      updateChart();
+    });
+
+    handleAxisLabelInteraction(xAxisLabel, xAxisSelect);
+    handleAxisLabelInteraction(yAxisLabel, yAxisSelect);
 
     scenarioButtons.forEach((button) => {
       button.addEventListener('click', () => {

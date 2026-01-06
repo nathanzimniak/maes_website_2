@@ -382,6 +382,58 @@ section {
   position: relative;
 }
 
+.chart__axis-editor {
+  position: absolute;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(10px);
+  z-index: 3;
+}
+
+.chart__axis-editor--x {
+  right: 12px;
+  bottom: 12px;
+}
+
+.chart__axis-editor--y {
+  left: 12px;
+  top: 12px;
+}
+
+.chart__axis-editor-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.chart__axis-editor-select {
+  min-width: 110px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.chart__axis-label {
+  cursor: pointer;
+  transition: fill 0.2s ease;
+}
+
+.chart__axis-label:hover,
+.chart__axis-label:focus {
+  outline: none;
+  fill: var(--text);
+}
+
 .chart__figure::after {
   content: '';
   position: absolute;
