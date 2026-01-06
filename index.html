@@ -216,6 +216,12 @@
     ];
     const xAxisSelect = document.getElementById('x-axis-select');
     const yAxisSelect = document.getElementById('y-axis-select');
+    const axisOptions = Array.from(xAxisSelect.options).map((option) => ({
+      value: option.value,
+      label: option.textContent,
+    }));
+    let inlineXSelect = null;
+    let inlineYSelect = null;
     let selectedScenario = 's1';
     let currentSolutions = [];
     let selectedSolutionIndex = null;
@@ -299,6 +305,35 @@
     svg.insertBefore(defs, svg.firstChild);
 
     chartContainer.appendChild(svg);
+
+    function createAxisEditor(axisLabel, axisId) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `chart__axis-editor chart__axis-editor--${axisId}`;
+
+      const label = document.createElement('span');
+      label.className = 'chart__axis-editor-label';
+      label.textContent = axisLabel;
+
+      const select = document.createElement('select');
+      select.className = 'chart__axis-editor-select';
+      select.setAttribute('aria-label', `${axisLabel} (raccourci sur le graphique)`);
+
+      axisOptions.forEach(({ value, label: text }) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = text;
+        select.appendChild(option);
+      });
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(select);
+      chartContainer.appendChild(wrapper);
+
+      return select;
+    }
+
+    inlineXSelect = createAxisEditor('Axe X', 'x');
+    inlineYSelect = createAxisEditor('Axe Y', 'y');
 
     const scaleX = (value, domain) => {
       const range = domain.max - domain.min || 1;
@@ -593,6 +628,8 @@
 
       const xKey = xAxisSelect.value;
       const yKey = yAxisSelect.value;
+      if (inlineXSelect) inlineXSelect.value = xKey;
+      if (inlineYSelect) inlineYSelect.value = yKey;
       const solutions = buildSolutions(baseParams, selectedScenario);
       currentSolutions = solutions;
       resetProfiles();
@@ -607,6 +644,14 @@
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
     xAxisSelect.addEventListener('change', updateChart);
     yAxisSelect.addEventListener('change', updateChart);
+    inlineXSelect.addEventListener('change', () => {
+      xAxisSelect.value = inlineXSelect.value;
+      updateChart();
+    });
+    inlineYSelect.addEventListener('change', () => {
+      yAxisSelect.value = inlineYSelect.value;
+      updateChart();
+    });
 
     scenarioButtons.forEach((button) => {
       button.addEventListener('click', () => {
