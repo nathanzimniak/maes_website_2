@@ -479,7 +479,7 @@ section {
 }
 
 .chart__control-row--toggles {
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 1fr;
 }
 
 .chart__control label {
