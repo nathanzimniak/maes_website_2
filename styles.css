@@ -622,7 +622,7 @@ section {
 .chart__control input[type="range"] {
   width: 100%;
   accent-color: var(--color-text);
-  height: 32px;
+  height: 24px;
   background: transparent;
   appearance: none;
   -webkit-appearance: none;
@@ -630,7 +630,7 @@ section {
 }
 
 .chart__control input[type="range"]::-webkit-slider-runnable-track {
-  height: 6px;
+  height: 4px;
   border-radius: var(--radius);
   background: #d6d7dd;
   box-shadow: none;
@@ -639,9 +639,9 @@ section {
 .chart__control input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
-  margin-top: -5px;
+  width: 12px;
+  height: 12px;
+  margin-top: -4px;
   border-radius: var(--radius);
   background: var(--color-surface);
   border: 2px solid var(--color-text);
@@ -655,15 +655,15 @@ section {
 }
 
 .chart__control input[type="range"]::-moz-range-track {
-  height: 6px;
+  height: 4px;
   border-radius: var(--radius);
   background: #d6d7dd;
   box-shadow: none;
 }
 
 .chart__control input[type="range"]::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border-radius: var(--radius);
   background: var(--color-surface);
   border: 2px solid var(--color-text);
