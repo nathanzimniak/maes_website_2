@@ -496,11 +496,13 @@ section {
 .chart__button-row {
   display: flex;
   gap: 8px;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
+  width: 100%;
 }
 
 .chart__toggle-button {
+  flex: 1;
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.16);
@@ -510,6 +512,7 @@ section {
   letter-spacing: -0.01em;
   cursor: pointer;
   transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+  text-align: center;
 }
 
 .chart__toggle-button:hover {
