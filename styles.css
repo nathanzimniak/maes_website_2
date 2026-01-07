@@ -630,9 +630,9 @@ section {
 }
 
 .chart__axis-row .chart__select {
-  flex: 0 1 120px;
-  max-width: 130px;
-  padding: 6px 8px;
+  flex: 0 0 80px;
+  max-width: 80px;
+  padding: 6px 6px;
   font-size: 0.9rem;
 }
 
