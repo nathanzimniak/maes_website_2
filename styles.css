@@ -621,7 +621,7 @@ section {
 
 .chart__control input[type="range"] {
   width: 100%;
-  accent-color: var(--color-accent);
+  accent-color: var(--color-text);
   height: 32px;
   background: transparent;
   appearance: none;
@@ -644,14 +644,14 @@ section {
   margin-top: -5px;
   border-radius: var(--radius);
   background: var(--color-surface);
-  border: 2px solid var(--color-accent);
+  border: 2px solid var(--color-text);
   box-shadow: none;
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
 .chart__control input[type="range"]:hover::-webkit-slider-thumb {
   transform: scale(1.05);
-  box-shadow: 0 0 0 6px rgba(10, 132, 255, 0.12);
+  box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.12);
 }
 
 .chart__control input[type="range"]::-moz-range-track {
@@ -666,14 +666,14 @@ section {
   height: 16px;
   border-radius: var(--radius);
   background: var(--color-surface);
-  border: 2px solid var(--color-accent);
+  border: 2px solid var(--color-text);
   box-shadow: none;
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
 .chart__control input[type="range"]:hover::-moz-range-thumb {
   transform: scale(1.05);
-  box-shadow: 0 0 0 6px rgba(10, 132, 255, 0.12);
+  box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.12);
 }
 
 .chart__control input[type="range"]:focus-visible {
@@ -681,11 +681,11 @@ section {
 }
 
 .chart__control input[type="range"]:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 6px rgba(10, 132, 255, 0.2);
+  box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.2);
 }
 
 .chart__control input[type="range"]:focus-visible::-moz-range-thumb {
-  box-shadow: 0 0 0 6px rgba(10, 132, 255, 0.2);
+  box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.2);
 }
 
 .chart__controls-note {
