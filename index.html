@@ -188,7 +188,6 @@
           <div>
             <p class="chart__eyebrow chart__eyebrow--sub">Profils associés</p>
           </div>
-          <div id="profile-badge" class="chart__profiles-badge">Aucune sélection</div>
         </div>
         <div id="profile-content" class="chart__profiles-grid">
           <p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>
@@ -214,7 +213,6 @@
     chartContainer.appendChild(tooltip);
 
     const profileContent = document.getElementById('profile-content');
-    const profileBadge = document.getElementById('profile-badge');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
     const scaleButtons = Array.from(document.querySelectorAll('[data-scale-toggle]'));
 
@@ -606,8 +604,6 @@
 
     function renderProfiles(solution, index) {
       const { profiles } = solution;
-      profileBadge.textContent = `Profil ${index + 1} · ${solution.scenario.toUpperCase()}`;
-
       const series = [
         { label: 'Pression P(x)', key: 'pressure', unit: 'kPa', color: '#38bdf8' },
         { label: 'Densité ρ(x)', key: 'density', unit: 'kg/m³', color: '#fbbf24' },
@@ -652,7 +648,6 @@
 
     function resetProfiles() {
       selectedSolutionIndex = null;
-      profileBadge.textContent = 'Aucune sélection';
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 

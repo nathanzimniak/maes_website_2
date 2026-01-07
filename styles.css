@@ -691,16 +691,6 @@ section {
     max-width: 720px;
   }
 
-  .chart__profiles-badge {
-    padding: 10px 14px;
-    border-radius: 999px;
-    background: rgba(56, 189, 248, 0.14);
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    color: #e0f2fe;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-  }
-
   .chart__profiles-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
