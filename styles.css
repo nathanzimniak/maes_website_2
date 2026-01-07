@@ -816,7 +816,7 @@ section {
 }
 
 .chart__eyebrow--sub {
-  background: transparent;
+  background: var(--color-surface);
   color: var(--color-muted);
   border-color: var(--color-line);
   font-weight: 700;
