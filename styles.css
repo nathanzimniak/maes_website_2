@@ -571,7 +571,7 @@ section {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .chart__axis-header {
@@ -617,8 +617,8 @@ section {
 
 .chart__select {
   width: 100%;
-  min-width: 180px;
-  padding: 10px 12px;
+  min-width: 140px;
+  padding: 8px 10px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(15, 23, 42, 0.6);
@@ -627,7 +627,8 @@ section {
 }
 
 .chart__axis-row .chart__select {
-  flex: 1;
+  flex: 0 1 160px;
+  max-width: 180px;
 }
 
 .chart__legend {
@@ -817,5 +818,9 @@ section {
     height: auto;
     min-height: 0;
     max-height: none;
+  }
+
+  .chart__axis-row {
+    flex-wrap: wrap;
   }
 }
