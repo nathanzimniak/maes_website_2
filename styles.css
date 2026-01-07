@@ -621,7 +621,7 @@ section {
 
 .chart__select {
   width: 100%;
-  min-width: 140px;
+  min-width: 70px;
   padding: 8px 10px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -631,8 +631,8 @@ section {
 }
 
 .chart__axis-row .chart__select {
-  flex: 0 0 64px;
-  max-width: 64px;
+  flex: 0 0 32px;
+  max-width: 32px;
   padding: 6px 4px;
   font-size: 0.88rem;
 }
