@@ -627,7 +627,7 @@ section {
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(15, 23, 42, 0.6);
   color: var(--text);
-  font-size: 0.95rem;
+  font-size: 0.7rem;
 }
 
 .chart__axis-row .chart__select {
