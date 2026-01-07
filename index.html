@@ -232,9 +232,8 @@
     let currentSolutions = [];
     let selectedSolutionIndex = null;
 
-    const aspectRatio = 1;
     const width = chartContainer.clientWidth || 720;
-    const height = Math.max(chartContainer.clientHeight, width / aspectRatio);
+    const height = chartContainer.clientHeight || width;
     const margin = { top: 24, right: 24, bottom: 48, left: 48 };
 
     const svgNS = 'http://www.w3.org/2000/svg';
