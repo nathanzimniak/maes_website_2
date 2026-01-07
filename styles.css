@@ -622,8 +622,8 @@ section {
 .chart__select {
   width: 100%;
   min-width: 70px;
-  padding: 4px 5px;
-  border-radius: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(15, 23, 42, 0.6);
   color: var(--text);
@@ -633,8 +633,8 @@ section {
 .chart__axis-row .chart__select {
   flex: 0 0 32px;
   max-width: 32px;
-  padding: 3px 2px;
-  font-size: 0.65rem;
+  padding: 6px 4px;
+  font-size: 0.88rem;
 }
 
 .chart__legend {
