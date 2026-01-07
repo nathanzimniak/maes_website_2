@@ -241,6 +241,7 @@
     let selectedScenario = 's1';
     let currentSolutions = [];
     let selectedSolutionIndex = null;
+    let pinnedSolutionIndex = null;
 
     let width = 0;
     let height = 0;
@@ -565,6 +566,20 @@
       hoveredValues.innerHTML = '<p class="chart__hovered-placeholder">Survolez un point pour afficher g1, g2, g3…</p>';
     }
 
+    function restorePinnedValues() {
+      if (pinnedSolutionIndex === null) {
+        resetHoveredValues();
+        return;
+      }
+
+      const pinned = currentSolutions[pinnedSolutionIndex];
+      if (pinned) {
+        renderHoveredValues(pinned);
+      } else {
+        resetHoveredValues();
+      }
+    }
+
     function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       pointsGroup.innerHTML = '';
       points.forEach((point, index) => {
@@ -599,12 +614,12 @@
 
         circle.addEventListener('pointerleave', () => {
           tooltip.classList.remove('chart__tooltip--visible');
-          resetHoveredValues();
+          restorePinnedValues();
         });
 
         circle.addEventListener('blur', () => {
           tooltip.classList.remove('chart__tooltip--visible');
-          resetHoveredValues();
+          restorePinnedValues();
         });
 
         circle.addEventListener('click', () => {
@@ -679,7 +694,9 @@
 
     function selectSolution(index) {
       selectedSolutionIndex = index;
+      pinnedSolutionIndex = index;
       renderProfiles(currentSolutions[index], index);
+      renderHoveredValues(currentSolutions[index]);
 
       Array.from(pointsGroup.children).forEach((circle, idx) => {
         circle.classList.toggle('chart__point--selected', idx === index);
@@ -688,6 +705,7 @@
 
     function resetProfiles() {
       selectedSolutionIndex = null;
+      pinnedSolutionIndex = null;
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 
@@ -715,7 +733,7 @@
       const solutions = buildSolutions(baseParams, selectedScenario);
       currentSolutions = solutions;
       resetProfiles();
-      resetHoveredValues();
+      restorePinnedValues();
 
       const xDomain = getDomain(solutions.map(solution => solution[xKey]), xScaleType);
       const yDomain = getDomain(solutions.map(solution => solution[yKey]), yScaleType);
