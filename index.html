@@ -328,6 +328,10 @@
       xAxis.setAttribute('y2', margin.top + innerHeight);
       yAxis.setAttribute('y1', margin.top);
       yAxis.setAttribute('y2', margin.top + innerHeight);
+
+      xAxisLabel.setAttribute('x', margin.left + innerWidth / 2);
+      xAxisLabel.setAttribute('y', margin.top + innerHeight + 36);
+      yAxisLabel.setAttribute('transform', `translate(${margin.left - 36} ${margin.top + innerHeight / 2}) rotate(-90)`);
     }
 
     function createScale(domain, scaleType, axis) {
