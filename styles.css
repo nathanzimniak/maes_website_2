@@ -651,7 +651,7 @@ section {
 
 .chart__control input[type="range"]:hover::-webkit-slider-thumb {
   transform: scale(1.05);
-  box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
 }
 
 .chart__control input[type="range"]::-moz-range-track {
@@ -673,7 +673,7 @@ section {
 
 .chart__control input[type="range"]:hover::-moz-range-thumb {
   transform: scale(1.05);
-  box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
 }
 
 .chart__control input[type="range"]:focus-visible {
