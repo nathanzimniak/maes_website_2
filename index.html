@@ -181,6 +181,16 @@
           </div>
         </div>
         <div class="chart__figure" role="img" aria-label="Graphique en nuage de points"></div>
+        <div class="chart__hovered" aria-live="polite">
+          <div class="chart__hovered-header">
+            <div>
+              <p class="chart__eyebrow chart__eyebrow--sub">Grandeurs</p>
+            </div>
+          </div>
+          <div id="hovered-values" class="chart__hovered-body">
+            <p class="chart__hovered-placeholder">Survolez un point pour afficher g1, g2, g3…</p>
+          </div>
+        </div>
       </div>
 
       <div class="chart__profiles" aria-live="polite">
@@ -213,6 +223,7 @@
     chartContainer.appendChild(tooltip);
 
     const profileContent = document.getElementById('profile-content');
+    const hoveredValues = document.getElementById('hovered-values');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
     const scaleButtons = Array.from(document.querySelectorAll('[data-scale-toggle]'));
 
@@ -528,6 +539,32 @@
       tooltip.style.top = `${offsetY + 14}px`;
     }
 
+    function renderHoveredValues(solution) {
+      if (!hoveredValues || !solution) return;
+
+      const rows = Object.entries(solution)
+        .filter(([key]) => key.startsWith('g'))
+        .sort(([a], [b]) => Number(a.slice(1)) - Number(b.slice(1)))
+        .map(([key, value]) => `
+          <li class="chart__hovered-item">
+            <span class="chart__hovered-key">${key}</span>
+            <span class="chart__hovered-value">${value.toFixed(1)}</span>
+          </li>
+        `)
+        .join('');
+
+      hoveredValues.innerHTML = `
+        <ul class="chart__hovered-list">
+          ${rows}
+        </ul>
+      `;
+    }
+
+    function resetHoveredValues() {
+      if (!hoveredValues) return;
+      hoveredValues.innerHTML = '<p class="chart__hovered-placeholder">Survolez un point pour afficher g1, g2, g3…</p>';
+    }
+
     function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       pointsGroup.innerHTML = '';
       points.forEach((point, index) => {
@@ -555,16 +592,19 @@
           tooltip.innerHTML = `<div class="chart__tooltip-title">Point simulé</div><ul class="chart__tooltip-list">${rows}</ul>`;
           tooltip.classList.add('chart__tooltip--visible');
           positionTooltip(event);
+          renderHoveredValues(hovered);
         });
 
         circle.addEventListener('pointermove', positionTooltip);
 
         circle.addEventListener('pointerleave', () => {
           tooltip.classList.remove('chart__tooltip--visible');
+          resetHoveredValues();
         });
 
         circle.addEventListener('blur', () => {
           tooltip.classList.remove('chart__tooltip--visible');
+          resetHoveredValues();
         });
 
         circle.addEventListener('click', () => {
@@ -675,6 +715,7 @@
       const solutions = buildSolutions(baseParams, selectedScenario);
       currentSolutions = solutions;
       resetProfiles();
+      resetHoveredValues();
 
       const xDomain = getDomain(solutions.map(solution => solution[xKey]), xScaleType);
       const yDomain = getDomain(solutions.map(solution => solution[yKey]), yScaleType);
