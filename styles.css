@@ -607,6 +607,13 @@ section {
   box-shadow: none;
 }
 
+.chart__toggle-button--active:hover {
+  background: var(--color-text);
+  border-color: var(--color-text);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
 .chart__pill {
   display: inline;
   min-width: auto;
@@ -763,6 +770,13 @@ section {
   border-color: var(--color-text);
   color: #ffffff;
   box-shadow: none;
+}
+
+.chart__scale-button--active:hover {
+  background: var(--color-text);
+  border-color: var(--color-text);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .chart__select {
