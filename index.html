@@ -192,7 +192,7 @@
           <div>
             <p class="chart__eyebrow chart__eyebrow--sub">Profils associés</p>
           </div>
-          <div id="profile-badge" class="chart__profiles-badge">Aucun point sélectionné</div>
+          <div id="profile-badge" class="chart__profiles-badge">Aucune sélection</div>
         </div>
         <div id="profile-content" class="chart__profiles-grid">
           <p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>
@@ -589,7 +589,7 @@
 
     function renderProfiles(solution, index) {
       const { profiles } = solution;
-      profileBadge.textContent = `Point ${index + 1} · ${solution.scenario.toUpperCase()}`;
+      profileBadge.textContent = `Profil ${index + 1} · ${solution.scenario.toUpperCase()}`;
 
       const series = [
         { label: 'Pression P(x)', key: 'pressure', unit: 'kPa', color: '#38bdf8' },
@@ -635,7 +635,7 @@
 
     function resetProfiles() {
       selectedSolutionIndex = null;
-      profileBadge.textContent = 'Aucun point sélectionné';
+      profileBadge.textContent = 'Aucune sélection';
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 
