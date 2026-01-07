@@ -769,22 +769,6 @@ section {
   font-size: 0.88rem;
 }
 
-.chart__legend {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-
-  .chart__legend-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #38bdf8, #6366f1);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
-  }
-
   .chart__profiles {
     padding: 6px 12px 4px;
     border-radius: 12px;
