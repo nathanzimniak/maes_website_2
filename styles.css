@@ -816,9 +816,10 @@ section {
 }
 
 .chart__eyebrow--sub {
-  background: var(--color-surface);
+  background: transparent;
   color: var(--color-muted);
   border-color: var(--color-line);
+  font-weight: 700;
 }
 
 .chart__profiles-title {
