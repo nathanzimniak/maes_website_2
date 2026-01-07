@@ -790,11 +790,17 @@ section {
   font-size: 0.7rem;
 }
 
-.chart__axis-row .chart__select {
+.chart__axis-row .chart__select--axis {
   flex: 0 0 32px;
   max-width: 32px;
   padding: var(--space-2);
   font-size: 0.88rem;
+}
+
+.chart__scale-toggle .chart__select--scale {
+  min-width: 140px;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
 }
 
 .chart__profiles {

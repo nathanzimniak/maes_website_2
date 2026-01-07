@@ -140,7 +140,7 @@
               <div class="chart__axis-control">
                 <div class="chart__axis-row">
                   <label class="chart__select-label" for="x-axis-select">X</label>
-                  <select id="x-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe X">
+                  <select id="x-axis-select" class="chart__select chart__select--axis" aria-label="Choisir la grandeur pour l'axe X">
                     <option value="g1">g1</option>
                     <option value="g2">g2</option>
                     <option value="g3">g3</option>
@@ -152,15 +152,18 @@
                     <option value="g9">g9</option>
                     <option value="g10">g10</option>
                   </select>
-                  <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe X">
-                    <button type="button" class="chart__scale-button" data-scale-toggle="x" aria-pressed="false">Linéaire</button>
+                  <div class="chart__scale-toggle">
+                    <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
+                      <option value="linear">Linéaire</option>
+                      <option value="log">Logarithmique</option>
+                    </select>
                   </div>
                 </div>
               </div>
               <div class="chart__axis-control">
                 <div class="chart__axis-row">
                   <label class="chart__select-label" for="y-axis-select">Y</label>
-                  <select id="y-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe Y">
+                  <select id="y-axis-select" class="chart__select chart__select--axis" aria-label="Choisir la grandeur pour l'axe Y">
                     <option value="g2">g2</option>
                     <option value="g1">g1</option>
                     <option value="g3">g3</option>
@@ -172,8 +175,11 @@
                     <option value="g9">g9</option>
                     <option value="g10">g10</option>
                   </select>
-                  <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe Y">
-                    <button type="button" class="chart__scale-button" data-scale-toggle="y" aria-pressed="false">Linéaire</button>
+                  <div class="chart__scale-toggle">
+                    <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
+                      <option value="linear">Linéaire</option>
+                      <option value="log">Logarithmique</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -221,7 +227,7 @@
     const profileContent = document.getElementById('profile-content');
     const hoveredValues = document.getElementById('hovered-values');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
-    const scaleButtons = Array.from(document.querySelectorAll('[data-scale-toggle]'));
+    const scaleSelects = Array.from(document.querySelectorAll('[data-scale-select]'));
 
     const sliders = [
       { id: 'p1', element: document.getElementById('p1-slider'), display: document.getElementById('p1-value') },
@@ -705,14 +711,11 @@
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 
-    function updateScaleButton(axis, scaleType) {
-      const button = scaleButtons.find((btn) => btn.dataset.scaleToggle === axis);
-      if (!button) return;
+    function updateScaleSelect(axis, scaleType) {
+      const select = scaleSelects.find((option) => option.dataset.scaleSelect === axis);
+      if (!select) return;
 
-      const isLog = scaleType === 'log';
-      button.textContent = isLog ? 'Logarithmique' : 'Linéaire';
-      button.classList.toggle('chart__scale-button--active', isLog);
-      button.setAttribute('aria-pressed', String(isLog));
+      select.value = scaleType;
     }
 
     function updateChart() {
@@ -745,26 +748,25 @@
     xAxisSelect.addEventListener('change', updateChart);
     yAxisSelect.addEventListener('change', updateChart);
 
-    scaleButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const axis = button.dataset.scaleToggle;
+    scaleSelects.forEach((select) => {
+      select.addEventListener('change', () => {
+        const axis = select.dataset.scaleSelect;
+        const nextScale = select.value;
 
         if (axis === 'x') {
-          xScaleType = xScaleType === 'linear' ? 'log' : 'linear';
-          updateScaleButton('x', xScaleType);
+          xScaleType = nextScale;
         }
 
         if (axis === 'y') {
-          yScaleType = yScaleType === 'linear' ? 'log' : 'linear';
-          updateScaleButton('y', yScaleType);
+          yScaleType = nextScale;
         }
 
         updateChart();
       });
     });
 
-    updateScaleButton('x', xScaleType);
-    updateScaleButton('y', yScaleType);
+    updateScaleSelect('x', xScaleType);
+    updateScaleSelect('y', yScaleType);
 
     scenarioButtons.forEach((button) => {
       button.addEventListener('click', () => {
