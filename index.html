@@ -140,12 +140,7 @@
             <div class="chart__axis-selectors">
               <div class="chart__axis-control">
                 <div class="chart__axis-row">
-                  <div class="chart__axis-header">
-                    <label class="chart__select-label" for="x-axis-select">Axe X</label>
-                    <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe X">
-                      <button type="button" class="chart__scale-button" data-scale-toggle="x" aria-pressed="false">Linéaire</button>
-                    </div>
-                  </div>
+                  <label class="chart__select-label" for="x-axis-select">Axe X</label>
                   <select id="x-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe X">
                     <option value="g1">g1</option>
                     <option value="g2">g2</option>
@@ -158,16 +153,14 @@
                     <option value="g9">g9</option>
                     <option value="g10">g10</option>
                   </select>
+                  <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe X">
+                    <button type="button" class="chart__scale-button" data-scale-toggle="x" aria-pressed="false">Linéaire</button>
+                  </div>
                 </div>
               </div>
               <div class="chart__axis-control">
                 <div class="chart__axis-row">
-                  <div class="chart__axis-header">
-                    <label class="chart__select-label" for="y-axis-select">Axe Y</label>
-                    <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe Y">
-                      <button type="button" class="chart__scale-button" data-scale-toggle="y" aria-pressed="false">Linéaire</button>
-                    </div>
-                  </div>
+                  <label class="chart__select-label" for="y-axis-select">Axe Y</label>
                   <select id="y-axis-select" class="chart__select" aria-label="Choisir la grandeur pour l'axe Y">
                     <option value="g2">g2</option>
                     <option value="g1">g1</option>
@@ -180,6 +173,9 @@
                     <option value="g9">g9</option>
                     <option value="g10">g10</option>
                   </select>
+                  <div class="chart__scale-toggle" role="group" aria-label="Échelle de l'axe Y">
+                    <button type="button" class="chart__scale-button" data-scale-toggle="y" aria-pressed="false">Linéaire</button>
+                  </div>
                 </div>
               </div>
             </div>
