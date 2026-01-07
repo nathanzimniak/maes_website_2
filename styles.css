@@ -592,12 +592,14 @@ section {
 
 .chart__scale-button {
   padding: 6px 10px;
+  min-width: 140px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: rgba(255, 255, 255, 0.05);
   color: var(--text);
   font-weight: 700;
   font-size: 0.9rem;
+  text-align: center;
   cursor: pointer;
   transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
 }
@@ -627,8 +629,8 @@ section {
 }
 
 .chart__axis-row .chart__select {
-  flex: 0 1 160px;
-  max-width: 180px;
+  flex: 0 1 140px;
+  max-width: 150px;
 }
 
 .chart__legend {
