@@ -571,7 +571,7 @@ section {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .chart__axis-header {
@@ -817,5 +817,9 @@ section {
     height: auto;
     min-height: 0;
     max-height: none;
+  }
+
+  .chart__axis-row {
+    flex-wrap: wrap;
   }
 }
