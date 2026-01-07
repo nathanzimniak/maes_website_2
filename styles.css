@@ -632,7 +632,7 @@ section {
 .chart__control input[type="range"]::-webkit-slider-runnable-track {
   height: 4px;
   border-radius: var(--radius);
-  background: #d6d7dd;
+  background: #000000;
   box-shadow: none;
 }
 
@@ -657,7 +657,7 @@ section {
 .chart__control input[type="range"]::-moz-range-track {
   height: 4px;
   border-radius: var(--radius);
-  background: #d6d7dd;
+  background: #000000;
   box-shadow: none;
 }
 
