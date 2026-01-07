@@ -208,6 +208,7 @@
 
   <script>
     const chartContainer = document.querySelector('.chart__figure');
+    const chartControls = document.querySelector('.chart__controls');
     const tooltip = document.createElement('div');
     tooltip.className = 'chart__tooltip';
     chartContainer.appendChild(tooltip);
@@ -232,9 +233,8 @@
     let currentSolutions = [];
     let selectedSolutionIndex = null;
 
-    const aspectRatio = 1;
-    const width = chartContainer.clientWidth || 720;
-    const height = Math.max(chartContainer.clientHeight, width / aspectRatio);
+    let width = 0;
+    let height = 0;
     const margin = { top: 24, right: 24, bottom: 48, left: 48 };
 
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -242,8 +242,8 @@
     svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
     svg.setAttribute('role', 'presentation');
 
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
+    let innerWidth = 0;
+    let innerHeight = 0;
 
     const axes = document.createElementNS(svgNS, 'g');
     axes.setAttribute('stroke', 'rgba(226, 232, 240, 0.4)');
@@ -260,8 +260,6 @@
     const yAxis = document.createElementNS(svgNS, 'line');
     yAxis.setAttribute('x1', margin.left);
     yAxis.setAttribute('x2', margin.left);
-    yAxis.setAttribute('y1', margin.top);
-    yAxis.setAttribute('y2', margin.top + innerHeight);
     axes.appendChild(yAxis);
 
     const xTicksGroup = document.createElementNS(svgNS, 'g');
@@ -312,6 +310,25 @@
     svg.insertBefore(defs, svg.firstChild);
 
     chartContainer.appendChild(svg);
+
+    function resizeChart() {
+      if (chartControls) {
+        chartContainer.style.height = `${chartControls.offsetHeight}px`;
+      }
+
+      width = chartContainer.clientWidth || 720;
+      height = chartContainer.clientHeight || 320;
+      innerWidth = width - margin.left - margin.right;
+      innerHeight = height - margin.top - margin.bottom;
+
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+      xAxis.setAttribute('x2', margin.left + innerWidth);
+      xAxis.setAttribute('y1', margin.top + innerHeight);
+      xAxis.setAttribute('y2', margin.top + innerHeight);
+      yAxis.setAttribute('y1', margin.top);
+      yAxis.setAttribute('y2', margin.top + innerHeight);
+    }
 
     function createScale(domain, scaleType, axis) {
       const normalize = scaleType === 'log'
@@ -646,6 +663,7 @@
     }
 
     function updateChart() {
+      resizeChart();
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
         slider.display.textContent = value.toFixed(0);
@@ -706,6 +724,8 @@
         updateChart();
       });
     });
+
+    window.addEventListener('resize', updateChart);
 
     updateChart();
   </script>
