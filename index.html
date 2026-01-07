@@ -181,6 +181,15 @@
           </div>
         </div>
         <div class="chart__figure" role="img" aria-label="Graphique en nuage de points"></div>
+        <div class="chart__details" aria-live="polite">
+          <div class="chart__details-header">
+            <p class="chart__eyebrow chart__eyebrow--sub">Point survolé</p>
+            <h3 class="chart__details-title">Grandeurs g1 à g10</h3>
+          </div>
+          <div id="hovered-values" class="chart__details-content">
+            <p class="chart__details-placeholder">Survolez un point pour afficher les grandeurs.</p>
+          </div>
+        </div>
       </div>
 
       <div class="chart__profiles" aria-live="polite">
@@ -215,6 +224,8 @@
     const profileContent = document.getElementById('profile-content');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
     const scaleButtons = Array.from(document.querySelectorAll('[data-scale-toggle]'));
+    const hoveredValuesContainer = document.getElementById('hovered-values');
+    const gKeys = Array.from({ length: 10 }, (_, index) => `g${index + 1}`);
 
     const sliders = [
       { id: 'p1', element: document.getElementById('p1-slider'), display: document.getElementById('p1-value') },
@@ -555,16 +566,19 @@
           tooltip.innerHTML = `<div class="chart__tooltip-title">Point simulé</div><ul class="chart__tooltip-list">${rows}</ul>`;
           tooltip.classList.add('chart__tooltip--visible');
           positionTooltip(event);
+          renderHoveredDetails(hovered);
         });
 
         circle.addEventListener('pointermove', positionTooltip);
 
         circle.addEventListener('pointerleave', () => {
           tooltip.classList.remove('chart__tooltip--visible');
+          resetHoveredDetails();
         });
 
         circle.addEventListener('blur', () => {
           tooltip.classList.remove('chart__tooltip--visible');
+          resetHoveredDetails();
         });
 
         circle.addEventListener('click', () => {
@@ -651,6 +665,28 @@
       profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
     }
 
+    function renderHoveredDetails(solution) {
+      if (!hoveredValuesContainer) return;
+
+      const rows = gKeys
+        .map((key) => {
+          const value = solution[key];
+          return `<li><span class="chart__details-key">${key}</span><span class="chart__details-value">${value.toFixed(1)}</span></li>`;
+        })
+        .join('');
+
+      hoveredValuesContainer.innerHTML = `
+        <ul class="chart__details-list">
+          ${rows}
+        </ul>
+      `;
+    }
+
+    function resetHoveredDetails() {
+      if (!hoveredValuesContainer) return;
+      hoveredValuesContainer.innerHTML = '<p class="chart__details-placeholder">Survolez un point pour afficher les grandeurs.</p>';
+    }
+
     function updateScaleButton(axis, scaleType) {
       const button = scaleButtons.find((btn) => btn.dataset.scaleToggle === axis);
       if (!button) return;
@@ -675,6 +711,7 @@
       const solutions = buildSolutions(baseParams, selectedScenario);
       currentSolutions = solutions;
       resetProfiles();
+      resetHoveredDetails();
 
       const xDomain = getDomain(solutions.map(solution => solution[xKey]), xScaleType);
       const yDomain = getDomain(solutions.map(solution => solution[yKey]), yScaleType);
