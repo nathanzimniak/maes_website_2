@@ -585,6 +585,7 @@ section {
 
 .chart__select-label {
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .chart__scale-toggle {
