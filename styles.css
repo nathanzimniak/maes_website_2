@@ -373,7 +373,8 @@ section {
 .chart__figure {
   width: 100%;
   max-width: none;
-  height: 320px;
+  height: 100%;
+  min-height: 0;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.07), transparent 35%),
