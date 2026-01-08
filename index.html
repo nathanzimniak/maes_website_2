@@ -585,12 +585,20 @@
 
         circle.addEventListener('pointerenter', (event) => {
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
-          const rows = Object.entries(hovered)
-            .filter(([key]) => key.startsWith('g'))
-            .map(([key, value]) => `<li><span class="chart__tooltip-key">${key}</span><span class="chart__tooltip-value">${value.toFixed(1)}</span></li>`) 
-            .join('');
+          const xValue = hovered[xKey];
+          const yValue = hovered[yKey];
+          const rows = `
+            <li>
+              <span class="chart__tooltip-key">${xKey.toUpperCase()}</span>
+              <span class="chart__tooltip-value">${xValue.toFixed(1)}</span>
+            </li>
+            <li>
+              <span class="chart__tooltip-key">${yKey.toUpperCase()}</span>
+              <span class="chart__tooltip-value">${yValue.toFixed(1)}</span>
+            </li>
+          `;
 
-          tooltip.innerHTML = `<div class="chart__tooltip-title">Point simulé</div><ul class="chart__tooltip-list">${rows}</ul>`;
+          tooltip.innerHTML = `<div class="chart__tooltip-title">Coordonnées du point</div><ul class="chart__tooltip-list">${rows}</ul>`;
           tooltip.classList.add('chart__tooltip--visible');
           positionTooltip(event);
           renderHoveredValues(hovered);
