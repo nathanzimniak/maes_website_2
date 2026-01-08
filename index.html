@@ -280,12 +280,14 @@
     const yAxisLabel = document.createElementNS(svgNS, 'text');
 
     xAxisLabel.setAttribute('fill', 'var(--color-axis-label)');
+    xAxisLabel.setAttribute('stroke', 'none');
     xAxisLabel.setAttribute('font-size', '12');
     xAxisLabel.setAttribute('text-anchor', 'middle');
     xAxisLabel.setAttribute('x', margin.left + innerWidth / 2);
     xAxisLabel.setAttribute('y', margin.top + innerHeight + 36);
 
     yAxisLabel.setAttribute('fill', 'var(--color-axis-label)');
+    yAxisLabel.setAttribute('stroke', 'none');
     yAxisLabel.setAttribute('font-size', '12');
     yAxisLabel.setAttribute('text-anchor', 'middle');
     yAxisLabel.setAttribute('transform', `translate(${margin.left - 36} ${margin.top + innerHeight / 2}) rotate(-90)`);
@@ -484,6 +486,7 @@
         xTickLabel.setAttribute('x', xPos);
         xTickLabel.setAttribute('y', margin.top + innerHeight + 22);
         xTickLabel.setAttribute('fill', 'var(--color-axis-label)');
+        xTickLabel.setAttribute('stroke', 'none');
         xTickLabel.setAttribute('font-size', '12');
         xTickLabel.setAttribute('text-anchor', 'middle');
         xTicksGroup.appendChild(xTickLabel);
@@ -504,6 +507,7 @@
         yTickLabel.setAttribute('x', margin.left - 12);
         yTickLabel.setAttribute('y', yPos + 4);
         yTickLabel.setAttribute('fill', 'var(--color-axis-label)');
+        yTickLabel.setAttribute('stroke', 'none');
         yTickLabel.setAttribute('font-size', '12');
         yTickLabel.setAttribute('text-anchor', 'end');
         yTicksGroup.appendChild(yTickLabel);
