@@ -587,7 +587,7 @@ section {
 .chart__control-group .chart__eyebrow {
   align-self: flex-start;
   margin: 0;
-  padding: 0 var(--space-2);
+  padding: var(--space-2) var(--space-3);
 }
 
 .chart__group-title {
