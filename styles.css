@@ -364,11 +364,6 @@ section {
   margin-top: var(--space-1);
 }
 
-.chart__header h2 {
-  margin: var(--space-2) 0 var(--space-2);
-  letter-spacing: -0.01em;
-}
-
 .chart__eyebrow {
   display: inline-flex;
   padding: var(--space-2) var(--space-3);
