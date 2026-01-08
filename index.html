@@ -190,11 +190,11 @@
         <div class="chart__hovered" aria-live="polite">
           <div class="chart__hovered-header">
             <div>
-              <p class="chart__eyebrow chart__eyebrow--sub">Grandeurs</p>
+              <p class="chart__eyebrow chart__eyebrow--sub">Coordonnées</p>
             </div>
           </div>
           <div id="hovered-values" class="chart__hovered-body">
-            <p class="chart__hovered-placeholder">Survolez un point pour afficher g1, g2, g3…</p>
+            <p class="chart__hovered-placeholder">Survolez un point pour afficher ses coordonnées.</p>
           </div>
         </div>
       </div>
@@ -220,9 +220,6 @@
   <script>
     const chartContainer = document.querySelector('.chart__figure');
     const chartControls = document.querySelector('.chart__controls');
-    const tooltip = document.createElement('div');
-    tooltip.className = 'chart__tooltip';
-    chartContainer.appendChild(tooltip);
 
     const profileContent = document.getElementById('profile-content');
     const hoveredValues = document.getElementById('hovered-values');
@@ -244,6 +241,8 @@
     let currentSolutions = [];
     let selectedSolutionIndex = null;
     let pinnedSolutionIndex = null;
+    let currentXKey = xAxisSelect.value;
+    let currentYKey = yAxisSelect.value;
 
     let width = 0;
     let height = 0;
@@ -517,24 +516,17 @@
       yAxisLabel.textContent = yLabel;
     }
 
-    function positionTooltip(event) {
-      const bounds = chartContainer.getBoundingClientRect();
-      const offsetX = event.clientX - bounds.left;
-      const offsetY = event.clientY - bounds.top;
-      tooltip.style.left = `${offsetX + 14}px`;
-      tooltip.style.top = `${offsetY + 14}px`;
-    }
-
     function renderHoveredValues(solution) {
       if (!hoveredValues || !solution) return;
 
-      const rows = Object.entries(solution)
-        .filter(([key]) => key.startsWith('g'))
-        .sort(([a], [b]) => Number(a.slice(1)) - Number(b.slice(1)))
-        .map(([key, value]) => `
+      const rows = [
+        { label: currentXKey.toUpperCase(), value: solution[currentXKey] },
+        { label: currentYKey.toUpperCase(), value: solution[currentYKey] },
+      ]
+        .map(({ label, value }) => `
           <li class="chart__hovered-item">
-            <span class="chart__hovered-key">${key}</span>
-            <span class="chart__hovered-value">${value.toFixed(1)}</span>
+            <span class="chart__hovered-key">${label}</span>
+            <span class="chart__hovered-value">${value.toFixed(2)}</span>
           </li>
         `)
         .join('');
@@ -548,7 +540,7 @@
 
     function resetHoveredValues() {
       if (!hoveredValues) return;
-      hoveredValues.innerHTML = '<p class="chart__hovered-placeholder">Survolez un point pour afficher g1, g2, g3…</p>';
+      hoveredValues.innerHTML = '<p class="chart__hovered-placeholder">Survolez un point pour afficher ses coordonnées.</p>';
     }
 
     function restorePinnedValues() {
@@ -583,29 +575,22 @@
           circle.classList.add('chart__point--selected');
         }
 
-        circle.addEventListener('pointerenter', (event) => {
+        circle.addEventListener('pointerenter', () => {
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
-          const rows = Object.entries(hovered)
-            .filter(([key]) => key.startsWith('g'))
-            .map(([key, value]) => `<li><span class="chart__tooltip-key">${key}</span><span class="chart__tooltip-value">${value.toFixed(1)}</span></li>`) 
-            .join('');
-
-          tooltip.innerHTML = `<div class="chart__tooltip-title">Point simulé</div><ul class="chart__tooltip-list">${rows}</ul>`;
-          tooltip.classList.add('chart__tooltip--visible');
-          positionTooltip(event);
           renderHoveredValues(hovered);
         });
 
-        circle.addEventListener('pointermove', positionTooltip);
-
         circle.addEventListener('pointerleave', () => {
-          tooltip.classList.remove('chart__tooltip--visible');
           restorePinnedValues();
         });
 
         circle.addEventListener('blur', () => {
-          tooltip.classList.remove('chart__tooltip--visible');
           restorePinnedValues();
+        });
+
+        circle.addEventListener('focus', () => {
+          const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
+          renderHoveredValues(hovered);
         });
 
         circle.addEventListener('click', () => {
@@ -713,6 +698,8 @@
 
       const xKey = xAxisSelect.value;
       const yKey = yAxisSelect.value;
+      currentXKey = xKey;
+      currentYKey = yKey;
       const solutions = buildSolutions(baseParams, selectedScenario);
       currentSolutions = solutions;
       resetProfiles();
