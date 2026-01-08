@@ -438,7 +438,7 @@ section {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-2) var(--space-3);
 }
 
@@ -448,8 +448,8 @@ section {
   align-items: center;
   padding: var(--space-2);
   border-radius: var(--radius);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
+  background: transparent;
+  border: none;
 }
 
 .chart__hovered-key {
