@@ -569,13 +569,12 @@
       pointsGroup.innerHTML = '';
       points.forEach((point, index) => {
         const circle = document.createElementNS(svgNS, 'circle');
+        circle.classList.add('chart__point');
         circle.setAttribute('cx', scaleX(point[xKey]));
         circle.setAttribute('cy', scaleY(point[yKey]));
         circle.setAttribute('r', 7);
         circle.setAttribute('fill', '#7dd3fc');
         circle.setAttribute('fill-opacity', '0.7');
-        circle.setAttribute('stroke', 'rgba(226, 232, 240, 0.2)');
-        circle.setAttribute('stroke-width', '1.5');
         circle.dataset.solutionIndex = index;
         circle.setAttribute('tabindex', '0');
 

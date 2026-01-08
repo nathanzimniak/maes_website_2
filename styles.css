@@ -881,6 +881,12 @@ section {
   border: 1px solid var(--color-line);
 }
 
+.chart__point {
+  stroke: rgba(15, 23, 42, 0.75);
+  stroke-width: 1.6;
+  paint-order: stroke;
+}
+
 .chart__point--selected {
   stroke: #111827;
   stroke-width: 2.4;
