@@ -398,7 +398,6 @@ section {
   min-height: 0;
   padding: var(--space-4);
   border-radius: var(--radius);
-  border: 1px solid var(--color-line);
   background: var(--color-surface-muted);
   overflow: hidden;
   position: relative;
@@ -409,7 +408,6 @@ section {
 .chart__hovered {
   padding: var(--space-4);
   border-radius: var(--radius);
-  border: 1px solid var(--color-line);
   background: var(--color-surface-subtle);
   box-shadow: none;
   display: flex;
@@ -517,7 +515,6 @@ section {
 .chart__controls {
   padding: var(--space-4);
   border-radius: var(--radius);
-  border: 1px solid var(--color-line);
   background: var(--color-surface-subtle);
   box-shadow: none;
   display: flex;
@@ -808,7 +805,6 @@ section {
 .chart__profiles {
   padding: var(--space-2) var(--space-4) var(--space-2);
   border-radius: var(--radius);
-  border: 1px solid var(--color-line);
   background: var(--color-surface-subtle);
   box-shadow: none;
   display: grid;
