@@ -300,27 +300,6 @@
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
 
-    const defs = document.createElementNS(svgNS, 'defs');
-    const gradient = document.createElementNS(svgNS, 'linearGradient');
-    gradient.setAttribute('id', 'pointGradient');
-    gradient.setAttribute('x1', '0%');
-    gradient.setAttribute('y1', '0%');
-    gradient.setAttribute('x2', '100%');
-    gradient.setAttribute('y2', '100%');
-
-    const stop1 = document.createElementNS(svgNS, 'stop');
-    stop1.setAttribute('offset', '0%');
-    stop1.setAttribute('stop-color', '#38bdf8');
-    gradient.appendChild(stop1);
-
-    const stop2 = document.createElementNS(svgNS, 'stop');
-    stop2.setAttribute('offset', '100%');
-    stop2.setAttribute('stop-color', '#6366f1');
-    gradient.appendChild(stop2);
-
-    defs.appendChild(gradient);
-    svg.insertBefore(defs, svg.firstChild);
-
     chartContainer.appendChild(svg);
 
     function resizeChart() {
@@ -589,7 +568,8 @@
         circle.setAttribute('cx', scaleX(point[xKey]));
         circle.setAttribute('cy', scaleY(point[yKey]));
         circle.setAttribute('r', 7);
-        circle.setAttribute('fill', 'url(#pointGradient)');
+        circle.setAttribute('fill', '#2563eb');
+        circle.setAttribute('fill-opacity', '0.7');
         circle.setAttribute('stroke', 'rgba(226, 232, 240, 0.2)');
         circle.setAttribute('stroke-width', '1.5');
         circle.dataset.solutionIndex = index;
