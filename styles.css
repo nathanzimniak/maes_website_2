@@ -889,6 +889,14 @@ section {
   stroke: var(--point-color);
   stroke-opacity: 1;
   stroke-width: 3.0;
+  transform-origin: center;
+  transform-box: fill-box;
+  transition: transform 150ms ease;
+}
+
+.chart__point:hover,
+.chart__point:focus-visible {
+  transform: scale(1.35);
 }
 
 .chart__point--selected {
