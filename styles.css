@@ -900,6 +900,56 @@ section {
   stroke-width: 2.4;
 }
 
+.chart__tooltip {
+  position: absolute;
+  min-width: 160px;
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-float);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 2;
+}
+
+.chart__tooltip--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chart__tooltip-title {
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.01em;
+}
+
+.chart__tooltip-rows {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.chart__tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.chart__tooltip-key {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.chart__tooltip-value {
+  text-align: right;
+  display: inline-block;
+  min-width: 46px;
+  font-weight: 700;
+}
+
 @media (max-width: 640px) {
   .hero {
     padding: var(--space-9) var(--space-4) var(--space-8);
