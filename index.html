@@ -218,6 +218,7 @@
   <script>
     const chartContainer = document.querySelector('.chart__figure');
     const chartControls = document.querySelector('.chart__controls');
+    const hoveredPanel = document.querySelector('.chart__hovered');
     const tooltip = document.createElement('div');
     tooltip.className = 'chart__tooltip';
     chartContainer.appendChild(tooltip);
@@ -305,6 +306,9 @@
     function resizeChart() {
       if (chartControls) {
         chartContainer.style.height = `${chartControls.offsetHeight}px`;
+        if (hoveredPanel) {
+          hoveredPanel.style.height = `${chartControls.offsetHeight}px`;
+        }
       }
 
       width = chartContainer.clientWidth || 720;

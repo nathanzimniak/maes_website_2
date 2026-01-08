@@ -414,6 +414,8 @@ section {
   flex-direction: column;
   gap: var(--space-3);
   grid-column: 3;
+  height: 100%;
+  min-height: 0;
 }
 
 .chart__hovered-header {
@@ -425,6 +427,9 @@ section {
 
 .chart__hovered-body {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .chart__hovered-placeholder {
@@ -438,8 +443,12 @@ section {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-2) var(--space-3);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: var(--space-1);
 }
 
 .chart__hovered-item {
@@ -448,8 +457,8 @@ section {
   align-items: center;
   padding: var(--space-2);
   border-radius: var(--radius);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
+  background: transparent;
+  border: none;
 }
 
 .chart__hovered-key {
