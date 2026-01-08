@@ -450,6 +450,23 @@ section {
   min-height: 0;
   overflow-y: auto;
   padding-right: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+
+.chart__hovered-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chart__hovered-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chart__hovered-list::-webkit-scrollbar-thumb {
+  background-color: var(--color-line);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .chart__hovered-item {
