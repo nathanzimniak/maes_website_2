@@ -577,21 +577,6 @@
 
         circle.addEventListener('pointerenter', () => {
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
-          tooltip.innerHTML = `
-            <div class="chart__tooltip-title">Coordonnées</div>
-            <div class="chart__tooltip-rows">
-              <div class="chart__tooltip-row">
-                <span class="chart__tooltip-key">${currentXKey.toUpperCase()}</span>
-                <span class="chart__tooltip-value">${hovered[currentXKey].toFixed(2)}</span>
-              </div>
-              <div class="chart__tooltip-row">
-                <span class="chart__tooltip-key">${currentYKey.toUpperCase()}</span>
-                <span class="chart__tooltip-value">${hovered[currentYKey].toFixed(2)}</span>
-              </div>
-            </div>
-          `;
-          tooltip.classList.add('chart__tooltip--visible');
-          positionTooltip(event);
           renderHoveredValues(hovered);
         });
 
