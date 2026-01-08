@@ -902,8 +902,8 @@ section {
 
 .chart__tooltip {
   position: absolute;
-  min-width: 220px;
-  padding: var(--space-3) var(--space-4);
+  min-width: 160px;
+  padding: var(--space-3);
   border-radius: var(--radius);
   border: 1px solid var(--color-line);
   background: var(--color-surface);
@@ -927,13 +927,15 @@ section {
   letter-spacing: -0.01em;
 }
 
-.chart__tooltip-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.chart__tooltip-rows {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-1) var(--space-3);
+  gap: var(--space-1);
+}
+
+.chart__tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
 }
 
 .chart__tooltip-key {
@@ -944,7 +946,8 @@ section {
 .chart__tooltip-value {
   text-align: right;
   display: inline-block;
-  min-width: 42px;
+  min-width: 46px;
+  font-weight: 700;
 }
 
 @media (max-width: 640px) {
