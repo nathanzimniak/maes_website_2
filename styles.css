@@ -522,7 +522,7 @@ section {
   box-shadow: none;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-7);
   height: 100%;
   min-height: 400px;
   max-height: none;
