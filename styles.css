@@ -903,8 +903,6 @@ section {
 }
 
 .chart__point--selected {
-  stroke: #111827;
-  stroke-width: 3.0;
   transform: scale(1.35);
 }
 
