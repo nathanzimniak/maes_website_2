@@ -120,10 +120,10 @@
               </div>
               <div class="chart__control">
                 <div class="chart__control-row chart__control-row--toggles">
-                  <div class="chart__button-row" role="group" aria-label="Choisir super-SM, super-A ou super-FM">
-                    <button type="button" class="chart__toggle-button chart__toggle-button--active" data-scenario="super-SM">super-SM</button>
-                    <button type="button" class="chart__toggle-button" data-scenario="super-A">super-A</button>
-                    <button type="button" class="chart__toggle-button" data-scenario="super-FM">super-FM</button>
+                  <div class="chart__button-row" role="group" aria-label="Choisir Super-SM, Super-A ou Super-FM">
+                    <button type="button" class="chart__toggle-button chart__toggle-button--active" data-scenario="Super-SM">Super-SM</button>
+                    <button type="button" class="chart__toggle-button" data-scenario="Super-A">Super-A</button>
+                    <button type="button" class="chart__toggle-button" data-scenario="Super-FM">Super-FM</button>
                   </div>
                 </div>
               </div>
@@ -235,7 +235,7 @@
     const yAxisSelect = document.getElementById('y-axis-select');
     let xScaleType = 'linear';
     let yScaleType = 'linear';
-    let selectedScenario = 'super-SM';
+    let selectedScenario = 'Super-SM';
     let currentSolutions = [];
     let selectedSolutionIndex = null;
     let pinnedSolutionIndex = null;
@@ -349,7 +349,7 @@
     function buildProfiles(base) {
       const sampleCount = 24;
       const xValues = Array.from({ length: sampleCount }, (_, i) => Number(((i / (sampleCount - 1)) * 10).toFixed(2)));
-      const scenarioShift = base.scenario === 'super-A' ? 6 : base.scenario === 'super-FM' ? -4 : 0;
+      const scenarioShift = base.scenario === 'Super-A' ? 6 : base.scenario === 'Super-FM' ? -4 : 0;
 
       const pressure = xValues.map((x) => {
         return clamp(85 + scenarioShift + 0.5 * base.p1 - 0.3 * base.p3 + Math.sin(x / 1.8 + base.p2 / 60) * 9 + (Math.random() - 0.5) * 2, 40, 180);
@@ -372,7 +372,7 @@
       const numericParams = Object.fromEntries(
         Object.entries(baseParams).filter(([key]) => key.startsWith('p'))
       );
-      const scenarioOffset = scenario === 'super-A' ? 12 : scenario === 'super-FM' ? -8 : 0;
+      const scenarioOffset = scenario === 'Super-A' ? 12 : scenario === 'Super-FM' ? -8 : 0;
 
       for (let i = 0; i < sampleCount; i++) {
         const jittered = Object.fromEntries(
