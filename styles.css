@@ -825,7 +825,8 @@ section {
   background: var(--color-surface);
   color: var(--color-muted);
   border-color: var(--color-line);
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 0.12em;
 }
 
 .chart__profiles-title {
