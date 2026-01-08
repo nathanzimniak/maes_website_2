@@ -586,8 +586,8 @@ section {
 
 .chart__control-group .chart__eyebrow {
   align-self: flex-start;
-  margin: 0 0 var(--space-0);
-  padding: var(--space-1) var(--space-2);
+  margin: 0;
+  padding: 0 var(--space-2);
 }
 
 .chart__group-title {
@@ -599,6 +599,7 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: var(--space-2);
+  margin-top: calc(-1 * var(--space-2));
 }
 
 .chart__control-row {
