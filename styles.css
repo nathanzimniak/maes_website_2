@@ -711,7 +711,7 @@ section {
 .chart__axis-row {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-6);
   flex-wrap: nowrap;
   width: 100%;
 }
