@@ -906,6 +906,8 @@ section {
 .chart__tooltip--visible {
   opacity: 1;
   transform: translateY(0);
+  border: none;
+  box-shadow: none;
 }
 
 .chart__tooltip-title {
