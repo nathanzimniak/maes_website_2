@@ -731,7 +731,7 @@ section {
 .chart__scale-toggle {
   display: inline-flex;
   gap: var(--space-2);
-  margin-left: auto;
+  margin-left: var(--space-4);
 }
 
 .chart__scale-button {
