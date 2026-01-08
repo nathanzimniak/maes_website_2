@@ -131,10 +131,11 @@
               </div>
             </div>
           </div>
-
-          <div class="chart__control-group">
-            <p class="chart__eyebrow chart__eyebrow--sub">Axes du graphique</p>
-            <div class="chart__axis-selectors">
+        </div>
+        <div class="chart__figure" role="img" aria-label="Graphique en nuage de points">
+          <div class="chart__axis-overlay" aria-label="Réglages rapides des axes">
+            <p class="chart__axis-title">Axes</p>
+            <div class="chart__axis-overlay-grid">
               <div class="chart__axis-control">
                 <div class="chart__axis-row">
                   <label class="chart__select-label" for="x-axis-select">X</label>
@@ -149,13 +150,12 @@
                     <option value="g8">g8</option>
                     <option value="g9">g9</option>
                     <option value="g10">g10</option>
-                  </select><div class="chart__scale-toggle">
-                    <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
-                      <option value="linear">Linéaire</option>
-                      <option value="log">Logarithmique</option>
-                    </select>
-                  </div>
+                  </select>
                 </div>
+                <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
+                  <option value="linear">Linéaire</option>
+                  <option value="log">Logarithmique</option>
+                </select>
               </div>
               <div class="chart__axis-control">
                 <div class="chart__axis-row">
@@ -171,18 +171,16 @@
                     <option value="g8">g8</option>
                     <option value="g9">g9</option>
                     <option value="g10">g10</option>
-                  </select><div class="chart__scale-toggle">
-                    <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
-                      <option value="linear">Linéaire</option>
-                      <option value="log">Logarithmique</option>
-                    </select>
-                  </div>
+                  </select>
                 </div>
+                <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
+                  <option value="linear">Linéaire</option>
+                  <option value="log">Logarithmique</option>
+                </select>
               </div>
             </div>
           </div>
         </div>
-        <div class="chart__figure" role="img" aria-label="Graphique en nuage de points"></div>
         <div class="chart__hovered" aria-live="polite">
           <div class="chart__hovered-header">
             <div>
