@@ -888,13 +888,14 @@ section {
 
 .chart__tooltip {
   position: absolute;
-  min-width: 220px;
-  padding: var(--space-3) var(--space-4);
+  min-width: 160px;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius);
   border: 1px solid var(--color-line);
   background: var(--color-surface);
   color: var(--color-text);
   box-shadow: var(--shadow-float);
+  font-size: var(--font-size-sm);
   pointer-events: none;
   opacity: 0;
   transform: translateY(4px);
@@ -919,7 +920,7 @@ section {
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-1) var(--space-3);
+  gap: var(--space-1) var(--space-2);
 }
 
 .chart__tooltip-key {
@@ -930,7 +931,7 @@ section {
 .chart__tooltip-value {
   text-align: right;
   display: inline-block;
-  min-width: 42px;
+  min-width: 34px;
 }
 
 @media (max-width: 640px) {
