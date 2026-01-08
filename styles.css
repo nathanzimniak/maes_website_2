@@ -609,7 +609,7 @@ section {
     "label label"
     "slider value";
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-1);
 }
 
 .chart__control-row--toggles {
