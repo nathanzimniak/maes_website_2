@@ -587,6 +587,16 @@ section {
   font-size: 0.95rem;
 }
 
+.chart__label-symbol {
+  font-style: italic;
+}
+
+.chart__label-sub {
+  font-size: 0.7em;
+  vertical-align: sub;
+  margin-left: 0.05em;
+}
+
 .chart__button-row {
   display: flex;
   gap: var(--space-2);
