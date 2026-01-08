@@ -771,18 +771,40 @@ section {
 .chart__select {
   width: 100%;
   min-width: 70px;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-2) calc(var(--space-3) + 18px) var(--space-2) var(--space-3);
   border-radius: var(--radius);
-  border: none;
-  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  background: linear-gradient(180deg, #ffffff 0%, #f7f8fa 100%);
   color: var(--color-text);
   font-size: 0.7rem;
+  font-weight: 600;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5' stroke='%236b7280' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.chart__select:hover {
+  border-color: rgba(10, 132, 255, 0.35);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
+}
+
+.chart__select:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2), 0 14px 28px rgba(15, 23, 42, 0.12);
 }
 
 .chart__axis-row .chart__select--axis {
   flex: 0 0 32px;
   max-width: 32px;
-  padding: var(--space-2);
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
   font-weight: 600;
   font-size: 0.88rem;
 }
