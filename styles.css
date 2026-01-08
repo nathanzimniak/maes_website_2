@@ -25,6 +25,9 @@
   --space-8: 40px;
   --space-9: 56px;
   --space-10: 72px;
+  --section-padding-y: var(--space-9);
+  --section-padding-x: var(--space-6);
+  --card-padding: var(--space-7);
   --font-sans: "SF Pro Display", "SF Pro Text", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size-xs: 0.78rem;
   --font-size-sm: 0.9rem;
@@ -70,7 +73,7 @@ section {
 .site-header__bar {
   max-width: 1120px;
   margin: 0 auto;
-  padding: var(--space-3) var(--space-6);
+  padding: var(--space-3) var(--section-padding-x);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -120,7 +123,7 @@ section {
 
 .hero {
   position: relative;
-  padding: var(--space-10) var(--space-6) var(--space-9);
+  padding: var(--section-padding-y) var(--section-padding-x);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -241,7 +244,7 @@ section {
 }
 
 .intro {
-  padding: 0 var(--space-6) var(--space-9);
+  padding: var(--section-padding-y) var(--section-padding-x);
   display: flex;
   justify-content: center;
   flex: 1;
@@ -250,7 +253,7 @@ section {
 .intro__card {
   max-width: 720px;
   width: min(720px, 100%);
-  padding: var(--space-7);
+  padding: var(--card-padding);
   background: var(--color-surface);
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
@@ -309,13 +312,13 @@ section {
 
 .footer {
   text-align: center;
-  padding: var(--space-7) var(--space-6) var(--space-8);
+  padding: var(--section-padding-y) var(--section-padding-x);
   color: var(--color-muted);
   font-size: 0.95rem;
 }
 
 .chart {
-  padding: 0 var(--space-6) var(--space-9);
+  padding: var(--section-padding-y) var(--section-padding-x);
   display: flex;
   justify-content: center;
 }
@@ -327,7 +330,7 @@ section {
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
   box-shadow: var(--shadow-card);
-  padding: var(--space-7);
+  padding: var(--card-padding);
   display: grid;
   gap: var(--space-5);
 }
@@ -1052,16 +1055,22 @@ section {
 }
 
 @media (max-width: 640px) {
+  :root {
+    --section-padding-y: var(--space-8);
+    --section-padding-x: var(--space-4);
+    --card-padding: var(--space-6);
+  }
+
   .hero {
-    padding: var(--space-9) var(--space-4) var(--space-8);
+    padding: var(--section-padding-y) var(--section-padding-x);
   }
 
   .intro__card {
-    padding: var(--space-6);
+    padding: var(--card-padding);
   }
 
   .chart__card {
-    padding: var(--space-6);
+    padding: var(--card-padding);
   }
 
   .chart__body {
