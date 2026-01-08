@@ -572,16 +572,21 @@ section {
 
 .chart__control-row {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "label label"
+    "slider value";
   align-items: center;
   gap: var(--space-3);
 }
 
 .chart__control-row--toggles {
   grid-template-columns: 1fr;
+  grid-template-areas: "toggle";
 }
 
 .chart__control label {
+  grid-area: label;
   font-weight: 600;
   letter-spacing: -0.01em;
   font-size: 0.95rem;
@@ -640,6 +645,7 @@ section {
 }
 
 .chart__pill {
+  grid-area: value;
   display: inline;
   min-width: auto;
   padding: 0;
@@ -652,6 +658,7 @@ section {
 }
 
 .chart__control input[type="range"] {
+  grid-area: slider;
   width: 100%;
   accent-color: var(--color-text);
   height: 24px;
@@ -659,6 +666,10 @@ section {
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
+}
+
+.chart__control-row--toggles .chart__button-row {
+  grid-area: toggle;
 }
 
 .chart__control input[type="range"]::-webkit-slider-runnable-track {
