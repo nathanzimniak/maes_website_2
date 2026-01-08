@@ -477,6 +477,8 @@ section {
   border-radius: var(--radius);
   background: transparent;
   border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .chart__hovered-key {
