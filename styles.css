@@ -371,7 +371,7 @@ section {
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius);
   background: var(--color-surface-subtle);
-  border: 1px solid var(--color-line);
+  border: none;
   color: var(--color-muted);
   font-size: var(--font-size-xs);
   letter-spacing: 0.22em;
@@ -584,7 +584,7 @@ section {
   flex: 1;
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius);
-  border: 1px solid var(--color-line);
+  border: none;
   background: var(--color-surface);
   color: var(--color-text);
   font-weight: 600;
@@ -714,7 +714,7 @@ section {
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius);
-  border: 1px solid var(--color-line);
+  border: none;
   background: var(--color-surface);
   box-shadow: none;
 }
@@ -749,7 +749,7 @@ section {
   padding: var(--space-2) var(--space-4);
   min-width: 140px;
   border-radius: var(--radius);
-  border: 1px solid var(--color-line);
+  border: none;
   background: var(--color-surface);
   color: var(--color-text);
   font-weight: 600;
@@ -824,7 +824,7 @@ section {
 .chart__eyebrow--sub {
   background: var(--color-surface);
   color: var(--color-muted);
-  border-color: var(--color-line);
+  border: none;
   font-weight: 800;
   letter-spacing: 0.12em;
 }
