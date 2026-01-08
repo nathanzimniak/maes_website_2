@@ -783,6 +783,7 @@ section {
   flex: 0 0 32px;
   max-width: 32px;
   padding: var(--space-2);
+  font-weight: 600;
   font-size: 0.88rem;
 }
 
