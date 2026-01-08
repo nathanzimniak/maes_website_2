@@ -882,9 +882,12 @@ section {
 }
 
 .chart__point {
-  stroke: rgba(15, 23, 42, 0.75);
-  stroke-width: 1.6;
-  paint-order: stroke;
+  --point-color: #7dd3fc;
+  fill: var(--point-color);
+  fill-opacity: 0.7;
+  stroke: var(--point-color);
+  stroke-opacity: 1;
+  stroke-width: 2;
 }
 
 .chart__point--selected {
