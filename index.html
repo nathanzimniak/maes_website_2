@@ -598,7 +598,7 @@
             </li>
           `;
 
-          tooltip.innerHTML = `<div class="chart__tooltip-title">Coordonnées du point</div><ul class="chart__tooltip-list">${rows}</ul>`;
+          tooltip.innerHTML = `<ul class="chart__tooltip-list">${rows}</ul>`;
           tooltip.classList.add('chart__tooltip--visible');
           positionTooltip(event);
           renderHoveredValues(hovered);
