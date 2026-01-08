@@ -14,6 +14,7 @@
   --shadow-card: 0 20px 40px rgba(15, 23, 42, 0.08);
   --shadow-float: 0 16px 30px rgba(15, 23, 42, 0.12);
   --radius: 16px;
+  --radius-pill: 999px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -31,6 +32,45 @@
   --font-size-lg: 1.1rem;
   --font-size-xl: clamp(2.4rem, 5vw, 3.6rem);
   color-scheme: light;
+}
+
+:where(
+  .metric-card,
+  .intro__card,
+  .intro__tile,
+  .chart__card,
+  .chart__status-item,
+  .chart__hovered,
+  .chart__controls,
+  .chart__axis-control,
+  .chart__profile-card,
+  .chart__sparkline,
+  .chart__hovered-item
+) {
+  padding: var(--surface-padding, var(--space-4));
+  border-radius: var(--radius);
+  border: 1px solid var(--color-line);
+  background: var(--surface-bg, var(--color-surface));
+  box-shadow: var(--surface-shadow, none);
+}
+
+:where(
+  .site-header__pill,
+  .hero__cta,
+  .hero__ghost,
+  .chart__chip,
+  .chart__toggle-button,
+  .chart__scale-button
+) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--button-padding, var(--space-2) var(--space-4));
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 * {
@@ -92,7 +132,7 @@ section {
   text-decoration: none;
   font-weight: 600;
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius);
+  border-radius: var(--radius-pill);
   transition: background 140ms ease, color 140ms ease;
 }
 
@@ -102,14 +142,10 @@ section {
 }
 
 .site-header__pill {
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius);
+  --button-padding: var(--space-2) var(--space-4);
   background: var(--color-text);
   color: #ffffff;
-  font-weight: 600;
-  text-decoration: none;
   box-shadow: none;
-  transition: transform 120ms ease, background 120ms ease;
 }
 
 .site-header__pill:hover {
@@ -142,7 +178,7 @@ section {
 .hero__eyebrow {
   display: inline-flex;
   padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius);
+  border-radius: var(--radius-pill);
   background: var(--color-surface);
   border: 1px solid var(--color-line);
   color: var(--color-muted);
@@ -171,17 +207,10 @@ section {
 }
 
 .hero__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius);
+  --button-padding: var(--space-3) var(--space-6);
   background: var(--color-accent);
   color: #ffffff;
-  font-weight: 600;
-  text-decoration: none;
   box-shadow: none;
-  transition: transform 160ms ease, background 160ms ease;
 }
 
 .hero__cta:hover {
@@ -190,17 +219,10 @@ section {
 }
 
 .hero__ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius);
+  --button-padding: var(--space-3) var(--space-5);
   border: 1px solid var(--color-line);
   color: var(--color-text);
-  text-decoration: none;
-  font-weight: 600;
   background: var(--color-surface);
-  transition: border-color 140ms ease, transform 140ms ease;
 }
 
 .hero__ghost:hover {
@@ -217,11 +239,7 @@ section {
 }
 
 .metric-card {
-  padding: var(--space-4);
-  border-radius: var(--radius);
-  border: 1px solid var(--color-line);
-  background: var(--color-surface);
-  box-shadow: none;
+  --surface-padding: var(--space-4);
 }
 
 .metric-card__label {
@@ -247,13 +265,10 @@ section {
 }
 
 .intro__card {
+  --surface-padding: var(--space-7);
+  --surface-shadow: var(--shadow-card);
   max-width: 720px;
   width: min(720px, 100%);
-  padding: var(--space-7);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
 }
 
 .intro__card h2 {
@@ -278,11 +293,7 @@ section {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--space-3);
-  padding: var(--space-4);
-  border-radius: var(--radius);
-  border: 1px solid var(--color-line);
-  background: var(--color-surface);
-  box-shadow: none;
+  --surface-padding: var(--space-4);
 }
 
 .intro__icon {
@@ -322,11 +333,8 @@ section {
 .chart__card {
   width: 100%;
   max-width: none;
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  padding: var(--space-7);
+  --surface-padding: var(--space-7);
+  --surface-shadow: var(--shadow-card);
   display: grid;
   gap: var(--space-5);
 }
@@ -338,16 +346,11 @@ section {
 }
 
 .chart__status-item {
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius);
-  border: 1px solid var(--color-line);
-  background: var(--color-surface);
-  box-shadow: none;
+  --surface-padding: var(--space-3) var(--space-4);
 }
 
 .chart__status-item--accent {
-  background: var(--color-surface-subtle);
-  border-color: var(--color-line);
+  --surface-bg: var(--color-surface-subtle);
 }
 
 .chart__status-label {
@@ -371,7 +374,7 @@ section {
 .chart__eyebrow {
   display: inline-flex;
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius);
+  border-radius: var(--radius-pill);
   background: var(--color-surface-subtle);
   border: none;
   color: var(--color-muted);
@@ -406,10 +409,8 @@ section {
 }
 
 .chart__hovered {
-  padding: var(--space-4);
-  border-radius: var(--radius);
-  background: var(--color-surface-subtle);
-  box-shadow: none;
+  --surface-padding: var(--space-4);
+  --surface-bg: var(--color-surface-subtle);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -446,10 +447,7 @@ section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-2);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
+  --surface-padding: var(--space-2);
 }
 
 .chart__hovered-key {
@@ -481,14 +479,12 @@ section {
 }
 
 .chart__chip {
+  --button-padding: var(--space-2) var(--space-4);
   border: 1px solid var(--color-line);
   background: var(--color-surface);
   color: var(--color-text);
-  border-radius: var(--radius);
-  padding: var(--space-2) var(--space-4);
   font-weight: 700;
   cursor: pointer;
-  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
 }
 
 .chart__chip:hover {
@@ -503,10 +499,8 @@ section {
 }
 
 .chart__controls {
-  padding: var(--space-4);
-  border-radius: var(--radius);
-  background: var(--color-surface-subtle);
-  box-shadow: none;
+  --surface-padding: var(--space-4);
+  --surface-bg: var(--color-surface-subtle);
   display: flex;
   flex-direction: column;
   gap: var(--space-7);
@@ -573,15 +567,12 @@ section {
 
 .chart__toggle-button {
   flex: 1;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius);
+  --button-padding: var(--space-2) var(--space-3);
   border: none;
   background: var(--color-surface);
   color: var(--color-text);
-  font-weight: 600;
   letter-spacing: -0.01em;
   cursor: pointer;
-  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
   text-align: center;
 }
 
@@ -703,11 +694,8 @@ section {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: 2px var(--space-3);
-  border-radius: var(--radius);
+  --surface-padding: 2px var(--space-3);
   border: none;
-  background: var(--color-surface);
-  box-shadow: none;
 }
 
 .chart__axis-row {
@@ -738,17 +726,14 @@ section {
 }
 
 .chart__scale-button {
-  padding: var(--space-2) var(--space-4);
+  --button-padding: var(--space-2) var(--space-4);
   min-width: 140px;
-  border-radius: var(--radius);
   border: none;
   background: var(--color-surface);
   color: var(--color-text);
-  font-weight: 600;
   font-size: var(--font-size-sm);
   text-align: center;
   cursor: pointer;
-  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
 }
 
 .chart__scale-button:hover {
@@ -800,7 +785,6 @@ section {
   padding: var(--space-2) var(--space-4) var(--space-2);
   border-radius: var(--radius);
   background: var(--color-surface-subtle);
-  box-shadow: none;
   display: grid;
   gap: var(--space-3);
 }
@@ -845,11 +829,7 @@ section {
 }
 
 .chart__profile-card {
-  padding: var(--space-3);
-  border-radius: var(--radius);
-  border: 1px solid var(--color-line);
-  background: var(--color-surface);
-  box-shadow: none;
+  --surface-padding: var(--space-3);
   display: grid;
   gap: var(--space-2);
 }
@@ -878,11 +858,10 @@ section {
 }
 
 .chart__sparkline {
+  --surface-padding: 0;
+  --surface-bg: var(--color-surface-muted);
   width: 100%;
   height: 80px;
-  border-radius: var(--radius);
-  background: var(--color-surface-muted);
-  border: 1px solid var(--color-line);
 }
 
 .chart__point {
@@ -963,11 +942,11 @@ section {
   }
 
   .intro__card {
-    padding: var(--space-6);
+    --surface-padding: var(--space-6);
   }
 
   .chart__card {
-    padding: var(--space-6);
+    --surface-padding: var(--space-6);
   }
 
   .chart__body {
