@@ -609,7 +609,7 @@ section {
     "label label"
     "slider value";
   align-items: center;
-  gap: var(--space-0);
+  gap: 0;
 }
 
 .chart__control-row--toggles {
@@ -622,6 +622,8 @@ section {
   font-weight: 600;
   letter-spacing: -0.01em;
   font-size: 0.95rem;
+  margin: 0 0 -2px;
+  line-height: 1.1;
 }
 
 .chart__label-symbol {
