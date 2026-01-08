@@ -713,7 +713,7 @@ section {
 .chart__axis-row {
   display: flex;
   align-items: center;
-  gap: var(--space-6);
+  gap: 0;
   flex-wrap: nowrap;
   width: 100%;
 }
@@ -728,12 +728,13 @@ section {
 .chart__select-label {
   font-weight: 600;
   white-space: nowrap;
+  margin-right: var(--space-6);
 }
 
 .chart__scale-toggle {
   display: inline-flex;
   gap: var(--space-2);
-  margin-left: var(--space-4);
+  margin-left: 0;
 }
 
 .chart__scale-button {
