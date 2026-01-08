@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bonjour Monde</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -92,7 +94,7 @@
               </div>
               <div class="chart__control">
                 <div class="chart__control-row">
-                  <label for="p2-slider">p2</label>
+                  <label for="p2-slider"><span class="math-label" data-latex="\\alpha_m"></span></label>
                   <input id="p2-slider" type="range" min="0" max="100" step="1" value="40">
                   <span id="p2-value" class="chart__pill">40</span>
                 </div>
@@ -771,6 +773,17 @@
     window.addEventListener('resize', updateChart);
 
     updateChart();
+
+    window.addEventListener('load', () => {
+      if (!window.katex) return;
+
+      document.querySelectorAll('.math-label').forEach((element) => {
+        const latex = element.dataset.latex;
+        if (!latex) return;
+
+        window.katex.render(latex, element, { throwOnError: false });
+      });
+    });
   </script>
 </body>
 </html>
