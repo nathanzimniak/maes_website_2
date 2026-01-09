@@ -637,7 +637,6 @@ section {
 }
 
 .chart__control-label--aspect .chart__label-text {
-  text-transform: lowercase;
   font-weight: 500;
   font-size: 0.8rem;
   font-style: italic;
