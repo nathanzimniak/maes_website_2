@@ -578,6 +578,17 @@
       tooltip.style.top = `${offsetY + 14}px`;
     }
 
+    function renderMathLabels(scope = document) {
+      if (!window.katex) return;
+
+      scope.querySelectorAll('.math-label').forEach((element) => {
+        const latex = element.dataset.latex;
+        if (!latex) return;
+
+        window.katex.render(latex, element, { throwOnError: false });
+      });
+    }
+
     function renderHoveredValues(solution) {
       if (!hoveredValues || !solution) return;
 
@@ -585,9 +596,13 @@
         .filter(([key]) => key.startsWith('g'))
         .sort(([a], [b]) => Number(a.slice(1)) - Number(b.slice(1)))
         .map(([key, value]) => `
-          <li class="chart__hovered-item">
-            <span class="chart__hovered-key">${key}</span>
-            <span class="chart__hovered-value">${value.toFixed(1)}</span>
+          <li class="chart__hovered-item chart__control-label--aspect">
+            <span class="chart__label-text">Grandeur ${key.slice(1)}</span>
+            <span class="chart__label-math">
+              <span class="math-label" data-latex="\\varepsilon"></span>
+              <span class="chart__label-equals">=</span>
+              <span class="chart__label-value">${value.toFixed(1)}</span>
+            </span>
           </li>
         `)
         .join('');
@@ -597,6 +612,7 @@
           ${rows}
         </ul>
       `;
+      renderMathLabels(hoveredValues);
     }
 
     function resetHoveredValues() {
@@ -834,14 +850,7 @@
     }
 
     window.addEventListener('load', () => {
-      if (!window.katex) return;
-
-      document.querySelectorAll('.math-label').forEach((element) => {
-        const latex = element.dataset.latex;
-        if (!latex) return;
-
-        window.katex.render(latex, element, { throwOnError: false });
-      });
+      renderMathLabels();
 
       updateChart();
     });
