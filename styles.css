@@ -974,6 +974,7 @@ section {
   letter-spacing: 0.12em;
   display: block;
   width: 100%;
+  text-align: center;
 }
 
 .chart__profiles-title {
