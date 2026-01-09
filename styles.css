@@ -638,13 +638,13 @@ section {
 
 .chart__control-label--aspect .chart__label-text {
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.8rem;
   color: #000000;
 }
 
 .chart__control-label--aspect .math-label {
-  color: #9ca3af;
+  color: #000000;
 }
 
 .chart__label-symbol {
