@@ -255,6 +255,9 @@
     const hoveredValues = document.getElementById('hovered-values');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
     const scaleSelects = Array.from(document.querySelectorAll('[data-scale-select]'));
+    const resizeObserver = 'ResizeObserver' in window
+      ? new ResizeObserver(() => updateChart())
+      : null;
 
     const sliders = [
       {
@@ -825,6 +828,10 @@
     window.addEventListener('resize', updateChart);
 
     updateChart();
+
+    if (resizeObserver && chartControls) {
+      resizeObserver.observe(chartControls);
+    }
 
     window.addEventListener('load', () => {
       if (!window.katex) return;
