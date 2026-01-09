@@ -561,7 +561,7 @@ section {
 }
 
 .chart__controls {
-  padding: var(--space-4);
+  padding: var(--space-6);
   border-radius: var(--radius);
   background: var(--color-surface-subtle);
   box-shadow: none;
