@@ -895,7 +895,7 @@ section {
 }
 
 .chart__profiles {
-  padding: var(--space-2) var(--space-4) var(--space-2);
+  padding: var(--space-4);
   border-radius: var(--radius);
   background: var(--color-surface-subtle);
   box-shadow: none;
