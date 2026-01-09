@@ -607,10 +607,10 @@ section {
 
 .chart__control-row {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   grid-template-areas:
-    "label label"
-    "slider value";
+    "label"
+    "slider";
   align-items: center;
   row-gap: var(--space-2);
   column-gap: var(--space-3);
@@ -698,22 +698,6 @@ section {
   border-color: var(--color-text);
   color: #ffffff;
   transform: translateY(-1px);
-}
-
-.chart__pill {
-  grid-area: value;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 2.5rem;
-  padding: 0;
-  border-radius: 0;
-  background: none;
-  border: 0;
-  color: var(--color-text);
-  font-weight: 600;
-  font-size: 0.9rem;
-  font-variant-numeric: tabular-nums;
 }
 
 .chart__control input[type="range"] {
