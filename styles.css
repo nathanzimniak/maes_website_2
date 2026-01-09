@@ -527,7 +527,7 @@ section {
 
 .chart__body {
   display: grid;
-  grid-template-columns: 320px minmax(0, 1fr) 240px;
+  grid-template-columns: 310px minmax(0, 1fr) 240px;
   gap: var(--space-5);
   align-items: stretch;
 }
