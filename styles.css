@@ -105,6 +105,11 @@ section {
   color: var(--color-text);
 }
 
+.math-label--bold .katex,
+.math-label--bold .katex * {
+  font-weight: 700;
+}
+
 .site-header__pill {
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius);
