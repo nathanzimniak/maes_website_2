@@ -411,9 +411,9 @@ section {
   right: var(--space-3);
   padding: var(--space-2);
   border-radius: calc(var(--radius) - 4px);
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid var(--color-line);
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   display: grid;
   gap: var(--space-1);
   min-width: 170px;
@@ -914,6 +914,11 @@ section {
   padding: var(--space-2);
   font-weight: 600;
   font-size: 0.88rem;
+}
+
+.chart__select--axis,
+.chart__select--scale {
+  background: transparent;
 }
 
 .chart__axis-overlay .chart__select--axis {
