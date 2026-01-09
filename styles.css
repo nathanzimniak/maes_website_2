@@ -925,7 +925,7 @@ section {
 .chart__axis-overlay .chart__select--axis {
   flex: 1;
   max-width: none;
-  min-width: 70px;
+  min-width: 45px;
 }
 
 .chart__axis-overlay .chart__select-label {
