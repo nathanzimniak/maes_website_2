@@ -612,7 +612,8 @@ section {
     "label label"
     "slider value";
   align-items: center;
-  gap: 0;
+  row-gap: 0;
+  column-gap: var(--space-3);
 }
 
 .chart__control-row--toggles {
