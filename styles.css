@@ -394,7 +394,7 @@ section {
 .chart__figure {
   width: 100%;
   max-width: none;
-  height: 100%;
+  height: auto;
   min-height: 0;
   padding: var(--space-4);
   border-radius: var(--radius);
@@ -403,6 +403,7 @@ section {
   position: relative;
   margin: 0;
   grid-column: 2;
+  align-self: stretch;
 }
 
 .chart__axis-overlay {
@@ -444,8 +445,9 @@ section {
   flex-direction: column;
   gap: var(--space-3);
   grid-column: 3;
-  height: 100%;
+  height: auto;
   min-height: 0;
+  align-self: stretch;
 }
 
 .chart__hovered-header {
@@ -574,7 +576,7 @@ section {
   display: flex;
   flex-direction: column;
   gap: var(--space-7);
-  height: 100%;
+  height: auto;
   min-height: 400px;
   max-height: none;
   overflow-y: auto;
