@@ -377,6 +377,7 @@ section {
   font-size: var(--font-size-xs);
   letter-spacing: 0.22em;
   text-transform: uppercase;
+  margin: 0;
 }
 
 .chart__description {
@@ -589,7 +590,6 @@ section {
 
 .chart__control-group .chart__eyebrow {
   align-self: flex-start;
-  margin: 0;
   padding: var(--space-2) var(--space-3);
 }
 
