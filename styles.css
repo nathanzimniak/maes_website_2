@@ -644,6 +644,14 @@ section {
   color: #000000;
 }
 
+.chart__control-label--aspect .chart__label-equals,
+.chart__control-label--aspect .chart__label-value {
+  font-weight: 500;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #000000;
+}
+
 .chart__control-label--aspect .math-label {
   color: #000000;
 }
