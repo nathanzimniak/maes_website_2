@@ -602,7 +602,7 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: var(--space-2);
-  margin-top: 0;
+  margin-top: var(--space-3);
 }
 
 .chart__control-row {
