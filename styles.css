@@ -646,6 +646,27 @@ section {
   margin-top: var(--space-4);
 }
 
+.chart__control-row--dropdowns {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.chart__dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.chart__dropdown-label {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #000000;
+}
+
 .chart__control label {
   grid-area: label;
   font-weight: 400;
@@ -929,6 +950,10 @@ section {
   background: var(--color-surface);
   color: var(--color-text);
   font-size: 0.7rem;
+}
+
+.chart__select--profile {
+  font-size: 0.8rem;
 }
 
 .chart__axis-row .chart__select--axis {
