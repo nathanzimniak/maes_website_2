@@ -884,7 +884,7 @@
         .join(' ');
     }
 
-    function renderProfiles(solution, index) {
+    function renderProfiles(solution) {
       const { profiles } = solution;
       const series = [
         { label: 'Pression P(x)', key: 'pressure', unit: 'kPa', color: '#38bdf8' },
@@ -919,10 +919,26 @@
       });
     }
 
+    function renderFlatProfiles() {
+      const fallbackX = Array.from({ length: 24 }, (_, index) => index);
+      const baseProfiles = currentSolutions[0]?.profiles;
+      const xValues = baseProfiles?.x ?? fallbackX;
+      const flatValues = xValues.map(() => 0);
+
+      renderProfiles({
+        profiles: {
+          x: xValues,
+          pressure: flatValues,
+          density: flatValues,
+          temperature: flatValues,
+        },
+      });
+    }
+
     function selectSolution(index) {
       selectedSolutionIndex = index;
       pinnedSolutionIndex = index;
-      renderProfiles(currentSolutions[index], index);
+      renderProfiles(currentSolutions[index]);
       renderHoveredValues(currentSolutions[index]);
 
       Array.from(pointsGroup.children).forEach((circle, idx) => {
@@ -933,7 +949,7 @@
     function resetProfiles() {
       selectedSolutionIndex = null;
       pinnedSolutionIndex = null;
-      profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
+      renderFlatProfiles();
     }
 
     function updateScaleSelect(axis, scaleType) {
