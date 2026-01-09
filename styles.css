@@ -574,7 +574,7 @@ section {
   display: flex;
   flex-direction: column;
   gap: var(--space-7);
-  height: 100%;
+  height: auto;
   min-height: 400px;
   max-height: none;
   overflow-y: auto;
