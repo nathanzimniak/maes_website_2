@@ -919,6 +919,7 @@ section {
 .chart__select--axis,
 .chart__select--scale {
   background: transparent;
+  font-weight: 600;
 }
 
 .chart__axis-overlay .chart__select--axis {
