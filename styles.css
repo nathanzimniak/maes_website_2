@@ -623,10 +623,10 @@ section {
 
 .chart__control label {
   grid-area: label;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.01em;
   font-size: 0.95rem;
-  margin: 0 0 -2px;
+  margin: 0 0 -4px;
   line-height: 1.1;
 }
 
