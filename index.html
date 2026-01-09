@@ -154,6 +154,26 @@
                 </div>
               </div>
               <div class="chart__control">
+                <div class="chart__control-row chart__control-row--dropdowns">
+                  <div class="chart__dropdown">
+                    <label for="turbulence-profile-select" class="chart__dropdown-label">Turbulence profile</label>
+                    <select id="turbulence-profile-select" class="chart__select chart__select--profile" aria-label="Choisir un profil de turbulence">
+                      <option value="core">Core-driven</option>
+                      <option value="mixed">Mixed layer</option>
+                      <option value="surface">Surface-only</option>
+                    </select>
+                  </div>
+                  <div class="chart__dropdown">
+                    <label for="heat-profile-select" class="chart__dropdown-label">Heat profile</label>
+                    <select id="heat-profile-select" class="chart__select chart__select--profile" aria-label="Choisir un profil de chaleur">
+                      <option value="uniform">Uniform</option>
+                      <option value="bottom">Bottom heating</option>
+                      <option value="top">Top cooling</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="chart__control">
                 <div class="chart__control-row chart__control-row--toggles">
                   <div class="chart__button-row" role="group" aria-label="Choisir SM, A ou FM">
                     <button type="button" class="chart__toggle-button chart__toggle-button--active" data-scenario="SM">SM</button>
