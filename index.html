@@ -931,9 +931,17 @@
     }
 
     function resetProfiles() {
-      selectedSolutionIndex = null;
-      pinnedSolutionIndex = null;
-      profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
+      if (!currentSolutions.length) {
+        selectedSolutionIndex = null;
+        pinnedSolutionIndex = null;
+        profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
+        return;
+      }
+
+      selectedSolutionIndex = 0;
+      pinnedSolutionIndex = 0;
+      renderProfiles(currentSolutions[0], 0);
+      renderHoveredValues(currentSolutions[0]);
     }
 
     function updateScaleSelect(axis, scaleType) {
