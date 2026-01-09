@@ -1011,6 +1011,7 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--space-3);
+  margin-top: var(--space-5);
 }
 
 .chart__profiles-placeholder {
