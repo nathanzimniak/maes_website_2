@@ -394,7 +394,7 @@ section {
 .chart__figure {
   width: 100%;
   max-width: none;
-  height: 100%;
+  height: auto;
   min-height: 0;
   padding: var(--space-4);
   border-radius: var(--radius);
@@ -402,7 +402,8 @@ section {
   overflow: hidden;
   position: relative;
   margin: 0;
-  grid-column: 2;
+  align-self: stretch;
+  flex: 1 1 auto;
 }
 
 .chart__axis-overlay {
@@ -443,9 +444,10 @@ section {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  grid-column: 3;
-  height: 100%;
+  height: auto;
   min-height: 0;
+  align-self: stretch;
+  flex: 0 0 240px;
 }
 
 .chart__hovered-header {
@@ -532,8 +534,7 @@ section {
 }
 
 .chart__body {
-  display: grid;
-  grid-template-columns: 310px minmax(0, 1fr) 240px;
+  display: flex;
   gap: var(--space-5);
   align-items: stretch;
 }
@@ -574,11 +575,11 @@ section {
   display: flex;
   flex-direction: column;
   gap: var(--space-7);
-  height: 100%;
+  height: auto;
   min-height: 400px;
   max-height: none;
   overflow-y: auto;
-  grid-column: 1;
+  flex: 0 0 310px;
 }
 
 .chart__control {
@@ -1138,10 +1139,12 @@ section {
   }
 
   .chart__body {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    gap: var(--space-5);
   }
 
   .chart__controls {
+    flex: none;
     height: auto;
     min-height: 0;
     max-height: none;
@@ -1149,10 +1152,6 @@ section {
 
   .chart__figure {
     max-width: 100%;
-  }
-
-  .chart__hovered {
-    grid-column: 1;
   }
 
   .chart__axis-row {
