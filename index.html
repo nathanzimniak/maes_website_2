@@ -612,10 +612,17 @@
     function renderHoveredValues(solution) {
       if (!hoveredValues || !solution) return;
 
-      const rows = Object.entries(solution)
+      const entries = Object.entries(solution)
         .filter(([key]) => key.startsWith('g'))
-        .sort(([a], [b]) => Number(a.slice(1)) - Number(b.slice(1)))
-        .map(([key, value]) => `
+        .sort(([a], [b]) => Number(a.slice(1)) - Number(b.slice(1)));
+      const rows = entries
+        .reduce((acc, [key, value], index) => {
+          if (index % 5 === 0) {
+            const start = index + 1;
+            const end = Math.min(index + 5, entries.length);
+            acc.push(`<li class="chart__hovered-title">Grandeurs ${start}\u2013${end}</li>`);
+          }
+          acc.push(`
           <li class="chart__hovered-item chart__control-label--aspect">
             <span class="chart__label-text">Grandeur ${key.slice(1)}</span>
             <span class="chart__label-math">
@@ -624,7 +631,9 @@
               <span class="chart__label-value">${value.toFixed(1)}</span>
             </span>
           </li>
-        `)
+        `);
+          return acc;
+        }, [])
         .join('');
 
       hoveredValues.innerHTML = `
