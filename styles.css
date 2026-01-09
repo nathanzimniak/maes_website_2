@@ -618,6 +618,7 @@ section {
 .chart__control-row--toggles {
   grid-template-columns: 1fr;
   grid-template-areas: "toggle";
+  margin-top: var(--space-3);
 }
 
 .chart__control label {
