@@ -652,6 +652,10 @@ section {
   color: #000000;
 }
 
+.chart__control-label--aspect .chart__label-equals {
+  margin-inline: calc(-1 * var(--space-1));
+}
+
 .chart__control-label--aspect .math-label {
   color: #000000;
 }
