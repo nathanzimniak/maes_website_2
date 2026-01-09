@@ -492,6 +492,21 @@ section {
   scrollbar-color: var(--color-line) transparent;
 }
 
+.chart__hovered-title {
+  grid-column: 1 / -1;
+  margin: var(--space-2) 0 0;
+  padding: 0 var(--space-2);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.chart__hovered-title:first-child {
+  margin-top: 0;
+}
+
 .chart__hovered-list::-webkit-scrollbar {
   width: 6px;
 }
