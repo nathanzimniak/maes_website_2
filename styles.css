@@ -645,7 +645,7 @@ section {
 }
 
 .chart__control-row--aspect input[type="range"] {
-  margin-top: -6px;
+  margin-top: -4px;
 }
 
 .chart__control-row--toggles {
