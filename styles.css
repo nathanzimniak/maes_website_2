@@ -662,7 +662,7 @@ section {
 
 .chart__control-row--dropdowns {
   display: flex;
-  flex-wrap: nowrap;
+  flex-direction: column;
   align-items: flex-start;
   gap: var(--space-3);
   margin-top: var(--space-4);
