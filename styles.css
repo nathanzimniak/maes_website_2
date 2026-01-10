@@ -644,6 +644,10 @@ section {
   row-gap: 0;
 }
 
+.chart__control-row--aspect input[type="range"] {
+  margin-top: -6px;
+}
+
 .chart__control-row--toggles {
   grid-template-columns: 1fr;
   grid-template-areas: "toggle";
