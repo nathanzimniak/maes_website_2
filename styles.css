@@ -640,6 +640,10 @@ section {
   column-gap: var(--space-3);
 }
 
+.chart__control-row--aspect {
+  row-gap: 0;
+}
+
 .chart__control-row--toggles {
   grid-template-columns: 1fr;
   grid-template-areas: "toggle";
