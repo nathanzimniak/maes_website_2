@@ -660,12 +660,6 @@ section {
   gap: var(--space-2);
 }
 
-.chart__toggle-label {
-  font-weight: 600;
-  font-size: 0.6rem;
-  color: #000000;
-}
-
 .chart__control-row--dropdowns {
   display: flex;
   flex-wrap: nowrap;
