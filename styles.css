@@ -685,7 +685,7 @@ section {
   align-items: baseline;
   gap: var(--space-2);
   width: 100%;
-  margin: 0 0 -14px;
+  margin: 0 0 -18px;
 }
 
 .chart__control-label--aspect .chart__label-text {
