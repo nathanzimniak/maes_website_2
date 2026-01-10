@@ -677,8 +677,11 @@ section {
 }
 
 .chart__dropdown-label {
-  font-weight: 600;
-  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: 0.80rem;
+  margin: 0;
+  line-height: 1.2;
   color: #000000;
 }
 
