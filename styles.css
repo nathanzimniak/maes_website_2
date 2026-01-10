@@ -695,6 +695,14 @@ section {
   line-height: 1.2;
 }
 
+.chart__control label.chart__dropdown-label {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
 .chart__control-label--aspect {
   display: flex;
   align-items: baseline;
