@@ -659,6 +659,7 @@ section {
   flex-wrap: nowrap;
   align-items: flex-start;
   gap: var(--space-3);
+  margin-top: var(--space-4);
 }
 
 .chart__dropdown {
