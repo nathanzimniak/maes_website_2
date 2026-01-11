@@ -14,7 +14,7 @@
   --shadow-card: 0 20px 40px rgba(15, 23, 42, 0.08);
   --shadow-float: 0 16px 30px rgba(15, 23, 42, 0.12);
   --radius: 16px;
-  --radius-1: 8px;
+  --radius-1: 10px;
   --space-0: 2px;
   --space-1: 4px;
   --space-2: 8px;
@@ -460,7 +460,7 @@ section {
 .chart__eyebrow {
   display: inline-flex;
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius);
+  border-radius: var(--radius-1);
   background: var(--color-surface-subtle);
   border: none;
   color: var(--color-muted);
@@ -854,7 +854,7 @@ section {
 .chart__toggle-button {
   flex: 1;
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius);
+  border-radius: var(--radius-1);
   border: none;
   background: var(--color-surface);
   color: var(--color-text);
@@ -1064,7 +1064,7 @@ section {
   width: 100%;
   min-width: 70px;
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius);
+  border-radius: var(--radius-1);
   border: none;
   background: var(--color-surface);
   color: var(--color-text);
@@ -1171,7 +1171,6 @@ section {
 .chart__profile-card {
   padding: var(--space-5);
   border-radius: var(--radius);
-  border: 1px solid var(--color-line);
   background: var(--color-surface);
   box-shadow: none;
   display: grid;
@@ -1199,6 +1198,7 @@ section {
 
 .chart__sparkline-wrapper {
   position: relative;
+  overflow: hidden;
 }
 
 .chart__sparkline-grid line {
