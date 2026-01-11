@@ -988,7 +988,7 @@
       });
     }
 
-    function buildProfileChart(xValues, yValues, width = 240, height = 100) {
+    function buildProfileChart(xValues, yValues, width = 240, height = 140) {
       const padding = { top: 10, right: 10, bottom: 24, left: 30 };
       const xMin = Math.min(...xValues);
       const xMax = Math.max(...xValues);
@@ -1024,12 +1024,12 @@
     function renderProfiles(solution) {
       const { profiles } = solution;
       const series = [
-        { label: 'Pression <span class="math-label" data-latex="P(x)"></span>', key: 'pressure', unit: 'kPa', color: '#000000' },
-        { label: 'Densité <span class="math-label" data-latex="\\rho(x)"></span>', key: 'density', unit: 'kg/m³', color: '#000000' },
-        { label: 'Température <span class="math-label" data-latex="T(x)"></span>', key: 'temperature', unit: 'K', color: '#000000' },
-        { label: 'Vitesse radiale <span class="math-label" data-latex="u_r(x)"></span>', key: 'radialVelocity', unit: 'km/s', color: '#000000' },
-        { label: 'Vitesse toroïdale <span class="math-label" data-latex="u_\\phi(x)"></span>', key: 'toroidalVelocity', unit: 'km/s', color: '#000000' },
-        { label: 'Vitesse verticale <span class="math-label" data-latex="u_z(x)"></span>', key: 'verticalVelocity', unit: 'km/s', color: '#000000' },
+        { label: 'Pression <span class="math-label" data-latex="P(x)"></span>', key: 'pressure', color: '#000000' },
+        { label: 'Densité <span class="math-label" data-latex="\\rho(x)"></span>', key: 'density', color: '#000000' },
+        { label: 'Température <span class="math-label" data-latex="T(x)"></span>', key: 'temperature', color: '#000000' },
+        { label: 'Vitesse radiale <span class="math-label" data-latex="u_r(x)"></span>', key: 'radialVelocity', color: '#000000' },
+        { label: 'Vitesse toroïdale <span class="math-label" data-latex="u_\\phi(x)"></span>', key: 'toroidalVelocity', color: '#000000' },
+        { label: 'Vitesse verticale <span class="math-label" data-latex="u_z(x)"></span>', key: 'verticalVelocity', color: '#000000' },
       ];
 
       profileContent.innerHTML = '';
@@ -1072,7 +1072,6 @@
                   ${chart.format(tick)}
                 </text>
               `).join('')}
-              <text x="${chart.width - chart.padding.right}" y="${chart.padding.top + 10}" text-anchor="end">${serie.unit}</text>
             </g>
             <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
           </svg>
