@@ -1071,8 +1071,8 @@
         const tooltipHeight = tooltip.offsetHeight || 42;
         const desiredLeft = markerX + 12;
         const desiredTop = markerY - tooltipHeight - 12;
-        const maxLeft = chart.width - chart.padding.right - tooltipWidth;
-        const maxTop = chart.height - chart.padding.bottom - tooltipHeight;
+        const maxLeft = Math.max(chart.padding.left, chart.width - chart.padding.right - tooltipWidth);
+        const maxTop = Math.max(chart.padding.top, chart.height - chart.padding.bottom - tooltipHeight);
 
         tooltip.style.left = `${clamp(desiredLeft, chart.padding.left, maxLeft)}px`;
         tooltip.style.top = `${clamp(desiredTop, chart.padding.top, maxTop)}px`;
