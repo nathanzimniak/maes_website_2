@@ -988,24 +988,37 @@
       });
     }
 
-    function sparklinePath(xValues, yValues, width = 240, height = 80, padding = 6) {
+    function buildProfileChart(xValues, yValues, width = 240, height = 100) {
+      const padding = { top: 10, right: 10, bottom: 24, left: 30 };
       const xMin = Math.min(...xValues);
       const xMax = Math.max(...xValues);
       const yMin = Math.min(...yValues);
       const yMax = Math.max(...yValues);
       const xRange = xMax - xMin || 1;
       const yRange = yMax - yMin || 1;
+      const plotWidth = width - padding.left - padding.right;
+      const plotHeight = height - padding.top - padding.bottom;
 
-      const plotWidth = width - padding * 2;
-      const plotHeight = height - padding * 2;
+      const xScale = (x) => padding.left + ((x - xMin) / xRange) * plotWidth;
+      const yScale = (y) => padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
 
-      return xValues
-        .map((x, idx) => {
-          const px = padding + ((x - xMin) / xRange) * plotWidth;
-          const py = padding + plotHeight - ((yValues[idx] - yMin) / yRange) * plotHeight;
-          return `${px},${py}`;
-        })
+      const points = xValues
+        .map((x, idx) => `${xScale(x)},${yScale(yValues[idx])}`)
         .join(' ');
+
+      const yMid = (yMin + yMax) / 2;
+      const yTicks = [yMin, yMid, yMax];
+      const xTicks = [xMin, xMax];
+
+      return {
+        width,
+        height,
+        padding,
+        points,
+        xTicks,
+        yTicks,
+        format: (value) => formatTick(value),
+      };
     }
 
     function renderProfiles(solution) {
@@ -1023,9 +1036,7 @@
 
       series.forEach((serie) => {
         const values = profiles[serie.key];
-        const path = sparklinePath(profiles.x, values);
-        const min = Math.min(...values).toFixed(1);
-        const max = Math.max(...values).toFixed(1);
+        const chart = buildProfileChart(profiles.x, values);
 
         const card = document.createElement('div');
         card.className = 'chart__profile-card';
@@ -1033,11 +1044,37 @@
           <div class="chart__profile-header">
             <div>
               <div class="chart__profile-title">${serie.label}</div>
-              <div>min ${min} · max ${max} ${serie.unit}</div>
             </div>
           </div>
-          <svg class="chart__sparkline" viewBox="0 0 240 80" role="img" aria-label="${serie.label}">
-            <polyline fill="none" stroke="${serie.color}" stroke-width="2" points="${path}" />
+          <svg class="chart__sparkline" viewBox="0 0 ${chart.width} ${chart.height}" role="img" aria-label="${serie.label}">
+            <g class="chart__sparkline-axes" aria-hidden="true">
+              <line x1="${chart.padding.left}" y1="${chart.padding.top}" x2="${chart.padding.left}" y2="${chart.height - chart.padding.bottom}"></line>
+              <line x1="${chart.padding.left}" y1="${chart.height - chart.padding.bottom}" x2="${chart.width - chart.padding.right}" y2="${chart.height - chart.padding.bottom}"></line>
+              ${chart.yTicks.map((tick) => `
+                <line x1="${chart.padding.left - 4}" y1="${chart.padding.top + ((chart.yTicks[2] - tick) / (chart.yTicks[2] - chart.yTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"
+                      x2="${chart.padding.left}" y2="${chart.padding.top + ((chart.yTicks[2] - tick) / (chart.yTicks[2] - chart.yTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"></line>
+              `).join('')}
+              ${chart.xTicks.map((tick) => `
+                <line x1="${chart.padding.left + ((tick - chart.xTicks[0]) / (chart.xTicks[1] - chart.xTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                      y1="${chart.height - chart.padding.bottom}" x2="${chart.padding.left + ((tick - chart.xTicks[0]) / (chart.xTicks[1] - chart.xTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                      y2="${chart.height - chart.padding.bottom + 4}"></line>
+              `).join('')}
+            </g>
+            <g class="chart__sparkline-labels" aria-hidden="true">
+              ${chart.yTicks.map((tick) => `
+                <text x="${chart.padding.left - 8}" y="${chart.padding.top + ((chart.yTicks[2] - tick) / (chart.yTicks[2] - chart.yTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom) + 4}" text-anchor="end">
+                  ${chart.format(tick)}
+                </text>
+              `).join('')}
+              ${chart.xTicks.map((tick) => `
+                <text x="${chart.padding.left + ((tick - chart.xTicks[0]) / (chart.xTicks[1] - chart.xTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                      y="${chart.height - chart.padding.bottom + 18}" text-anchor="middle">
+                  ${chart.format(tick)}
+                </text>
+              `).join('')}
+              <text x="${chart.width - chart.padding.right}" y="${chart.padding.top + 10}" text-anchor="end">${serie.unit}</text>
+            </g>
+            <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
           </svg>
         `;
 
