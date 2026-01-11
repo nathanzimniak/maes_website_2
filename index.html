@@ -849,6 +849,37 @@
       });
     }
 
+    const hoveredMetricLabels = {
+      g1: { label: 'Aspect ratio', latex: '\\varepsilon' },
+      g2: { label: 'Magnetic diffusivity', latex: '\\alpha_m' },
+      g3: { label: 'Magnetic diffusivity anisotropy', latex: '\\chi_m' },
+      g4: { label: 'Magnetic Prandtl number', latex: '\\mathcal{P}_m' },
+      g5: { label: 'Turbulent magnetic pressure', latex: '\\alpha_p' },
+      g6: { label: 'Ejection index', latex: '\\xi' },
+      g7: { label: 'Magnetization', latex: '\\mu' },
+      g8: { label: 'Toroidal electric current', latex: 'p' },
+      g9: { label: 'Radial electric current', latex: 'q' },
+      g10: { label: 'Rotation', latex: '\\delta' },
+      g11: { label: 'Grandeur 11', latex: '\\varepsilon' },
+      g12: { label: 'Grandeur 12', latex: '\\varepsilon' },
+      g13: { label: 'Grandeur 13', latex: '\\varepsilon' },
+      g14: { label: 'Grandeur 14', latex: '\\varepsilon' },
+      g15: { label: 'Grandeur 15', latex: '\\varepsilon' },
+      g16: { label: 'Grandeur 16', latex: '\\varepsilon' },
+      g17: { label: 'Grandeur 17', latex: '\\varepsilon' },
+      g18: { label: 'Grandeur 18', latex: '\\varepsilon' },
+      g19: { label: 'Grandeur 19', latex: '\\varepsilon' },
+      g20: { label: 'Grandeur 20', latex: '\\varepsilon' }
+    };
+
+    function getHoveredMetricLabel(key) {
+      const fallbackIndex = Number(key.slice(1));
+      return hoveredMetricLabels[key] ?? {
+        label: `Grandeur ${fallbackIndex}`,
+        latex: '\\varepsilon'
+      };
+    }
+
     function buildHoveredList(entries, valueFormatter) {
       const rows = entries
         .reduce((acc, key, index) => {
@@ -865,12 +896,13 @@
               `<li class="chart__hovered-title">${titles[start]}</li>`
             );
           }
+          const { label, latex } = getHoveredMetricLabel(key);
           const value = valueFormatter(key);
           acc.push(`
           <li class="chart__hovered-item chart__control-label--aspect">
-            <span class="chart__label-text">Grandeur ${key.slice(1)}</span>
+            <span class="chart__label-text">${label}</span>
             <span class="chart__label-math">
-              <span class="math-label" data-latex="\\varepsilon"></span>
+              <span class="math-label" data-latex="${latex}"></span>
               <span class="chart__label-equals">=</span>
               <span class="chart__label-value">${value}</span>
             </span>
