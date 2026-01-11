@@ -1044,10 +1044,16 @@
       const updateHover = (event) => {
         const bounds = sparkline.getBoundingClientRect();
         const scaleX = chart.width / bounds.width;
+        const scaleY = chart.height / bounds.height;
         const localX = clamp(
           (event.clientX - bounds.left) * scaleX,
           chart.padding.left,
           chart.width - chart.padding.right
+        );
+        const localY = clamp(
+          (event.clientY - bounds.top) * scaleY,
+          chart.padding.top,
+          chart.height - chart.padding.bottom
         );
         const xValue = chart.xMin + ((localX - chart.padding.left) / chart.plotWidth) * (chart.xMax - chart.xMin);
         const rawIndex = (xValue - chart.xMin) / chart.step;
@@ -1057,7 +1063,7 @@
         const t = (xValue - xValues[lowerIndex]) / span;
         const interpolatedY = yValues[lowerIndex] + t * (yValues[upperIndex] - yValues[lowerIndex]);
         const markerX = localX;
-        const markerY = chart.yScale(interpolatedY);
+        const markerY = localY;
 
         marker.setAttribute('cx', markerX);
         marker.setAttribute('cy', markerY);
@@ -1077,15 +1083,15 @@
         const tooltipWidth = tooltip.offsetWidth || 140;
         const tooltipHeight = tooltip.offsetHeight || 42;
         const tooltipScaleX = bounds.width / chart.width;
-        const scaleY = bounds.height / chart.height;
+        const tooltipScaleY = bounds.height / chart.height;
         const markerLeft = markerX * tooltipScaleX;
-        const markerTop = markerY * scaleY;
+        const markerTop = markerY * tooltipScaleY;
         const desiredLeft = markerLeft - tooltipWidth / 2;
         const desiredTop = markerTop - tooltipHeight - 12;
-        const minLeft = chart.padding.left * scaleX;
-        const maxLeft = Math.max(minLeft, bounds.width - chart.padding.right * scaleX - tooltipWidth);
-        const minTop = chart.padding.top * scaleY;
-        const maxTop = Math.max(minTop, bounds.height - chart.padding.bottom * scaleY - tooltipHeight);
+        const minLeft = chart.padding.left * tooltipScaleX;
+        const maxLeft = Math.max(minLeft, bounds.width - chart.padding.right * tooltipScaleX - tooltipWidth);
+        const minTop = chart.padding.top * tooltipScaleY;
+        const maxTop = Math.max(minTop, bounds.height - chart.padding.bottom * tooltipScaleY - tooltipHeight);
 
         tooltip.style.left = `${clamp(desiredLeft, minLeft, maxLeft)}px`;
         tooltip.style.top = `${clamp(desiredTop, minTop, maxTop)}px`;
