@@ -1198,7 +1198,6 @@ section {
 
 .chart__sparkline-wrapper {
   position: relative;
-  overflow: hidden;
 }
 
 .chart__sparkline-grid line {
