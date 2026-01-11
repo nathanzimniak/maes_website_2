@@ -45,7 +45,7 @@
         </div>
         <div class="metric-card">
           <span class="metric-card__label">Profils détaillés</span>
-          <span class="metric-card__value">3 courbes</span>
+          <span class="metric-card__value">6 courbes</span>
         </div>
       </div>
     </div>
@@ -619,7 +619,19 @@
         return clamp(260 + 0.75 * base.p4 + scenarioShift * 1.5 + Math.sin((x + base.p3 / 6) / 2.8) * 14 + (Math.random() - 0.5) * 4, 230, 420);
       });
 
-      return { x: xValues, pressure, density, temperature };
+      const radialVelocity = xValues.map((x) => {
+        return clamp(-12 + 0.25 * base.p1 - 0.18 * base.p2 + scenarioShift * 0.35 + Math.sin((x + base.p4 / 8) / 2.3) * 6 + (Math.random() - 0.5) * 1.5, -40, 40);
+      });
+
+      const toroidalVelocity = xValues.map((x) => {
+        return clamp(80 + 0.9 * base.p4 + 0.3 * base.p5 + scenarioShift * 1.6 + Math.cos((x + base.p3 / 5) / 2.1) * 18 + (Math.random() - 0.5) * 3, 40, 200);
+      });
+
+      const verticalVelocity = xValues.map((x) => {
+        return clamp(10 + 0.4 * base.p2 + 0.2 * base.p3 + scenarioShift * 0.9 + Math.sin((x + base.p1 / 10) / 2.6) * 8 + (Math.random() - 0.5) * 2, 0, 80);
+      });
+
+      return { x: xValues, pressure, density, temperature, radialVelocity, toroidalVelocity, verticalVelocity };
     }
 
     function buildSolutions(baseParams, scenario) {
@@ -975,6 +987,9 @@
         { label: 'Pression P(x)', key: 'pressure', unit: 'kPa', color: '#38bdf8' },
         { label: 'Densité ρ(x)', key: 'density', unit: 'kg/m³', color: '#fbbf24' },
         { label: 'Température T(x)', key: 'temperature', unit: 'K', color: '#a78bfa' },
+        { label: 'Vitesse radiale u<sub>r</sub>(x)', key: 'radialVelocity', unit: 'km/s', color: '#34d399' },
+        { label: 'Vitesse toroïdale u<sub>φ</sub>(x)', key: 'toroidalVelocity', unit: 'km/s', color: '#f472b6' },
+        { label: 'Vitesse verticale u<sub>z</sub>(x)', key: 'verticalVelocity', unit: 'km/s', color: '#fb7185' },
       ];
 
       profileContent.innerHTML = '';
@@ -1016,6 +1031,9 @@
           pressure: flatValues,
           density: flatValues,
           temperature: flatValues,
+          radialVelocity: flatValues,
+          toroidalVelocity: flatValues,
+          verticalVelocity: flatValues,
         },
       });
     }
