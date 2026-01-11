@@ -210,6 +210,11 @@
                     <option value="g13">g13</option>
                     <option value="g14">g14</option>
                     <option value="g15">g15</option>
+                    <option value="g16">g16</option>
+                    <option value="g17">g17</option>
+                    <option value="g18">g18</option>
+                    <option value="g19">g19</option>
+                    <option value="g20">g20</option>
                   </select>
                 </div>
                 <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
@@ -236,6 +241,11 @@
                     <option value="g13">g13</option>
                     <option value="g14">g14</option>
                     <option value="g15">g15</option>
+                    <option value="g16">g16</option>
+                    <option value="g17">g17</option>
+                    <option value="g18">g18</option>
+                    <option value="g19">g19</option>
+                    <option value="g20">g20</option>
                   </select>
                 </div>
                 <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
@@ -371,6 +381,47 @@
               </li>
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Grandeur 15</span>
+                <span class="chart__label-math">
+                  <span class="math-label" data-latex="\varepsilon"></span>
+                  <span class="chart__label-equals">=</span>
+                  <span class="chart__label-value">―</span>
+                </span>
+              </li>
+              <li class="chart__hovered-title">Grandeurs 16–20</li>
+              <li class="chart__hovered-item chart__control-label--aspect">
+                <span class="chart__label-text">Grandeur 16</span>
+                <span class="chart__label-math">
+                  <span class="math-label" data-latex="\varepsilon"></span>
+                  <span class="chart__label-equals">=</span>
+                  <span class="chart__label-value">―</span>
+                </span>
+              </li>
+              <li class="chart__hovered-item chart__control-label--aspect">
+                <span class="chart__label-text">Grandeur 17</span>
+                <span class="chart__label-math">
+                  <span class="math-label" data-latex="\varepsilon"></span>
+                  <span class="chart__label-equals">=</span>
+                  <span class="chart__label-value">―</span>
+                </span>
+              </li>
+              <li class="chart__hovered-item chart__control-label--aspect">
+                <span class="chart__label-text">Grandeur 18</span>
+                <span class="chart__label-math">
+                  <span class="math-label" data-latex="\varepsilon"></span>
+                  <span class="chart__label-equals">=</span>
+                  <span class="chart__label-value">―</span>
+                </span>
+              </li>
+              <li class="chart__hovered-item chart__control-label--aspect">
+                <span class="chart__label-text">Grandeur 19</span>
+                <span class="chart__label-math">
+                  <span class="math-label" data-latex="\varepsilon"></span>
+                  <span class="chart__label-equals">=</span>
+                  <span class="chart__label-value">―</span>
+                </span>
+              </li>
+              <li class="chart__hovered-item chart__control-label--aspect">
+                <span class="chart__label-text">Grandeur 20</span>
                 <span class="chart__label-math">
                   <span class="math-label" data-latex="\varepsilon"></span>
                   <span class="chart__label-equals">=</span>
@@ -612,6 +663,11 @@
         const g13 = 0.55 * p4 + 0.45 * p5 + 5 * Math.cos(p2 / 22) + scenarioOffset * 0.5 + noise(8);
         const g14 = 0.4 * p1 + 0.25 * p3 + 0.35 * p5 + 15 + scenarioOffset * 0.2 + noise(10);
         const g15 = 0.6 * p2 + 0.25 * p4 + 0.2 * p5 + 8 * Math.sin(p1 / 28) + scenarioOffset * 0.6 + noise(9);
+        const g16 = 0.45 * p1 + 0.55 * p4 + 0.2 * p5 + 18 + scenarioOffset * 0.4 + noise(10);
+        const g17 = 0.3 * p2 + 0.6 * p3 + 0.4 * p5 + 12 * Math.cos(p4 / 30) + scenarioOffset * 0.5 + noise(9);
+        const g18 = 0.5 * p1 + 0.3 * p3 + 0.7 * p4 + scenarioOffset * 0.3 + noise(8);
+        const g19 = 0.65 * p2 + 0.2 * p4 + 0.25 * p5 + 10 * Math.sin(p3 / 26) + scenarioOffset * 0.4 + noise(11);
+        const g20 = 0.4 * p1 + 0.4 * p2 + 0.4 * p3 + 10 + scenarioOffset * 0.2 + noise(10);
 
         const solution = { ...jittered, scenario };
 
@@ -632,7 +688,12 @@
           g12: clamp(g12, 0, 200),
           g13: clamp(g13, 0, 200),
           g14: clamp(g14, 0, 200),
-          g15: clamp(g15, 0, 200)
+          g15: clamp(g15, 0, 200),
+          g16: clamp(g16, 0, 200),
+          g17: clamp(g17, 0, 200),
+          g18: clamp(g18, 0, 200),
+          g19: clamp(g19, 0, 200),
+          g20: clamp(g20, 0, 200)
         });
       }
 
@@ -801,7 +862,7 @@
     function renderEmptyHoveredValues() {
       if (!hoveredValues) return;
 
-      const entries = Array.from({ length: 15 }, (_, index) => `g${index + 1}`);
+      const entries = Array.from({ length: 20 }, (_, index) => `g${index + 1}`);
       hoveredValues.innerHTML = buildHoveredList(entries, () => '―');
       renderMathLabels(hoveredValues);
     }
