@@ -1069,12 +1069,13 @@
 
         const tooltipWidth = tooltip.offsetWidth || 140;
         const tooltipHeight = tooltip.offsetHeight || 42;
-        const desiredLeft = markerX + 12;
+        const desiredLeft = markerX - tooltipWidth / 2;
         const desiredTop = markerY - tooltipHeight - 12;
-        const maxLeft = chart.width - chart.padding.right - tooltipWidth;
-        const maxTop = chart.height - chart.padding.bottom - tooltipHeight;
+        const minLeft = chart.padding.left;
+        const maxLeft = Math.max(minLeft, chart.width - chart.padding.right - tooltipWidth);
+        const maxTop = Math.max(chart.padding.top, chart.height - chart.padding.bottom - tooltipHeight);
 
-        tooltip.style.left = `${clamp(desiredLeft, chart.padding.left, maxLeft)}px`;
+        tooltip.style.left = `${clamp(desiredLeft, minLeft, maxLeft)}px`;
         tooltip.style.top = `${clamp(desiredTop, chart.padding.top, maxTop)}px`;
         tooltip.classList.add('chart__sparkline-tooltip--visible');
       };
