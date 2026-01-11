@@ -128,7 +128,6 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
 }
 
 .hero__overlay {
@@ -139,7 +138,8 @@ section {
 
 .hero__content {
   position: relative;
-  max-width: 720px;
+  max-width: 1120px;
+  width: min(1120px, 100%);
   z-index: 1;
 }
 
@@ -167,9 +167,21 @@ section {
   font-size: var(--font-size-lg);
 }
 
+.hero__layout {
+  display: grid;
+  gap: var(--space-7);
+  align-items: center;
+}
+
+.hero__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
 .hero__actions {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--space-3);
   flex-wrap: wrap;
 }
@@ -212,15 +224,14 @@ section {
   border-color: #cfd3d1;
 }
 
-.hero__metrics {
-  margin-top: var(--space-7);
+.hero__highlights {
+  margin-top: var(--space-6);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--space-3);
-  text-align: left;
 }
 
-.metric-card {
+.hero__highlight {
   padding: var(--space-4);
   border-radius: var(--radius);
   border: 1px solid var(--color-line);
@@ -228,19 +239,72 @@ section {
   box-shadow: none;
 }
 
-.metric-card__label {
-  color: var(--color-muted);
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-.metric-card__value {
+.hero__highlight-title {
   display: block;
   font-weight: 700;
-  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-1);
+}
+
+.hero__highlight-text {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+}
+
+.hero__panel {
+  padding: var(--card-padding);
+  border-radius: calc(var(--radius) + 4px);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  display: grid;
+  gap: var(--space-4);
+}
+
+.hero__panel-eyebrow {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.hero__panel-title {
+  margin: 0;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+}
+
+.hero__panel-grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.hero__panel-card {
+  padding: var(--space-3) var(--space-4);
+  border-radius: calc(var(--radius) - 4px);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface-muted);
+  display: grid;
+  gap: var(--space-1);
+}
+
+.hero__panel-card--accent {
+  background: var(--color-surface-subtle);
+}
+
+.hero__panel-label {
+  color: var(--color-muted);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero__panel-value {
+  font-weight: 700;
+  font-size: 1.05rem;
   letter-spacing: -0.01em;
-  margin-top: var(--space-1);
 }
 
 .intro {
@@ -260,13 +324,20 @@ section {
   box-shadow: var(--shadow-card);
 }
 
+.intro__eyebrow {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
 .intro__card h2 {
-  margin-top: 0;
-  margin-bottom: var(--space-3);
+  margin: 0 0 var(--space-3);
   letter-spacing: -0.01em;
 }
 
-.intro__card p {
+.intro__lede {
   margin: 0;
   color: var(--color-muted);
 }
@@ -308,6 +379,24 @@ section {
 .intro__tile-text {
   margin: 0;
   color: var(--color-muted);
+}
+
+@media (min-width: 960px) {
+  .hero__layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .hero__actions {
+    justify-content: stretch;
+  }
+
+  .hero__cta,
+  .hero__ghost {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .footer {
