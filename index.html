@@ -1043,17 +1043,16 @@
 
       const updateHover = (event) => {
         const bounds = sparkline.getBoundingClientRect();
-        const scaleX = chart.width / bounds.width;
-        const scaleY = chart.height / bounds.height;
+        const svgPoint = sparkline.createSVGPoint();
+        svgPoint.x = event.clientX;
+        svgPoint.y = event.clientY;
+        const ctm = sparkline.getScreenCTM();
+        if (!ctm) return;
+        const transformed = svgPoint.matrixTransform(ctm.inverse());
         const localX = clamp(
-          (event.clientX - bounds.left) * scaleX,
+          transformed.x,
           chart.padding.left,
           chart.width - chart.padding.right
-        );
-        const localY = clamp(
-          (event.clientY - bounds.top) * scaleY,
-          chart.padding.top,
-          chart.height - chart.padding.bottom
         );
         const xValue = chart.xMin + ((localX - chart.padding.left) / chart.plotWidth) * (chart.xMax - chart.xMin);
         const rawIndex = (xValue - chart.xMin) / chart.step;
