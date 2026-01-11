@@ -495,7 +495,6 @@ section {
 .chart__hovered-title {
   grid-column: 1 / -1;
   margin: var(--space-2) 0 0;
-  padding: 0 var(--space-2);
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
