@@ -1194,7 +1194,6 @@ section {
   height: 200px;
   border-radius: var(--radius);
   background: var(--color-surface-muted);
-  border: 1px solid var(--color-line);
 }
 
 .chart__sparkline-axes line {
