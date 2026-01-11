@@ -394,6 +394,7 @@ section {
 .chart__figure {
   width: 100%;
   max-width: none;
+  height: var(--chart-controls-height, auto);
   max-height: var(--chart-controls-height, none);
   min-height: 0;
   padding: var(--space-4);
@@ -402,7 +403,7 @@ section {
   overflow: hidden;
   position: relative;
   margin: 0;
-  align-self: stretch;
+  align-self: flex-start;
   flex: 1 1 auto;
 }
 
@@ -444,9 +445,10 @@ section {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  height: var(--chart-controls-height, auto);
   max-height: var(--chart-controls-height, none);
   min-height: 0;
-  align-self: stretch;
+  align-self: flex-start;
   flex: 0 0 240px;
 }
 
@@ -546,7 +548,7 @@ section {
 .chart__body {
   display: flex;
   gap: var(--space-5);
-  align-items: stretch;
+  align-items: flex-start;
   --chart-controls-height: auto;
 }
 
