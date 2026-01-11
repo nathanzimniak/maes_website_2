@@ -539,7 +539,7 @@ section {
   max-height: var(--chart-controls-height, none);
   min-height: 0;
   align-self: flex-start;
-  flex: 0 0 240px;
+  flex: 0 0 340px;
 }
 
 .chart__hovered-header {
@@ -804,7 +804,7 @@ section {
 
 .chart__control-label--aspect .chart__label-text {
   font-weight: 500;
-  font-size: 0.80rem;
+  font-size: 0.75rem;
   color: #000000;
 }
 
