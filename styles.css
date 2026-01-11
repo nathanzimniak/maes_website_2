@@ -539,7 +539,7 @@ section {
   max-height: var(--chart-controls-height, none);
   min-height: 0;
   align-self: flex-start;
-  flex: 0 0 340px;
+  flex: 0 0 320px;
 }
 
 .chart__hovered-header {
@@ -834,7 +834,7 @@ section {
 }
 
 .chart__hovered .math-label {
-  font-size: 0.72rem;
+  font-size: 0.80rem;
 }
 
 .chart__label-symbol {
