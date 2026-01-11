@@ -1062,8 +1062,8 @@
         const span = xValues[upperIndex] - xValues[lowerIndex] || 1;
         const t = (xValue - xValues[lowerIndex]) / span;
         const interpolatedY = yValues[lowerIndex] + t * (yValues[upperIndex] - yValues[lowerIndex]);
-        const markerX = localX;
-        const markerY = localY;
+        const markerX = chart.xScale(xValue);
+        const markerY = chart.yScale(interpolatedY);
 
         marker.setAttribute('cx', markerX);
         marker.setAttribute('cy', markerY);
