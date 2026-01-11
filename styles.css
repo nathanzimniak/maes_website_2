@@ -983,6 +983,8 @@ section {
 
 .chart__select--profile {
   font-size: 0.8rem;
+  padding-right: var(--space-6);
+  border-right: var(--space-2) solid transparent;
 }
 
 .chart__axis-row .chart__select--axis {
