@@ -1067,7 +1067,9 @@ section {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-3);
-  margin-top: var(--space-3);
+  width: 100%;
+  max-width: 1200px;
+  margin: var(--space-3) auto 0;
 }
 
 .chart__profiles-placeholder {
