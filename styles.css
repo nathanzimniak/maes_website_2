@@ -437,7 +437,7 @@ section {
 }
 
 .chart__hovered {
-  padding: var(--space-4);
+  padding: var(--space-6);
   border-radius: var(--radius);
   background: var(--color-surface-subtle);
   box-shadow: none;
@@ -1025,7 +1025,7 @@ section {
 }
 
 .chart__profiles {
-  padding: var(--space-4);
+  padding: var(--space-6);
   border-radius: var(--radius);
   background: var(--color-surface-subtle);
   box-shadow: none;
