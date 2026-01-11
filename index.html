@@ -1043,14 +1043,27 @@
 
       const updateHover = (event) => {
         const bounds = sparkline.getBoundingClientRect();
-        const localX = clamp(event.clientX - bounds.left, chart.padding.left, chart.width - chart.padding.right);
+        const scaleX = chart.width / bounds.width;
+        const scaleY = chart.height / bounds.height;
+        const localX = clamp(
+          (event.clientX - bounds.left) * scaleX,
+          chart.padding.left,
+          chart.width - chart.padding.right
+        );
+        const localY = clamp(
+          (event.clientY - bounds.top) * scaleY,
+          chart.padding.top,
+          chart.height - chart.padding.bottom
+        );
         const xValue = chart.xMin + ((localX - chart.padding.left) / chart.plotWidth) * (chart.xMax - chart.xMin);
-        const rawIndex = Math.round((xValue - chart.xMin) / chart.step);
-        const index = clampIndex(rawIndex, xValues.length - 1);
-        const hoveredX = xValues[index];
-        const hoveredY = yValues[index];
-        const markerX = chart.xScale(hoveredX);
-        const markerY = chart.yScale(hoveredY);
+        const rawIndex = (xValue - chart.xMin) / chart.step;
+        const lowerIndex = clampIndex(Math.floor(rawIndex), xValues.length - 1);
+        const upperIndex = clampIndex(Math.ceil(rawIndex), xValues.length - 1);
+        const span = xValues[upperIndex] - xValues[lowerIndex] || 1;
+        const t = (xValue - xValues[lowerIndex]) / span;
+        const interpolatedY = yValues[lowerIndex] + t * (yValues[upperIndex] - yValues[lowerIndex]);
+        const markerX = chart.xScale(xValue);
+        const markerY = chart.yScale(interpolatedY);
 
         marker.setAttribute('cx', markerX);
         marker.setAttribute('cy', markerY);
@@ -1059,26 +1072,26 @@
         tooltip.innerHTML = `
           <div class="chart__sparkline-tooltip-row">
             <span class="chart__sparkline-tooltip-key">x</span>
-            <span class="chart__sparkline-tooltip-value">${hoveredX.toFixed(2)}</span>
+            <span class="chart__sparkline-tooltip-value">${xValue.toFixed(2)}</span>
           </div>
           <div class="chart__sparkline-tooltip-row">
             <span class="chart__sparkline-tooltip-key">y</span>
-            <span class="chart__sparkline-tooltip-value">${chart.format(hoveredY)}</span>
+            <span class="chart__sparkline-tooltip-value">${chart.format(interpolatedY)}</span>
           </div>
         `;
 
         const tooltipWidth = tooltip.offsetWidth || 140;
         const tooltipHeight = tooltip.offsetHeight || 42;
-        const scaleX = bounds.width / chart.width;
-        const scaleY = bounds.height / chart.height;
-        const markerLeft = markerX * scaleX;
-        const markerTop = markerY * scaleY;
+        const tooltipScaleX = bounds.width / chart.width;
+        const tooltipScaleY = bounds.height / chart.height;
+        const markerLeft = markerX * tooltipScaleX;
+        const markerTop = markerY * tooltipScaleY;
         const desiredLeft = markerLeft - tooltipWidth / 2;
         const desiredTop = markerTop - tooltipHeight - 12;
-        const minLeft = chart.padding.left * scaleX;
-        const maxLeft = Math.max(minLeft, bounds.width - chart.padding.right * scaleX - tooltipWidth);
-        const minTop = chart.padding.top * scaleY;
-        const maxTop = Math.max(minTop, bounds.height - chart.padding.bottom * scaleY - tooltipHeight);
+        const minLeft = chart.padding.left * tooltipScaleX;
+        const maxLeft = Math.max(minLeft, bounds.width - chart.padding.right * tooltipScaleX - tooltipWidth);
+        const minTop = chart.padding.top * tooltipScaleY;
+        const maxTop = Math.max(minTop, bounds.height - chart.padding.bottom * tooltipScaleY - tooltipHeight);
 
         tooltip.style.left = `${clamp(desiredLeft, minLeft, maxLeft)}px`;
         tooltip.style.top = `${clamp(desiredTop, minTop, maxTop)}px`;
