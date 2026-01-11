@@ -260,7 +260,7 @@
           </div>
           <div id="hovered-values" class="chart__hovered-body">
             <ul class="chart__hovered-list">
-              <li class="chart__hovered-title">Grandeurs 1–5</li>
+              <li class="chart__hovered-title">Input parameters</li>
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Grandeur 1</span>
                 <span class="chart__label-math">
@@ -301,7 +301,7 @@
                   <span class="chart__label-value">―</span>
                 </span>
               </li>
-              <li class="chart__hovered-title">Grandeurs 6–10</li>
+              <li class="chart__hovered-title">Disk properties</li>
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Grandeur 6</span>
                 <span class="chart__label-math">
@@ -342,7 +342,7 @@
                   <span class="chart__label-value">―</span>
                 </span>
               </li>
-              <li class="chart__hovered-title">Grandeurs 11–15</li>
+              <li class="chart__hovered-title">Jet properties</li>
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Grandeur 11</span>
                 <span class="chart__label-math">
@@ -383,7 +383,7 @@
                   <span class="chart__label-value">―</span>
                 </span>
               </li>
-              <li class="chart__hovered-title">Grandeurs 16–20</li>
+              <li class="chart__hovered-title">Miscellaneous</li>
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Grandeur 16</span>
                 <span class="chart__label-math">
@@ -816,7 +816,15 @@
           if (index % 5 === 0) {
             const start = index + 1;
             const end = Math.min(index + 5, entries.length);
-            acc.push(`<li class="chart__hovered-title">Grandeurs ${start}\u2013${end}</li>`);
+            const titles = {
+              1: "Input parameters",
+              6: "Disk properties",
+              11: "Jet properties",
+              16: "Miscellaneous",
+            };
+            acc.push(
+              `<li class="chart__hovered-title">${titles[start]}</li>`
+            );
           }
           const value = valueFormatter(key);
           acc.push(`
