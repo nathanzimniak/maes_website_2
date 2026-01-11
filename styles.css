@@ -1175,6 +1175,7 @@ section {
   box-shadow: none;
   display: grid;
   gap: var(--space-2);
+  color: #000;
 }
 
 .chart__profile-header {
@@ -1183,21 +1184,9 @@ section {
   gap: var(--space-3);
 }
 
-.chart__profile-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px rgba(18, 20, 23, 0.08);
-}
-
 .chart__profile-title {
   font-weight: 700;
   letter-spacing: -0.01em;
-}
-
-.chart__profile-meta {
-  color: var(--color-muted);
-  font-size: var(--font-size-sm);
 }
 
 .chart__sparkline {

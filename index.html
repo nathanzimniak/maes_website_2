@@ -1011,12 +1011,12 @@
     function renderProfiles(solution) {
       const { profiles } = solution;
       const series = [
-        { label: 'Pression P(x)', key: 'pressure', unit: 'kPa', color: '#38bdf8' },
-        { label: 'Densité ρ(x)', key: 'density', unit: 'kg/m³', color: '#fbbf24' },
-        { label: 'Température T(x)', key: 'temperature', unit: 'K', color: '#a78bfa' },
-        { label: 'Vitesse radiale u<sub>r</sub>(x)', key: 'radialVelocity', unit: 'km/s', color: '#34d399' },
-        { label: 'Vitesse toroïdale u<sub>φ</sub>(x)', key: 'toroidalVelocity', unit: 'km/s', color: '#f472b6' },
-        { label: 'Vitesse verticale u<sub>z</sub>(x)', key: 'verticalVelocity', unit: 'km/s', color: '#fb7185' },
+        { label: 'Pression <span class="math-label" data-latex="P(x)"></span>', key: 'pressure', unit: 'kPa', color: '#000000' },
+        { label: 'Densité <span class="math-label" data-latex="\\rho(x)"></span>', key: 'density', unit: 'kg/m³', color: '#000000' },
+        { label: 'Température <span class="math-label" data-latex="T(x)"></span>', key: 'temperature', unit: 'K', color: '#000000' },
+        { label: 'Vitesse radiale <span class="math-label" data-latex="u_r(x)"></span>', key: 'radialVelocity', unit: 'km/s', color: '#000000' },
+        { label: 'Vitesse toroïdale <span class="math-label" data-latex="u_\\phi(x)"></span>', key: 'toroidalVelocity', unit: 'km/s', color: '#000000' },
+        { label: 'Vitesse verticale <span class="math-label" data-latex="u_z(x)"></span>', key: 'verticalVelocity', unit: 'km/s', color: '#000000' },
       ];
 
       profileContent.innerHTML = '';
@@ -1031,10 +1031,9 @@
         card.className = 'chart__profile-card';
         card.innerHTML = `
           <div class="chart__profile-header">
-            <span class="chart__profile-dot" style="background:${serie.color}"></span>
             <div>
               <div class="chart__profile-title">${serie.label}</div>
-              <div class="chart__profile-meta">min ${min} · max ${max} ${serie.unit}</div>
+              <div>min ${min} · max ${max} ${serie.unit}</div>
             </div>
           </div>
           <svg class="chart__sparkline" viewBox="0 0 240 80" role="img" aria-label="${serie.label}">
@@ -1044,6 +1043,8 @@
 
         profileContent.appendChild(card);
       });
+
+      renderMathLabels(profileContent);
     }
 
     function renderFlatProfiles() {
