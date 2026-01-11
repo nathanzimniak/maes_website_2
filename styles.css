@@ -833,6 +833,10 @@ section {
   font-size: 0.90rem;
 }
 
+.chart__hovered .math-label {
+  font-size: 0.72rem;
+}
+
 .chart__label-symbol {
   font-style: italic;
 }
