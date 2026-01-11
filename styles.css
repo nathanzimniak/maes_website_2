@@ -983,6 +983,11 @@ section {
 
 .chart__select--profile {
   font-size: 0.8rem;
+  padding-right: var(--space-6);
+  padding-left: var(--space-4);
+  direction: rtl;
+  text-align: left;
+  text-align-last: left;
 }
 
 .chart__axis-row .chart__select--axis {
