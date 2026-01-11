@@ -539,7 +539,7 @@ section {
   max-height: var(--chart-controls-height, none);
   min-height: 0;
   align-self: flex-start;
-  flex: 0 0 320px;
+  flex: 0 0 300px;
 }
 
 .chart__hovered-header {
