@@ -1072,6 +1072,7 @@
                   ${chart.format(tick)}
                 </text>
               `).join('')}
+              <text class="chart__sparkline-axis-label" x="${chart.width / 2}" y="${chart.height - chart.padding.bottom + 32}" text-anchor="middle">x</text>
             </g>
             <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
           </svg>

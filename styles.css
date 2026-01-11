@@ -1208,6 +1208,12 @@ section {
   font-size: 10px;
 }
 
+.chart__sparkline-axis-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
 .chart__sparkline-line {
   stroke-linecap: round;
   stroke-linejoin: round;
