@@ -579,7 +579,6 @@ section {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding-right: 14px;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) transparent;
 }
