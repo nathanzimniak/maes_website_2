@@ -412,8 +412,8 @@ section {
   top: var(--space-3);
   right: var(--space-3);
   padding: var(--space-2);
-  border-radius: calc(var(--radius) - 4px);
-  background: transparent;
+  border-radius: calc(var(--radius) - 6px);
+  background: var(--color-surface);
   border: none;
   box-shadow: none;
   display: grid;
