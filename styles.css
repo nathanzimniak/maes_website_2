@@ -523,7 +523,6 @@ section {
 
 .chart__hovered-item {
   display: flex;
-  padding: 0 var(--space-2);
   border-radius: var(--radius);
   background: transparent;
   border: none;
