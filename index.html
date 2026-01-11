@@ -1008,7 +1008,9 @@
 
       const yMid = (yMin + yMax) / 2;
       const yTicks = [yMin, yMid, yMax];
+      const xMid = (xMin + xMax) / 2;
       const xTicks = [xMin, xMax];
+      const xGridTicks = [xMin, xMid, xMax];
 
       return {
         width,
@@ -1017,6 +1019,8 @@
         points,
         xTicks,
         yTicks,
+        xGridTicks,
+        yGridTicks: yTicks,
         format: (value) => formatTick(value),
       };
     }
@@ -1047,6 +1051,17 @@
             </div>
           </div>
           <svg class="chart__sparkline" viewBox="0 0 ${chart.width} ${chart.height}" role="img" aria-label="${serie.label}">
+            <g class="chart__sparkline-grid" aria-hidden="true">
+              ${chart.yGridTicks.map((tick) => `
+                <line x1="${chart.padding.left}" y1="${chart.padding.top + ((chart.yGridTicks[2] - tick) / (chart.yGridTicks[2] - chart.yGridTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"
+                      x2="${chart.width - chart.padding.right}" y2="${chart.padding.top + ((chart.yGridTicks[2] - tick) / (chart.yGridTicks[2] - chart.yGridTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"></line>
+              `).join('')}
+              ${chart.xGridTicks.map((tick) => `
+                <line x1="${chart.padding.left + ((tick - chart.xGridTicks[0]) / (chart.xGridTicks[2] - chart.xGridTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                      y1="${chart.padding.top}" x2="${chart.padding.left + ((tick - chart.xGridTicks[0]) / (chart.xGridTicks[2] - chart.xGridTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                      y2="${chart.height - chart.padding.bottom}"></line>
+              `).join('')}
+            </g>
             <g class="chart__sparkline-axes" aria-hidden="true">
               <line x1="${chart.padding.left}" y1="${chart.padding.top}" x2="${chart.padding.left}" y2="${chart.height - chart.padding.bottom}"></line>
               <line x1="${chart.padding.left}" y1="${chart.height - chart.padding.bottom}" x2="${chart.width - chart.padding.right}" y2="${chart.height - chart.padding.bottom}"></line>
