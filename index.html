@@ -989,7 +989,7 @@
     }
 
     function buildProfileChart(xValues, yValues, width = 320, height = 140) {
-      const padding = { top: 28, right: 6, bottom: 38, left: 24 };
+      const padding = { top: 28, right: 6, bottom: 46, left: 24 };
       const xMin = Math.min(...xValues);
       const xMax = Math.max(...xValues);
       const yMin = Math.min(...yValues);
@@ -1072,7 +1072,11 @@
                   ${chart.format(tick)}
                 </text>
               `).join('')}
-              <text class="chart__sparkline-axis-label" x="${chart.width / 2}" y="${chart.height - chart.padding.bottom + 32}" text-anchor="middle">x</text>
+              <foreignObject class="chart__sparkline-axis-label" x="${chart.width / 2 - 24}" y="${chart.height - chart.padding.bottom + 24}" width="48" height="20">
+                <div xmlns="http://www.w3.org/1999/xhtml" class="chart__sparkline-axis-label-text">
+                  <span class="math-label" data-latex="x"></span>
+                </div>
+              </foreignObject>
             </g>
             <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
           </svg>
