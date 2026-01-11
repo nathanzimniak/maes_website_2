@@ -1050,12 +1050,14 @@
           chart.width - chart.padding.right
         );
         const xValue = chart.xMin + ((localX - chart.padding.left) / chart.plotWidth) * (chart.xMax - chart.xMin);
-        const rawIndex = Math.round((xValue - chart.xMin) / chart.step);
-        const index = clampIndex(rawIndex, xValues.length - 1);
-        const hoveredX = xValues[index];
-        const hoveredY = yValues[index];
-        const markerX = chart.xScale(hoveredX);
-        const markerY = chart.yScale(hoveredY);
+        const rawIndex = (xValue - chart.xMin) / chart.step;
+        const lowerIndex = clampIndex(Math.floor(rawIndex), xValues.length - 1);
+        const upperIndex = clampIndex(Math.ceil(rawIndex), xValues.length - 1);
+        const span = xValues[upperIndex] - xValues[lowerIndex] || 1;
+        const t = (xValue - xValues[lowerIndex]) / span;
+        const interpolatedY = yValues[lowerIndex] + t * (yValues[upperIndex] - yValues[lowerIndex]);
+        const markerX = localX;
+        const markerY = chart.yScale(interpolatedY);
 
         marker.setAttribute('cx', markerX);
         marker.setAttribute('cy', markerY);
@@ -1064,11 +1066,11 @@
         tooltip.innerHTML = `
           <div class="chart__sparkline-tooltip-row">
             <span class="chart__sparkline-tooltip-key">x</span>
-            <span class="chart__sparkline-tooltip-value">${hoveredX.toFixed(2)}</span>
+            <span class="chart__sparkline-tooltip-value">${xValue.toFixed(2)}</span>
           </div>
           <div class="chart__sparkline-tooltip-row">
             <span class="chart__sparkline-tooltip-key">y</span>
-            <span class="chart__sparkline-tooltip-value">${chart.format(hoveredY)}</span>
+            <span class="chart__sparkline-tooltip-value">${chart.format(interpolatedY)}</span>
           </div>
         `;
 
