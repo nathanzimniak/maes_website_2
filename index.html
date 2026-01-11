@@ -1074,9 +1074,9 @@
 
         const tooltipWidth = tooltip.offsetWidth || 140;
         const tooltipHeight = tooltip.offsetHeight || 42;
-        const scaleX = bounds.width / chart.width;
+        const tooltipScaleX = bounds.width / chart.width;
         const scaleY = bounds.height / chart.height;
-        const markerLeft = markerX * scaleX;
+        const markerLeft = markerX * tooltipScaleX;
         const markerTop = markerY * scaleY;
         const desiredLeft = markerLeft - tooltipWidth / 2;
         const desiredTop = markerTop - tooltipHeight - 12;
