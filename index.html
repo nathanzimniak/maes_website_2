@@ -1043,7 +1043,12 @@
 
       const updateHover = (event) => {
         const bounds = sparkline.getBoundingClientRect();
-        const localX = clamp(event.clientX - bounds.left, chart.padding.left, chart.width - chart.padding.right);
+        const scaleX = chart.width / bounds.width;
+        const localX = clamp(
+          (event.clientX - bounds.left) * scaleX,
+          chart.padding.left,
+          chart.width - chart.padding.right
+        );
         const xValue = chart.xMin + ((localX - chart.padding.left) / chart.plotWidth) * (chart.xMax - chart.xMin);
         const rawIndex = Math.round((xValue - chart.xMin) / chart.step);
         const index = clampIndex(rawIndex, xValues.length - 1);
@@ -1069,9 +1074,9 @@
 
         const tooltipWidth = tooltip.offsetWidth || 140;
         const tooltipHeight = tooltip.offsetHeight || 42;
-        const scaleX = bounds.width / chart.width;
+        const tooltipScaleX = bounds.width / chart.width;
         const scaleY = bounds.height / chart.height;
-        const markerLeft = markerX * scaleX;
+        const markerLeft = markerX * tooltipScaleX;
         const markerTop = markerY * scaleY;
         const desiredLeft = markerLeft - tooltipWidth / 2;
         const desiredTop = markerTop - tooltipHeight - 12;
