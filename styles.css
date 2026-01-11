@@ -1204,8 +1204,9 @@ section {
 }
 
 .chart__sparkline-axes line {
-  stroke: var(--color-axis);
+  stroke: var(--color-line);
   stroke-width: 1;
+  opacity: 0.8;
   shape-rendering: crispEdges;
 }
 
