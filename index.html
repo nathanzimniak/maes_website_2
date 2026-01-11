@@ -1038,11 +1038,14 @@
       return Math.min(Math.max(value, 0), max);
     }
 
-    function attachSparklineHover({ sparkline, tooltip, marker, chart, xValues, yValues }) {
+    function attachSparklineHover({ sparkline, sparklineGrid, tooltip, marker, chart, xValues, yValues }) {
       if (!sparkline || !tooltip || !marker || !chart) return;
 
       const updateHover = (event) => {
         const bounds = sparkline.getBoundingClientRect();
+        const gridBounds = sparklineGrid?.getBoundingClientRect() || bounds;
+        const gridOffsetX = gridBounds.left - bounds.left;
+        const gridOffsetY = gridBounds.top - bounds.top;
         const svgPoint = sparkline.createSVGPoint();
         svgPoint.x = event.clientX;
         svgPoint.y = event.clientY;
@@ -1087,10 +1090,10 @@
         const markerTop = markerY * tooltipScaleY;
         const desiredLeft = markerLeft - tooltipWidth / 2;
         const desiredTop = markerTop - tooltipHeight - 12;
-        const minLeft = chart.padding.left * tooltipScaleX;
-        const maxLeft = Math.max(minLeft, bounds.width - chart.padding.right * tooltipScaleX - tooltipWidth);
-        const minTop = chart.padding.top * tooltipScaleY;
-        const maxTop = Math.max(minTop, bounds.height - chart.padding.bottom * tooltipScaleY - tooltipHeight);
+        const minLeft = gridOffsetX;
+        const maxLeft = Math.max(minLeft, gridOffsetX + gridBounds.width - tooltipWidth);
+        const minTop = gridOffsetY;
+        const maxTop = Math.max(minTop, gridOffsetY + gridBounds.height - tooltipHeight);
 
         tooltip.style.left = `${clamp(desiredLeft, minLeft, maxLeft)}px`;
         tooltip.style.top = `${clamp(desiredTop, minTop, maxTop)}px`;
@@ -1187,10 +1190,12 @@
         profileContent.appendChild(card);
 
         const sparkline = card.querySelector('.chart__sparkline');
+        const sparklineGrid = card.querySelector('.chart__sparkline-grid');
         const tooltip = card.querySelector('.chart__sparkline-tooltip');
         const marker = card.querySelector('.chart__sparkline-marker');
         attachSparklineHover({
           sparkline,
+          sparklineGrid,
           tooltip,
           marker,
           chart,
