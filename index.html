@@ -525,7 +525,7 @@
     let currentSolutions = [];
     let selectedSolutionIndex = null;
     let pinnedSolutionIndex = null;
-    const latexSelects = new Map();
+    const customSelects = new Map();
 
     let width = 0;
     let height = 0;
@@ -902,24 +902,29 @@
       });
     }
 
-    function updateLatexSelectDisplay(select) {
-      const state = latexSelects.get(select);
+    function updateCustomSelectDisplay(select) {
+      const state = customSelects.get(select);
       if (!state) return;
 
-      const { buttonLabel, menu } = state;
-      const latex = getMetricLatex(select.value);
-      buttonLabel.innerHTML = `<span class="math-label" data-latex="${latex}"></span>`;
-      renderMathLabels(buttonLabel);
+      const { buttonLabel, menu, renderLabel, usesMath } = state;
+      renderLabel(buttonLabel, select);
+
+      if (usesMath) {
+        renderMathLabels(buttonLabel);
+      }
 
       if (menu) {
         Array.from(menu.querySelectorAll('[data-value]')).forEach((item) => {
           item.classList.toggle('chart__latex-option--selected', item.dataset.value === select.value);
         });
+        if (usesMath) {
+          renderMathLabels(menu);
+        }
       }
     }
 
-    function closeLatexMenus() {
-      latexSelects.forEach(({ menu }, select) => {
+    function closeCustomMenus() {
+      customSelects.forEach(({ menu }, select) => {
         const button = menu?.previousElementSibling;
         if (menu) {
           menu.classList.remove('chart__latex-menu--open');
@@ -930,7 +935,7 @@
       });
     }
 
-    function buildLatexSelect(select) {
+    function buildCustomSelect(select, { renderLabel, renderOption, usesMath = false }) {
       const wrapper = document.createElement('div');
       wrapper.className = 'chart__latex-select';
 
@@ -958,7 +963,7 @@
         item.type = 'button';
         item.className = 'chart__latex-option';
         item.dataset.value = option.value;
-        item.innerHTML = `<span class="math-label" data-latex="${getMetricLatex(option.value)}"></span>`;
+        renderOption(item, option);
         item.addEventListener('click', () => {
           select.value = option.value;
           select.dispatchEvent(new Event('change', { bubbles: true }));
@@ -970,7 +975,7 @@
 
       button.addEventListener('click', (event) => {
         event.stopPropagation();
-        closeLatexMenus();
+        closeCustomMenus();
         const isOpen = menu.classList.toggle('chart__latex-menu--open');
         button.setAttribute('aria-expanded', String(isOpen));
       });
@@ -982,9 +987,8 @@
       select.parentNode.insertBefore(wrapper, select);
       wrapper.appendChild(select);
 
-      latexSelects.set(select, { buttonLabel, menu });
-      updateLatexSelectDisplay(select);
-      renderMathLabels(menu);
+      customSelects.set(select, { buttonLabel, menu, renderLabel, usesMath });
+      updateCustomSelectDisplay(select);
     }
 
     function buildHoveredList(entries, valueFormatter) {
@@ -1419,6 +1423,7 @@
       if (!select) return;
 
       select.value = scaleType;
+      updateCustomSelectDisplay(select);
     }
 
     function updateChart() {
@@ -1451,11 +1456,11 @@
 
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
     xAxisSelect.addEventListener('change', () => {
-      updateLatexSelectDisplay(xAxisSelect);
+      updateCustomSelectDisplay(xAxisSelect);
       updateChart();
     });
     yAxisSelect.addEventListener('change', () => {
-      updateLatexSelectDisplay(yAxisSelect);
+      updateCustomSelectDisplay(yAxisSelect);
       updateChart();
     });
 
@@ -1472,16 +1477,46 @@
           yScaleType = nextScale;
         }
 
+        updateCustomSelectDisplay(select);
         updateChart();
+      });
+    });
+
+    updateAxisOptionLabels();
+    buildCustomSelect(xAxisSelect, {
+      usesMath: true,
+      renderLabel: (label, select) => {
+        const latex = getMetricLatex(select.value);
+        label.innerHTML = `<span class="math-label" data-latex="${latex}"></span>`;
+      },
+      renderOption: (item, option) => {
+        item.innerHTML = `<span class="math-label" data-latex="${getMetricLatex(option.value)}"></span>`;
+      },
+    });
+    buildCustomSelect(yAxisSelect, {
+      usesMath: true,
+      renderLabel: (label, select) => {
+        const latex = getMetricLatex(select.value);
+        label.innerHTML = `<span class="math-label" data-latex="${latex}"></span>`;
+      },
+      renderOption: (item, option) => {
+        item.innerHTML = `<span class="math-label" data-latex="${getMetricLatex(option.value)}"></span>`;
+      },
+    });
+    scaleSelects.forEach((select) => {
+      buildCustomSelect(select, {
+        renderLabel: (label, select) => {
+          const selectedOption = select.options[select.selectedIndex];
+          label.textContent = selectedOption ? selectedOption.textContent : select.value;
+        },
+        renderOption: (item, option) => {
+          item.textContent = option.textContent;
+        },
       });
     });
 
     updateScaleSelect('x', xScaleType);
     updateScaleSelect('y', yScaleType);
-
-    updateAxisOptionLabels();
-    buildLatexSelect(xAxisSelect);
-    buildLatexSelect(yAxisSelect);
 
     scenarioButtons.forEach((button) => {
       button.addEventListener('click', () => {
@@ -1499,7 +1534,7 @@
     window.addEventListener('resize', updateChart);
 
     document.addEventListener('click', () => {
-      closeLatexMenus();
+      closeCustomMenus();
     });
 
     updateChart();
