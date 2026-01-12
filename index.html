@@ -580,13 +580,13 @@
     yAxisLabel.appendChild(yAxisLabelContent);
     xAxisLabel.setAttribute('width', '120');
     xAxisLabel.setAttribute('height', '24');
-    yAxisLabel.setAttribute('width', '140');
+    yAxisLabel.setAttribute('width', '120');
     yAxisLabel.setAttribute('height', '24');
     xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
     xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
-    yAxisLabel.setAttribute('x', margin.left - 96);
-    yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 12);
-    yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 96} ${margin.top + innerHeight / 2 - 12})`);
+    yAxisLabel.setAttribute('x', 0);
+    yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 60);
+    yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 24} ${margin.top + innerHeight / 2})`);
 
     axes.appendChild(xTicksGroup);
     axes.appendChild(yTicksGroup);
@@ -620,9 +620,9 @@
 
       xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
       xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
-      yAxisLabel.setAttribute('x', margin.left - 96);
-      yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 12);
-      yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 96} ${margin.top + innerHeight / 2 - 12})`);
+      yAxisLabel.setAttribute('x', 0);
+      yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 60);
+      yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 24} ${margin.top + innerHeight / 2})`);
     }
 
     function createScale(domain, scaleType, axis) {
