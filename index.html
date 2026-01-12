@@ -559,46 +559,32 @@
     const xTicksGroup = document.createElementNS(svgNS, 'g');
     const yTicksGroup = document.createElementNS(svgNS, 'g');
     const xAxisLabel = document.createElementNS(svgNS, 'foreignObject');
-    const yAxisLabel = document.createElementNS(svgNS, 'foreignObject');
     const xAxisLabelContent = document.createElement('div');
-    const yAxisLabelContent = document.createElement('div');
     xAxisLabelContent.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
-    yAxisLabelContent.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
     xAxisLabelContent.className = 'chart__axis-math';
-    yAxisLabelContent.className = 'chart__axis-math';
     xAxisLabelContent.style.display = 'flex';
     xAxisLabelContent.style.alignItems = 'center';
     xAxisLabelContent.style.justifyContent = 'center';
     xAxisLabelContent.style.fontSize = '12px';
     xAxisLabelContent.style.color = 'var(--color-axis-label)';
-    yAxisLabelContent.style.display = 'flex';
-    yAxisLabelContent.style.alignItems = 'center';
-    yAxisLabelContent.style.justifyContent = 'center';
-    yAxisLabelContent.style.fontSize = '12px';
-    yAxisLabelContent.style.color = 'var(--color-axis-label)';
     xAxisLabel.appendChild(xAxisLabelContent);
-    yAxisLabel.appendChild(yAxisLabelContent);
     xAxisLabel.setAttribute('width', '120');
     xAxisLabel.setAttribute('height', '24');
-    yAxisLabel.setAttribute('width', '120');
-    yAxisLabel.setAttribute('height', '24');
     xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
     xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
-    yAxisLabel.setAttribute('x', 0);
-    yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 60);
-    yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 24} ${margin.top + innerHeight / 2})`);
 
     axes.appendChild(xTicksGroup);
     axes.appendChild(yTicksGroup);
     axes.appendChild(xAxisLabel);
-    axes.appendChild(yAxisLabel);
-
     svg.appendChild(axes);
 
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
 
     chartContainer.appendChild(svg);
+    const yAxisOverlayLabel = document.createElement('div');
+    yAxisOverlayLabel.className = 'chart__axis-label-y';
+    chartContainer.appendChild(yAxisOverlayLabel);
 
     function resizeChart() {
       if (chartControls && chartBody) {
@@ -620,9 +606,8 @@
 
       xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
       xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
-      yAxisLabel.setAttribute('x', 0);
-      yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 60);
-      yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 24} ${margin.top + innerHeight / 2})`);
+      yAxisOverlayLabel.style.left = `${margin.left - 24}px`;
+      yAxisOverlayLabel.style.top = `${margin.top + innerHeight / 2}px`;
     }
 
     function createScale(domain, scaleType, axis) {
@@ -844,9 +829,9 @@
       });
 
       xAxisLabelContent.innerHTML = `<span class="math-label" data-latex="${xLabel}"></span>`;
-      yAxisLabelContent.innerHTML = `<span class="math-label" data-latex="${yLabel}"></span>`;
+      yAxisOverlayLabel.innerHTML = `<span class="math-label" data-latex="${yLabel}"></span>`;
       renderMathLabels(xAxisLabelContent);
-      renderMathLabels(yAxisLabelContent);
+      renderMathLabels(yAxisOverlayLabel);
     }
 
     function positionTooltip(event) {

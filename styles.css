@@ -522,6 +522,20 @@ section {
   font-weight: 700;
 }
 
+.chart__axis-label-y {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  transform-origin: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 24px;
+  font-size: 12px;
+  color: var(--color-axis-label);
+  pointer-events: none;
+}
+
 .chart__axis-overlay-grid {
   display: grid;
   gap: var(--space-2);
