@@ -1254,7 +1254,7 @@ section {
 }
 
 .chart__sparkline-marker {
-  fill: var(--point-color);
+  fill: var(--color-accent);
   stroke: #ffffff;
   stroke-width: 2;
   opacity: 0;
