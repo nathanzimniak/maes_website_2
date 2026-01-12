@@ -525,6 +525,7 @@
     let currentSolutions = [];
     let selectedSolutionIndex = null;
     let pinnedSolutionIndex = null;
+    const latexSelects = new Map();
 
     let width = 0;
     let height = 0;
@@ -557,33 +558,33 @@
 
     const xTicksGroup = document.createElementNS(svgNS, 'g');
     const yTicksGroup = document.createElementNS(svgNS, 'g');
-    const xAxisLabel = document.createElementNS(svgNS, 'text');
-    const yAxisLabel = document.createElementNS(svgNS, 'text');
-
-    xAxisLabel.setAttribute('fill', 'var(--color-axis-label)');
-    xAxisLabel.setAttribute('stroke', 'none');
-    xAxisLabel.setAttribute('font-size', '12');
-    xAxisLabel.setAttribute('text-anchor', 'middle');
-    xAxisLabel.setAttribute('x', margin.left + innerWidth / 2);
-    xAxisLabel.setAttribute('y', margin.top + innerHeight + 36);
-
-    yAxisLabel.setAttribute('fill', 'var(--color-axis-label)');
-    yAxisLabel.setAttribute('stroke', 'none');
-    yAxisLabel.setAttribute('font-size', '12');
-    yAxisLabel.setAttribute('text-anchor', 'middle');
-    yAxisLabel.setAttribute('transform', `translate(${margin.left - 36} ${margin.top + innerHeight / 2}) rotate(-90)`);
+    const xAxisLabel = document.createElementNS(svgNS, 'foreignObject');
+    const xAxisLabelContent = document.createElement('div');
+    xAxisLabelContent.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+    xAxisLabelContent.className = 'chart__axis-math';
+    xAxisLabelContent.style.display = 'flex';
+    xAxisLabelContent.style.alignItems = 'center';
+    xAxisLabelContent.style.justifyContent = 'center';
+    xAxisLabelContent.style.fontSize = '12px';
+    xAxisLabelContent.style.color = 'var(--color-axis-label)';
+    xAxisLabel.appendChild(xAxisLabelContent);
+    xAxisLabel.setAttribute('width', '120');
+    xAxisLabel.setAttribute('height', '24');
+    xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
+    xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
 
     axes.appendChild(xTicksGroup);
     axes.appendChild(yTicksGroup);
     axes.appendChild(xAxisLabel);
-    axes.appendChild(yAxisLabel);
-
     svg.appendChild(axes);
 
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
 
     chartContainer.appendChild(svg);
+    const yAxisOverlayLabel = document.createElement('div');
+    yAxisOverlayLabel.className = 'chart__axis-label-y';
+    chartContainer.appendChild(yAxisOverlayLabel);
 
     function resizeChart() {
       if (chartControls && chartBody) {
@@ -603,9 +604,10 @@
       yAxis.setAttribute('y1', margin.top);
       yAxis.setAttribute('y2', margin.top + innerHeight);
 
-      xAxisLabel.setAttribute('x', margin.left + innerWidth / 2);
-      xAxisLabel.setAttribute('y', margin.top + innerHeight + 36);
-      yAxisLabel.setAttribute('transform', `translate(${margin.left - 36} ${margin.top + innerHeight / 2}) rotate(-90)`);
+      xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
+      xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
+      yAxisOverlayLabel.style.left = `${margin.left - 24}px`;
+      yAxisOverlayLabel.style.top = `${margin.top + innerHeight / 2}px`;
     }
 
     function createScale(domain, scaleType, axis) {
@@ -826,8 +828,10 @@
         yTicksGroup.appendChild(yTickLabel);
       });
 
-      xAxisLabel.textContent = xLabel;
-      yAxisLabel.textContent = yLabel;
+      xAxisLabelContent.innerHTML = `<span class="math-label" data-latex="${xLabel}"></span>`;
+      yAxisOverlayLabel.innerHTML = `<span class="math-label" data-latex="${yLabel}"></span>`;
+      renderMathLabels(xAxisLabelContent);
+      renderMathLabels(yAxisOverlayLabel);
     }
 
     function positionTooltip(event) {
@@ -878,6 +882,108 @@
         label: `Grandeur ${fallbackIndex}`,
         latex: '\\varepsilon'
       };
+    }
+
+    function getMetricLatex(key) {
+      return getHoveredMetricLabel(key).latex ?? key.toUpperCase();
+    }
+
+    function updateAxisOptionLabels() {
+      if (!xAxisSelect || !yAxisSelect) return;
+
+      [xAxisSelect, yAxisSelect].forEach((select) => {
+        Array.from(select.options).forEach((option) => {
+          const { label, latex } = getHoveredMetricLabel(option.value);
+          option.textContent = label;
+          option.title = label;
+          option.dataset.latex = latex ?? option.value.toUpperCase();
+        });
+      });
+    }
+
+    function updateLatexSelectDisplay(select) {
+      const state = latexSelects.get(select);
+      if (!state) return;
+
+      const { buttonLabel, menu } = state;
+      const latex = getMetricLatex(select.value);
+      buttonLabel.innerHTML = `<span class="math-label" data-latex="${latex}"></span>`;
+      renderMathLabels(buttonLabel);
+
+      if (menu) {
+        Array.from(menu.querySelectorAll('[data-value]')).forEach((item) => {
+          item.classList.toggle('chart__latex-option--selected', item.dataset.value === select.value);
+        });
+      }
+    }
+
+    function closeLatexMenus() {
+      latexSelects.forEach(({ menu }, select) => {
+        const button = menu?.previousElementSibling;
+        if (menu) {
+          menu.classList.remove('chart__latex-menu--open');
+        }
+        if (button && button.classList.contains('chart__latex-button')) {
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    function buildLatexSelect(select) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'chart__latex-select';
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'chart__latex-button';
+      button.setAttribute('aria-haspopup', 'listbox');
+      button.setAttribute('aria-expanded', 'false');
+
+      const buttonLabel = document.createElement('span');
+      buttonLabel.className = 'chart__latex-button-label';
+      button.appendChild(buttonLabel);
+
+      const caret = document.createElement('span');
+      caret.className = 'chart__latex-button-caret';
+      caret.textContent = '▾';
+      button.appendChild(caret);
+
+      const menu = document.createElement('div');
+      menu.className = 'chart__latex-menu';
+      menu.setAttribute('role', 'listbox');
+
+      Array.from(select.options).forEach((option) => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'chart__latex-option';
+        item.dataset.value = option.value;
+        item.innerHTML = `<span class="math-label" data-latex="${getMetricLatex(option.value)}"></span>`;
+        item.addEventListener('click', () => {
+          select.value = option.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          menu.classList.remove('chart__latex-menu--open');
+          button.setAttribute('aria-expanded', 'false');
+        });
+        menu.appendChild(item);
+      });
+
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        closeLatexMenus();
+        const isOpen = menu.classList.toggle('chart__latex-menu--open');
+        button.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      wrapper.appendChild(button);
+      wrapper.appendChild(menu);
+
+      select.classList.add('chart__latex-select-native');
+      select.parentNode.insertBefore(wrapper, select);
+      wrapper.appendChild(select);
+
+      latexSelects.set(select, { buttonLabel, menu });
+      updateLatexSelectDisplay(select);
+      renderMathLabels(menu);
     }
 
     function buildHoveredList(entries, valueFormatter) {
@@ -978,11 +1084,11 @@
           const yValue = hovered[yKey];
           const rows = `
             <li>
-              <span class="chart__tooltip-key">${xKey.toUpperCase()}</span>
+              <span class="chart__tooltip-key math-label" data-latex="${getMetricLatex(xKey)}"></span>
               <span class="chart__tooltip-value">${xValue.toFixed(1)}</span>
             </li>
             <li>
-              <span class="chart__tooltip-key">${yKey.toUpperCase()}</span>
+              <span class="chart__tooltip-key math-label" data-latex="${getMetricLatex(yKey)}"></span>
               <span class="chart__tooltip-value">${yValue.toFixed(1)}</span>
             </li>
           `;
@@ -991,6 +1097,7 @@
           tooltip.classList.add('chart__tooltip--visible');
           positionTooltip(event);
           renderHoveredValues(hovered);
+          renderMathLabels(tooltip);
         });
 
         circle.addEventListener('pointermove', positionTooltip);
@@ -1337,13 +1444,19 @@
       const xScale = createScale(xDomain, xScaleType, 'x');
       const yScale = createScale(yDomain, yScaleType, 'y');
 
-      renderAxes(xDomain, yDomain, xKey.toUpperCase(), yKey.toUpperCase(), xScale, yScale, xScaleType, yScaleType);
+      renderAxes(xDomain, yDomain, getMetricLatex(xKey), getMetricLatex(yKey), xScale, yScale, xScaleType, yScaleType);
       renderPoints(solutions, xKey, yKey, xScale, yScale);
     }
 
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
-    xAxisSelect.addEventListener('change', updateChart);
-    yAxisSelect.addEventListener('change', updateChart);
+    xAxisSelect.addEventListener('change', () => {
+      updateLatexSelectDisplay(xAxisSelect);
+      updateChart();
+    });
+    yAxisSelect.addEventListener('change', () => {
+      updateLatexSelectDisplay(yAxisSelect);
+      updateChart();
+    });
 
     scaleSelects.forEach((select) => {
       select.addEventListener('change', () => {
@@ -1365,6 +1478,10 @@
     updateScaleSelect('x', xScaleType);
     updateScaleSelect('y', yScaleType);
 
+    updateAxisOptionLabels();
+    buildLatexSelect(xAxisSelect);
+    buildLatexSelect(yAxisSelect);
+
     scenarioButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const scenario = button.dataset.scenario;
@@ -1379,6 +1496,10 @@
     });
 
     window.addEventListener('resize', updateChart);
+
+    document.addEventListener('click', () => {
+      closeLatexMenus();
+    });
 
     updateChart();
 

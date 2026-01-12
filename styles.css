@@ -522,6 +522,20 @@ section {
   font-weight: 700;
 }
 
+.chart__axis-label-y {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  transform-origin: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 24px;
+  font-size: 12px;
+  color: var(--color-axis-label);
+  pointer-events: none;
+}
+
 .chart__axis-overlay-grid {
   display: grid;
   gap: var(--space-2);
@@ -1098,6 +1112,75 @@ section {
 .chart__select--scale {
   background: transparent;
   font-weight: 600;
+}
+
+.chart__latex-select {
+  position: relative;
+  width: 100%;
+}
+
+.chart__latex-select-native {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chart__latex-button {
+  width: 100%;
+  min-width: 70px;
+  padding: 4px 6px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 0.68rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.chart__latex-button-caret {
+  font-size: 0.7rem;
+  color: var(--color-text);
+}
+
+.chart__latex-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  display: none;
+  z-index: 20;
+}
+
+.chart__latex-menu--open {
+  display: block;
+}
+
+.chart__latex-option {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  color: var(--color-text);
+}
+
+.chart__latex-option:hover,
+.chart__latex-option--selected {
+  background: var(--color-surface-muted);
 }
 
 .chart__axis-overlay .chart__select--axis {
