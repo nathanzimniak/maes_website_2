@@ -1254,6 +1254,10 @@ section {
   stroke-linejoin: round;
 }
 
+.chart__sparkline-area {
+  pointer-events: none;
+}
+
 .chart__sparkline-marker {
   fill: var(--point-color);
   stroke: #ffffff;
