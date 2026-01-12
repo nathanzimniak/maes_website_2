@@ -881,8 +881,8 @@
       };
     }
 
-    function getMetricSymbol(key) {
-      return getHoveredMetricLabel(key).symbol ?? key.toUpperCase();
+    function getMetricLatex(key) {
+      return getHoveredMetricLabel(key).latex ?? key.toUpperCase();
     }
 
     function updateAxisOptionLabels() {
@@ -890,8 +890,8 @@
 
       [xAxisSelect, yAxisSelect].forEach((select) => {
         Array.from(select.options).forEach((option) => {
-          const { label, symbol } = getHoveredMetricLabel(option.value);
-          option.textContent = symbol ?? option.value.toUpperCase();
+          const { label, latex } = getHoveredMetricLabel(option.value);
+          option.textContent = latex ?? option.value.toUpperCase();
           option.title = label;
         });
       });
@@ -995,11 +995,11 @@
           const yValue = hovered[yKey];
           const rows = `
             <li>
-              <span class="chart__tooltip-key">${getMetricSymbol(xKey)}</span>
+              <span class="chart__tooltip-key math-label" data-latex="${getMetricLatex(xKey)}"></span>
               <span class="chart__tooltip-value">${xValue.toFixed(1)}</span>
             </li>
             <li>
-              <span class="chart__tooltip-key">${getMetricSymbol(yKey)}</span>
+              <span class="chart__tooltip-key math-label" data-latex="${getMetricLatex(yKey)}"></span>
               <span class="chart__tooltip-value">${yValue.toFixed(1)}</span>
             </li>
           `;
@@ -1008,6 +1008,7 @@
           tooltip.classList.add('chart__tooltip--visible');
           positionTooltip(event);
           renderHoveredValues(hovered);
+          renderMathLabels(tooltip);
         });
 
         circle.addEventListener('pointermove', positionTooltip);
@@ -1354,7 +1355,7 @@
       const xScale = createScale(xDomain, xScaleType, 'x');
       const yScale = createScale(yDomain, yScaleType, 'y');
 
-      renderAxes(xDomain, yDomain, getMetricSymbol(xKey), getMetricSymbol(yKey), xScale, yScale, xScaleType, yScaleType);
+      renderAxes(xDomain, yDomain, getMetricLatex(xKey), getMetricLatex(yKey), xScale, yScale, xScaleType, yScaleType);
       renderPoints(solutions, xKey, yKey, xScale, yScale);
     }
 
