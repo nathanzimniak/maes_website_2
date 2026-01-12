@@ -880,6 +880,22 @@
       };
     }
 
+    function getMetricLatex(key) {
+      return getHoveredMetricLabel(key).latex ?? key.toUpperCase();
+    }
+
+    function updateAxisOptionLabels() {
+      if (!xAxisSelect || !yAxisSelect) return;
+
+      [xAxisSelect, yAxisSelect].forEach((select) => {
+        Array.from(select.options).forEach((option) => {
+          const { label, latex } = getHoveredMetricLabel(option.value);
+          option.textContent = latex ?? option.value.toUpperCase();
+          option.title = label;
+        });
+      });
+    }
+
     function buildHoveredList(entries, valueFormatter) {
       const rows = entries
         .reduce((acc, key, index) => {
@@ -978,11 +994,11 @@
           const yValue = hovered[yKey];
           const rows = `
             <li>
-              <span class="chart__tooltip-key">${xKey.toUpperCase()}</span>
+              <span class="chart__tooltip-key math-label" data-latex="${getMetricLatex(xKey)}"></span>
               <span class="chart__tooltip-value">${xValue.toFixed(1)}</span>
             </li>
             <li>
-              <span class="chart__tooltip-key">${yKey.toUpperCase()}</span>
+              <span class="chart__tooltip-key math-label" data-latex="${getMetricLatex(yKey)}"></span>
               <span class="chart__tooltip-value">${yValue.toFixed(1)}</span>
             </li>
           `;
@@ -991,6 +1007,7 @@
           tooltip.classList.add('chart__tooltip--visible');
           positionTooltip(event);
           renderHoveredValues(hovered);
+          renderMathLabels(tooltip);
         });
 
         circle.addEventListener('pointermove', positionTooltip);
@@ -1337,7 +1354,7 @@
       const xScale = createScale(xDomain, xScaleType, 'x');
       const yScale = createScale(yDomain, yScaleType, 'y');
 
-      renderAxes(xDomain, yDomain, xKey.toUpperCase(), yKey.toUpperCase(), xScale, yScale, xScaleType, yScaleType);
+      renderAxes(xDomain, yDomain, getMetricLatex(xKey), getMetricLatex(yKey), xScale, yScale, xScaleType, yScaleType);
       renderPoints(solutions, xKey, yKey, xScale, yScale);
     }
 
@@ -1380,6 +1397,7 @@
 
     window.addEventListener('resize', updateChart);
 
+    updateAxisOptionLabels();
     updateChart();
 
     if (resizeObserver && chartControls) {
