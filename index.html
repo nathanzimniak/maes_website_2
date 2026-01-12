@@ -525,6 +525,7 @@
     let currentSolutions = [];
     let selectedSolutionIndex = null;
     let pinnedSolutionIndex = null;
+    const latexSelects = new Map();
 
     let width = 0;
     let height = 0;
@@ -579,13 +580,13 @@
     yAxisLabel.appendChild(yAxisLabelContent);
     xAxisLabel.setAttribute('width', '120');
     xAxisLabel.setAttribute('height', '24');
-    yAxisLabel.setAttribute('width', '24');
-    yAxisLabel.setAttribute('height', '120');
+    yAxisLabel.setAttribute('width', '140');
+    yAxisLabel.setAttribute('height', '24');
     xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
     xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
-    yAxisLabel.setAttribute('x', margin.left - 52);
-    yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 60);
-    yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 40} ${margin.top + innerHeight / 2})`);
+    yAxisLabel.setAttribute('x', margin.left - 96);
+    yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 12);
+    yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 96} ${margin.top + innerHeight / 2 - 12})`);
 
     axes.appendChild(xTicksGroup);
     axes.appendChild(yTicksGroup);
@@ -619,9 +620,9 @@
 
       xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
       xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
-      yAxisLabel.setAttribute('x', margin.left - 52);
-      yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 60);
-      yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 40} ${margin.top + innerHeight / 2})`);
+      yAxisLabel.setAttribute('x', margin.left - 96);
+      yAxisLabel.setAttribute('y', margin.top + innerHeight / 2 - 12);
+      yAxisLabel.setAttribute('transform', `rotate(-90 ${margin.left - 96} ${margin.top + innerHeight / 2 - 12})`);
     }
 
     function createScale(domain, scaleType, axis) {
@@ -909,10 +910,96 @@
       [xAxisSelect, yAxisSelect].forEach((select) => {
         Array.from(select.options).forEach((option) => {
           const { label, latex } = getHoveredMetricLabel(option.value);
-          option.textContent = latex ?? option.value.toUpperCase();
+          option.textContent = label;
           option.title = label;
+          option.dataset.latex = latex ?? option.value.toUpperCase();
         });
       });
+    }
+
+    function updateLatexSelectDisplay(select) {
+      const state = latexSelects.get(select);
+      if (!state) return;
+
+      const { buttonLabel, menu } = state;
+      const latex = getMetricLatex(select.value);
+      buttonLabel.innerHTML = `<span class="math-label" data-latex="${latex}"></span>`;
+      renderMathLabels(buttonLabel);
+
+      if (menu) {
+        Array.from(menu.querySelectorAll('[data-value]')).forEach((item) => {
+          item.classList.toggle('chart__latex-option--selected', item.dataset.value === select.value);
+        });
+      }
+    }
+
+    function closeLatexMenus() {
+      latexSelects.forEach(({ menu }, select) => {
+        const button = menu?.previousElementSibling;
+        if (menu) {
+          menu.classList.remove('chart__latex-menu--open');
+        }
+        if (button && button.classList.contains('chart__latex-button')) {
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    function buildLatexSelect(select) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'chart__latex-select';
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'chart__latex-button';
+      button.setAttribute('aria-haspopup', 'listbox');
+      button.setAttribute('aria-expanded', 'false');
+
+      const buttonLabel = document.createElement('span');
+      buttonLabel.className = 'chart__latex-button-label';
+      button.appendChild(buttonLabel);
+
+      const caret = document.createElement('span');
+      caret.className = 'chart__latex-button-caret';
+      caret.textContent = '▾';
+      button.appendChild(caret);
+
+      const menu = document.createElement('div');
+      menu.className = 'chart__latex-menu';
+      menu.setAttribute('role', 'listbox');
+
+      Array.from(select.options).forEach((option) => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'chart__latex-option';
+        item.dataset.value = option.value;
+        item.innerHTML = `<span class="math-label" data-latex="${getMetricLatex(option.value)}"></span>`;
+        item.addEventListener('click', () => {
+          select.value = option.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          menu.classList.remove('chart__latex-menu--open');
+          button.setAttribute('aria-expanded', 'false');
+        });
+        menu.appendChild(item);
+      });
+
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        closeLatexMenus();
+        const isOpen = menu.classList.toggle('chart__latex-menu--open');
+        button.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      wrapper.appendChild(button);
+      wrapper.appendChild(menu);
+
+      select.classList.add('chart__latex-select-native');
+      select.parentNode.insertBefore(wrapper, select);
+      wrapper.appendChild(select);
+
+      latexSelects.set(select, { buttonLabel, menu });
+      updateLatexSelectDisplay(select);
+      renderMathLabels(menu);
     }
 
     function buildHoveredList(entries, valueFormatter) {
@@ -1378,8 +1465,14 @@
     }
 
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
-    xAxisSelect.addEventListener('change', updateChart);
-    yAxisSelect.addEventListener('change', updateChart);
+    xAxisSelect.addEventListener('change', () => {
+      updateLatexSelectDisplay(xAxisSelect);
+      updateChart();
+    });
+    yAxisSelect.addEventListener('change', () => {
+      updateLatexSelectDisplay(yAxisSelect);
+      updateChart();
+    });
 
     scaleSelects.forEach((select) => {
       select.addEventListener('change', () => {
@@ -1401,6 +1494,10 @@
     updateScaleSelect('x', xScaleType);
     updateScaleSelect('y', yScaleType);
 
+    updateAxisOptionLabels();
+    buildLatexSelect(xAxisSelect);
+    buildLatexSelect(yAxisSelect);
+
     scenarioButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const scenario = button.dataset.scenario;
@@ -1416,7 +1513,10 @@
 
     window.addEventListener('resize', updateChart);
 
-    updateAxisOptionLabels();
+    document.addEventListener('click', () => {
+      closeLatexMenus();
+    });
+
     updateChart();
 
     if (resizeObserver && chartControls) {
