@@ -623,6 +623,10 @@ section {
   gap: var(--space-1);
 }
 
+.chart__hovered-item.chart__control-label--aspect .chart__label-math {
+  margin-left: var(--space-2);
+}
+
 .chart__hovered-key {
   color: var(--color-muted);
   font-weight: 600;
