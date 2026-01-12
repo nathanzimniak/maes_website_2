@@ -1037,9 +1037,17 @@
       const xScale = (x) => padding.left + ((x - xMin) / xRange) * plotWidth;
       const yScale = (y) => padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
 
-      const points = xValues
-        .map((x, idx) => `${xScale(x)},${yScale(yValues[idx])}`)
-        .join(' ');
+      const pointPairs = xValues.map((x, idx) => ({
+        x: xScale(x),
+        y: yScale(yValues[idx]),
+      }));
+      const points = pointPairs.map((point) => `${point.x},${point.y}`).join(' ');
+      const baselineY = height - padding.bottom;
+      const areaPath = pointPairs.length
+        ? `${pointPairs
+          .map((point, index) => `${index === 0 ? 'M' : 'L'}${point.x},${point.y}`)
+          .join(' ')} L ${pointPairs[pointPairs.length - 1].x},${baselineY} L ${pointPairs[0].x},${baselineY} Z`
+        : '';
 
       const yMid = (yMin + yMax) / 2;
       const yTicks = [yMin, yMid, yMax];
@@ -1051,6 +1059,7 @@
         height,
         padding,
         points,
+        areaPath,
         xTicks,
         yTicks,
         xGridTicks,
@@ -1178,8 +1187,16 @@
         const chartWidth = Math.max(1, Math.floor(wrapperWidth || 320));
         const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null);
 
+        const gradientId = `sparkline-gradient-${serie.key}`;
+
         sparklineWrapper.innerHTML = `
           <svg class="chart__sparkline" viewBox="0 0 ${chart.width} ${chart.height}" role="img" aria-label="${serie.label}">
+            <defs>
+              <linearGradient id="${gradientId}" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(0, 0, 0, 0.18)"></stop>
+                <stop offset="100%" stop-color="rgba(0, 0, 0, 0)"></stop>
+              </linearGradient>
+            </defs>
             <g class="chart__sparkline-grid" aria-hidden="true">
               ${chart.yGridTicks.map((tick) => `
                 <line x1="${chart.padding.left}" y1="${chart.padding.top + ((chart.yGridTicks[2] - tick) / (chart.yGridTicks[2] - chart.yGridTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"
@@ -1222,6 +1239,7 @@
                 </div>
               </foreignObject>
             </g>
+            <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
             <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="3" points="${chart.points}" />
             <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
           </svg>
