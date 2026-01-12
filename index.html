@@ -1026,9 +1026,13 @@
       const xMax = Math.max(...xValues);
       const computedYMin = Math.min(...yValues);
       const computedYMax = Math.max(...yValues);
-      const yMin = yDomainOverride?.min ?? computedYMin;
-      const yMax = yDomainOverride?.max ?? computedYMax;
+      const rawYMin = yDomainOverride?.min ?? computedYMin;
+      const rawYMax = yDomainOverride?.max ?? computedYMax;
       const xRange = xMax - xMin || 1;
+      const rawYRange = rawYMax - rawYMin || 1;
+      const yPadding = Math.max(rawYRange * 0.08, Math.abs(rawYMin) * 0.02, Math.abs(rawYMax) * 0.02, 1);
+      const yMin = rawYMin - yPadding;
+      const yMax = rawYMax + yPadding;
       const yRange = yMax - yMin || 1;
       const plotWidth = width - padding.left - padding.right;
       const plotHeight = height - padding.top - padding.bottom;
