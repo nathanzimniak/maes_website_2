@@ -1154,6 +1154,8 @@ section {
   right: 0;
   max-height: 240px;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
   background: var(--color-surface);
   border-radius: 12px;
   padding: 6px;
@@ -1164,6 +1166,21 @@ section {
 
 .chart__latex-menu--open {
   display: block;
+}
+
+.chart__latex-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chart__latex-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chart__latex-menu::-webkit-scrollbar-thumb {
+  background-color: var(--color-line);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .chart__latex-option {
