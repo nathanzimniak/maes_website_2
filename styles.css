@@ -808,6 +808,10 @@ section {
   color: #000000;
 }
 
+.chart__hovered--solution .chart__control-label--aspect .chart__label-text {
+  font-size: 75rem;
+}
+
 .chart__control-label--aspect .chart__label-math {
   margin-left: auto;
   display: inline-flex;
