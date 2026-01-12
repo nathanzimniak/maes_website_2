@@ -869,33 +869,34 @@
     }
 
     const hoveredMetricLabels = {
-      g1: { label: 'Aspect ratio', latex: '\\varepsilon' },
-      g2: { label: 'Magnetic diffusivity', latex: '\\alpha_m' },
-      g3: { label: 'Magnetic diffusivity anisotropy', latex: '\\chi_m' },
-      g4: { label: 'Magnetic Prandtl number', latex: '\\mathcal{P}_m' },
-      g5: { label: 'Turbulent magnetic pressure', latex: '\\alpha_p' },
-      g6: { label: 'Ejection index', latex: '\\xi' },
-      g7: { label: 'Magnetization', latex: '\\mu' },
-      g8: { label: 'Toroidal electric current', latex: 'p' },
-      g9: { label: 'Radial electric current', latex: 'q' },
-      g10: { label: 'Rotation', latex: '\\delta' },
-      g11: { label: 'Grandeur 11', latex: '\\varepsilon' },
-      g12: { label: 'Grandeur 12', latex: '\\varepsilon' },
-      g13: { label: 'Grandeur 13', latex: '\\varepsilon' },
-      g14: { label: 'Grandeur 14', latex: '\\varepsilon' },
-      g15: { label: 'Grandeur 15', latex: '\\varepsilon' },
-      g16: { label: 'Grandeur 16', latex: '\\varepsilon' },
-      g17: { label: 'Grandeur 17', latex: '\\varepsilon' },
-      g18: { label: 'Grandeur 18', latex: '\\varepsilon' },
-      g19: { label: 'Grandeur 19', latex: '\\varepsilon' },
-      g20: { label: 'Grandeur 20', latex: '\\varepsilon' }
+      g1: { label: 'Aspect ratio', latex: '\\varepsilon', symbol: 'ε' },
+      g2: { label: 'Magnetic diffusivity', latex: '\\alpha_m', symbol: 'αₘ' },
+      g3: { label: 'Magnetic diffusivity anisotropy', latex: '\\chi_m', symbol: 'χₘ' },
+      g4: { label: 'Magnetic Prandtl number', latex: '\\mathcal{P}_m', symbol: '𝒫ₘ' },
+      g5: { label: 'Turbulent magnetic pressure', latex: '\\alpha_p', symbol: 'αₚ' },
+      g6: { label: 'Ejection index', latex: '\\xi', symbol: 'ξ' },
+      g7: { label: 'Magnetization', latex: '\\mu', symbol: 'μ' },
+      g8: { label: 'Toroidal electric current', latex: 'p', symbol: 'p' },
+      g9: { label: 'Radial electric current', latex: 'q', symbol: 'q' },
+      g10: { label: 'Rotation', latex: '\\delta', symbol: 'δ' },
+      g11: { label: 'Grandeur 11', latex: '\\varepsilon', symbol: 'ε' },
+      g12: { label: 'Grandeur 12', latex: '\\varepsilon', symbol: 'ε' },
+      g13: { label: 'Grandeur 13', latex: '\\varepsilon', symbol: 'ε' },
+      g14: { label: 'Grandeur 14', latex: '\\varepsilon', symbol: 'ε' },
+      g15: { label: 'Grandeur 15', latex: '\\varepsilon', symbol: 'ε' },
+      g16: { label: 'Grandeur 16', latex: '\\varepsilon', symbol: 'ε' },
+      g17: { label: 'Grandeur 17', latex: '\\varepsilon', symbol: 'ε' },
+      g18: { label: 'Grandeur 18', latex: '\\varepsilon', symbol: 'ε' },
+      g19: { label: 'Grandeur 19', latex: '\\varepsilon', symbol: 'ε' },
+      g20: { label: 'Grandeur 20', latex: '\\varepsilon', symbol: 'ε' }
     };
 
     function getHoveredMetricLabel(key) {
       const fallbackIndex = Number(key.slice(1));
       return hoveredMetricLabels[key] ?? {
         label: `Grandeur ${fallbackIndex}`,
-        latex: '\\varepsilon'
+        latex: '\\varepsilon',
+        symbol: key.toUpperCase()
       };
     }
 
