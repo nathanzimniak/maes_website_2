@@ -1201,9 +1201,9 @@ section {
 }
 
 .chart__axis-overlay .chart__select--axis {
-  flex: 1;
+  flex: 0 0 auto;
   max-width: none;
-  min-width: 45px;
+  min-width: max-content;
 }
 
 .chart__axis-overlay .chart__select-label {
@@ -1212,6 +1212,8 @@ section {
 }
 
 .chart__axis-overlay .chart__select {
+  width: max-content;
+  min-width: max-content;
   padding: 4px 6px;
   border-radius: 10px;
   font-size: 0.68rem;
