@@ -486,6 +486,7 @@
     const hoveredValues = document.getElementById('hovered-values');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
     const scaleSelects = Array.from(document.querySelectorAll('[data-scale-select]'));
+    const profileSelects = Array.from(document.querySelectorAll('.chart__select--profile'));
     const resizeObserver = 'ResizeObserver' in window
       ? new ResizeObserver(() => updateChart())
       : null;
@@ -935,9 +936,12 @@
       });
     }
 
-    function buildCustomSelect(select, { renderLabel, renderOption, usesMath = false }) {
+    function buildCustomSelect(select, { renderLabel, renderOption, usesMath = false, wrapperClass = '' }) {
       const wrapper = document.createElement('div');
       wrapper.className = 'chart__latex-select';
+      if (wrapperClass) {
+        wrapper.classList.add(wrapperClass);
+      }
 
       const button = document.createElement('button');
       button.type = 'button';
@@ -1482,6 +1486,12 @@
       });
     });
 
+    profileSelects.forEach((select) => {
+      select.addEventListener('change', () => {
+        updateCustomSelectDisplay(select);
+      });
+    });
+
     updateAxisOptionLabels();
     buildCustomSelect(xAxisSelect, {
       usesMath: true,
@@ -1504,6 +1514,17 @@
       },
     });
     scaleSelects.forEach((select) => {
+      buildCustomSelect(select, {
+        renderLabel: (label, select) => {
+          const selectedOption = select.options[select.selectedIndex];
+          label.textContent = selectedOption ? selectedOption.textContent : select.value;
+        },
+        renderOption: (item, option) => {
+          item.textContent = option.textContent;
+        },
+      });
+    });
+    profileSelects.forEach((select) => {
       buildCustomSelect(select, {
         renderLabel: (label, select) => {
           const selectedOption = select.options[select.selectedIndex];
