@@ -1189,7 +1189,7 @@ section {
   background: transparent;
   padding: 6px 8px;
   text-align: left;
-  border-radius: 8px;
+  border-radius: var(--radius-1);
   cursor: pointer;
   font-size: 0.7rem;
   color: var(--color-text);
