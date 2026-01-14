@@ -1098,6 +1098,17 @@ section {
   font-size: 0.8rem;
   padding-right: var(--space-6);
   border-right: var(--space-2) solid transparent;
+  background: var(--color-surface);
+  background-color: var(--color-surface);
+}
+
+.chart__select--profile option {
+  background: var(--color-surface);
+}
+
+#turbulence-profile-select,
+#heat-profile-select {
+  background-color: var(--color-surface);
 }
 
 .chart__axis-row .chart__select--axis {
