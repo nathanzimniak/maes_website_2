@@ -1112,8 +1112,8 @@ section {
   background-color: var(--color-surface);
   background-image:
     linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(242, 244, 248, 0.92)),
-    linear-gradient(45deg, transparent 48%, var(--color-axis-label) 50%),
-    linear-gradient(135deg, var(--color-axis-label) 50%, transparent 52%);
+    linear-gradient(45deg, transparent 48%, var(--color-text) 50%),
+    linear-gradient(135deg, var(--color-text) 50%, transparent 52%);
   box-shadow: 0 10px 16px rgba(15, 23, 42, 0.08);
   transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease, background-color 150ms ease;
   appearance: none;
@@ -1125,8 +1125,8 @@ section {
     calc(100% - 14px) 50%;
   background-size:
     100% 100%,
-    6px 6px,
-    6px 6px;
+    5px 5px,
+    5px 5px;
   background-repeat: no-repeat;
 }
 
@@ -1200,12 +1200,12 @@ section {
 .chart__latex-button-caret {
   display: inline-flex;
   align-items: center;
-  color: var(--color-muted);
+  color: var(--color-text);
 }
 
 .chart__latex-button-caret svg {
-  width: 12px;
-  height: 8px;
+  width: 10px;
+  height: 6px;
 }
 
 .chart__latex-button:hover {
