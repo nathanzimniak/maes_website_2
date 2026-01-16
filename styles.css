@@ -1195,7 +1195,7 @@ section {
 }
 
 .chart__latex-button:hover {
-  font-weight: 600;
+  border-color: #b7c2ce;
 }
 
 .chart__latex-button:focus-visible {
