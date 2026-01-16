@@ -878,7 +878,7 @@ section {
   flex: 1;
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-1);
-  border: none;
+  border: 1px solid transparent;
   background: var(--color-surface);
   color: var(--color-text);
   font-weight: 600;
@@ -889,9 +889,7 @@ section {
 }
 
 .chart__toggle-button:hover {
-  transform: translateY(-1px);
-  border-color: #c9cccb;
-  background: var(--color-surface-muted);
+  border-color: #ddd;
 }
 
 .chart__toggle-button--active {
@@ -1196,7 +1194,7 @@ section {
 
 .chart__latex-button:hover {
   background-color: #f4f7fb;
-  border-color: var(--color-line);
+  border-color: #ddd;
 }
 
 .chart__latex-button:focus-visible {
