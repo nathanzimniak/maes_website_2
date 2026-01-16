@@ -1175,7 +1175,7 @@ section {
   min-width: 50px;
   padding: 8px 12px;
   border-radius: 10px;
-  border: none;
+  border: 1px solid transparent;
   background: var(--color-surface);
   color: var(--color-text);
   font-size: 0.78rem;
@@ -1196,6 +1196,7 @@ section {
 
 .chart__latex-button:hover {
   background-color: #f4f7fb;
+  border-color: var(--color-line);
 }
 
 .chart__latex-button:focus-visible {
