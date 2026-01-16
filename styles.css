@@ -1197,7 +1197,6 @@ section {
 .chart__latex-button:hover {
   border-color: #b7c2ce;
   background-color: #f4f7fb;
-  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.08);
   transform: translateY(-1px);
 }
 
