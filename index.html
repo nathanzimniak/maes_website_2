@@ -589,6 +589,9 @@
     let innerWidth = 0;
     let innerHeight = 0;
 
+    const gridGroup = document.createElementNS(svgNS, 'g');
+    gridGroup.classList.add('chart__grid');
+
     const axes = document.createElementNS(svgNS, 'g');
     axes.setAttribute('stroke', 'var(--color-axis)');
     axes.setAttribute('stroke-width', '1.5');
@@ -626,6 +629,7 @@
     axes.appendChild(xTicksGroup);
     axes.appendChild(yTicksGroup);
     axes.appendChild(xAxisLabel);
+    svg.appendChild(gridGroup);
     svg.appendChild(axes);
 
     const pointsGroup = document.createElementNS(svgNS, 'g');
@@ -830,11 +834,32 @@
     }
 
     function renderAxes(xDomain, yDomain, xLabel, yLabel, xScale, yScale, xType, yType) {
+      gridGroup.innerHTML = '';
       xTicksGroup.innerHTML = '';
       yTicksGroup.innerHTML = '';
 
       const xTicks = buildTicks(xDomain, xType);
       const yTicks = buildTicks(yDomain, yType);
+
+      xTicks.forEach((xValue) => {
+        const xPos = xScale(xValue);
+        const gridLine = document.createElementNS(svgNS, 'line');
+        gridLine.setAttribute('x1', xPos);
+        gridLine.setAttribute('x2', xPos);
+        gridLine.setAttribute('y1', margin.top);
+        gridLine.setAttribute('y2', margin.top + innerHeight);
+        gridGroup.appendChild(gridLine);
+      });
+
+      yTicks.forEach((yValue) => {
+        const yPos = yScale(yValue);
+        const gridLine = document.createElementNS(svgNS, 'line');
+        gridLine.setAttribute('x1', margin.left);
+        gridLine.setAttribute('x2', margin.left + innerWidth);
+        gridLine.setAttribute('y1', yPos);
+        gridLine.setAttribute('y2', yPos);
+        gridGroup.appendChild(gridLine);
+      });
 
       xTicks.forEach((xValue) => {
         const xPos = xScale(xValue);

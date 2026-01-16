@@ -660,6 +660,11 @@ section {
   display: block;
 }
 
+.chart__grid line {
+  stroke: var(--color-line);
+  stroke-width: 1;
+}
+
 .chart__body {
   display: flex;
   gap: var(--space-5);
