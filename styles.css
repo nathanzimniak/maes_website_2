@@ -1004,8 +1004,8 @@ section {
 }
 
 .chart__axis-overlay .chart__axis-control {
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   padding: 0;
   gap: var(--space-1);
   background: transparent;
