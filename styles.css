@@ -1288,6 +1288,10 @@ section {
   font-size: 0.68rem;
 }
 
+.chart__axis-overlay .chart__select--scale {
+  min-width: 120px;
+}
+
 .chart__scale-toggle .chart__select--scale {
   min-width: 140px;
   font-weight: 600;
