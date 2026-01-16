@@ -903,7 +903,6 @@ section {
   background: var(--color-text);
   border-color: var(--color-text);
   color: #ffffff;
-  transform: translateY(-1px);
 }
 
 .chart__control input[type="range"] {
