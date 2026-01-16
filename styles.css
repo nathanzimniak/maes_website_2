@@ -502,7 +502,7 @@ section {
   position: absolute;
   top: var(--space-3);
   right: var(--space-3);
-  padding: var(--space-2);
+  padding: 0px;
   border-radius: calc(var(--radius) - 6px);
   border: none;
   box-shadow: none;
