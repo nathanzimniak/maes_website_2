@@ -593,7 +593,6 @@
     gridGroup.classList.add('chart__grid');
 
     const axes = document.createElementNS(svgNS, 'g');
-    axes.setAttribute('stroke', 'var(--color-axis)');
     axes.setAttribute('stroke-width', '1.5');
     axes.setAttribute('shape-rendering', 'crispEdges');
 
@@ -602,11 +601,13 @@
     xAxis.setAttribute('x2', margin.left + innerWidth);
     xAxis.setAttribute('y1', margin.top + innerHeight);
     xAxis.setAttribute('y2', margin.top + innerHeight);
+    xAxis.setAttribute('stroke', 'none');
     axes.appendChild(xAxis);
 
     const yAxis = document.createElementNS(svgNS, 'line');
     yAxis.setAttribute('x1', margin.left);
     yAxis.setAttribute('x2', margin.left);
+    yAxis.setAttribute('stroke', 'none');
     axes.appendChild(yAxis);
 
     const xTicksGroup = document.createElementNS(svgNS, 'g');
@@ -868,7 +869,7 @@
         xTick.setAttribute('x2', xPos);
         xTick.setAttribute('y1', margin.top + innerHeight);
         xTick.setAttribute('y2', margin.top + innerHeight + 6);
-        xTick.setAttribute('stroke', 'var(--color-axis)');
+        xTick.setAttribute('stroke', 'var(--color-line)');
         xTicksGroup.appendChild(xTick);
 
         const xTickLabel = document.createElementNS(svgNS, 'text');
@@ -889,7 +890,7 @@
         yTick.setAttribute('x2', margin.left);
         yTick.setAttribute('y1', yPos);
         yTick.setAttribute('y2', yPos);
-        yTick.setAttribute('stroke', 'var(--color-axis)');
+        yTick.setAttribute('stroke', 'var(--color-line)');
         yTicksGroup.appendChild(yTick);
 
         const yTickLabel = document.createElementNS(svgNS, 'text');
