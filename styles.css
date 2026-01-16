@@ -783,13 +783,13 @@ section {
 }
 
 .chart__dropdown-label {
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: 0.78rem;
   margin: 0;
   line-height: 1.2;
-  text-transform: uppercase;
-  color: var(--color-muted);
+  text-transform: none;
+  color: var(--color-axis-label);
 }
 
 .chart__control label {
@@ -802,11 +802,11 @@ section {
 }
 
 .chart__control label.chart__dropdown-label {
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  color: var(--color-muted);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: 0.78rem;
+  text-transform: none;
+  color: var(--color-axis-label);
 }
 
 .chart__control-label--aspect {
