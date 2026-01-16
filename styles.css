@@ -783,13 +783,13 @@ section {
 }
 
 .chart__dropdown-label {
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: 0.78rem;
   margin: 0;
   line-height: 1.2;
-  text-transform: uppercase;
-  color: var(--color-muted);
+  text-transform: none;
+  color: var(--color-axis-label);
 }
 
 .chart__control label {
@@ -802,11 +802,11 @@ section {
 }
 
 .chart__control label.chart__dropdown-label {
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  color: var(--color-muted);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: 0.78rem;
+  text-transform: none;
+  color: var(--color-axis-label);
 }
 
 .chart__control-label--aspect {
@@ -1095,18 +1095,23 @@ section {
 }
 
 .chart__select--profile {
-  font-size: 0.8rem;
-  padding-right: var(--space-6);
-  border-right: var(--space-2) solid transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: var(--space-3) calc(var(--space-6) + var(--space-2)) var(--space-3) var(--space-4);
+  border: 1px solid var(--color-line);
+  border-right-width: 1px;
+  border-radius: 12px;
   background-color: var(--color-surface);
+  box-shadow: 0 12px 18px rgba(15, 23, 42, 0.08);
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease, background-color 150ms ease;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   background-image:
-    linear-gradient(45deg, transparent 50%, var(--color-muted) 50%),
-    linear-gradient(135deg, var(--color-muted) 50%, transparent 50%);
-  background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
-  background-size: 5px 5px;
+    linear-gradient(45deg, transparent 48%, var(--color-axis-label) 50%),
+    linear-gradient(135deg, var(--color-axis-label) 50%, transparent 52%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%;
+  background-size: 6px 6px;
   background-repeat: no-repeat;
 }
 
@@ -1117,6 +1122,19 @@ section {
 #turbulence-profile-select,
 #heat-profile-select {
   background-color: var(--color-surface);
+}
+
+.chart__select--profile:hover {
+  border-color: #c9d2dc;
+  box-shadow: 0 14px 26px rgba(15, 23, 42, 0.12);
+  background-color: var(--color-surface-muted);
+  transform: translateY(-1px);
+}
+
+.chart__select--profile:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
 }
 
 .chart__axis-row .chart__select--axis {
