@@ -1198,8 +1198,14 @@ section {
 }
 
 .chart__latex-button-caret {
-  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
   color: var(--color-muted);
+}
+
+.chart__latex-button-caret svg {
+  width: 12px;
+  height: 8px;
 }
 
 .chart__latex-button:hover {
