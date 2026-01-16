@@ -522,6 +522,57 @@
     let pinnedSolutionIndex = null;
     const customSelects = new Map();
 
+    const updateScaleSelectWidths = () => {
+      if (!scaleSelects.length) {
+        return;
+      }
+
+      const ruler = document.createElement('span');
+      ruler.setAttribute('aria-hidden', 'true');
+      ruler.style.position = 'absolute';
+      ruler.style.visibility = 'hidden';
+      ruler.style.whiteSpace = 'nowrap';
+      document.body.appendChild(ruler);
+
+      const referenceButton = scaleSelects
+        .map((select) => select.parentElement?.querySelector('.chart__latex-button'))
+        .find(Boolean);
+
+      const referenceStyles = window.getComputedStyle(referenceButton || scaleSelects[0]);
+      ruler.style.fontFamily = referenceStyles.fontFamily;
+      ruler.style.fontSize = referenceStyles.fontSize;
+      ruler.style.fontWeight = referenceStyles.fontWeight;
+      ruler.style.letterSpacing = referenceStyles.letterSpacing;
+
+      let maxTextWidth = 0;
+      scaleSelects.forEach((select) => {
+        Array.from(select.options).forEach((option) => {
+          ruler.textContent = option.textContent || '';
+          maxTextWidth = Math.max(maxTextWidth, ruler.getBoundingClientRect().width);
+        });
+      });
+
+      const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
+      const paddingRight = parseFloat(referenceStyles.paddingRight) || 0;
+      const borderLeft = parseFloat(referenceStyles.borderLeftWidth) || 0;
+      const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
+      const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
+      const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
+      const targetWidth = Math.ceil(
+        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+      );
+
+      scaleSelects.forEach((select) => {
+        const wrapper = select.closest('.chart__latex-select');
+        if (wrapper) {
+          wrapper.style.width = `${targetWidth}px`;
+        }
+        select.style.width = `${targetWidth}px`;
+      });
+
+      document.body.removeChild(ruler);
+    };
+
     let width = 0;
     let height = 0;
     const margin = { top: 24, right: 24, bottom: 48, left: 48 };
@@ -1530,6 +1581,7 @@
       });
     });
 
+    updateScaleSelectWidths();
     updateScaleSelect('x', xScaleType);
     updateScaleSelect('y', yScaleType);
 
@@ -1546,7 +1598,10 @@
       });
     });
 
-    window.addEventListener('resize', updateChart);
+    window.addEventListener('resize', () => {
+      updateScaleSelectWidths();
+      updateChart();
+    });
 
     document.addEventListener('click', () => {
       closeCustomMenus();
@@ -1561,8 +1616,15 @@
     window.addEventListener('load', () => {
       renderMathLabels();
 
+      updateScaleSelectWidths();
       updateChart();
     });
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        updateScaleSelectWidths();
+      });
+    }
   </script>
 </body>
 </html>
