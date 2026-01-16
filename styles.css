@@ -542,6 +542,17 @@ section {
   grid-template-columns: minmax(0, 1fr);
 }
 
+.chart__axis-overlay-labels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+  padding: 0 var(--space-1);
+}
+
+.chart__axis-overlay-labels .chart__axis-title {
+  margin-bottom: 0;
+}
+
 .chart__hovered {
   padding: var(--space-6);
   border-radius: var(--radius);
