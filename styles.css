@@ -551,7 +551,7 @@ section {
 }
 
 .chart__axis-label--y {
-  top: calc(var(--plot-size, 0px) / 2);
+  top: var(--axis-center-y, 50%);
   left: 0;
   width: var(--axis-label-size);
   transform: translateY(-50%) rotate(-90deg);
@@ -566,9 +566,10 @@ section {
 }
 
 .chart__axis-label--x {
-  left: var(--axis-label-space);
+  left: var(--axis-center-x, 50%);
   top: calc(var(--plot-size, 0px) + var(--axis-label-gap));
-  width: var(--plot-size, 100%);
+  width: max-content;
+  transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -590,6 +590,11 @@
 
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
 
+      if (chartPlot) {
+        chartPlot.style.setProperty('--axis-center-x', `${margin.left + innerWidth / 2}px`);
+        chartPlot.style.setProperty('--axis-center-y', `${margin.top + innerHeight / 2}px`);
+      }
+
     }
 
     function createScale(domain, scaleType, axis) {
