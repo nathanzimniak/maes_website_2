@@ -622,9 +622,9 @@
     xAxisLabelContent.style.fontSize = '14px';
     xAxisLabelContent.style.color = 'var(--color-axis-label)';
     xAxisLabel.appendChild(xAxisLabelContent);
-    xAxisLabel.setAttribute('width', '120');
+    xAxisLabel.setAttribute('width', '200');
     xAxisLabel.setAttribute('height', '28');
-    xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
+    xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 100);
     xAxisLabel.setAttribute('y', margin.top + innerHeight + 30);
 
     axes.appendChild(xTicksGroup);
@@ -659,7 +659,7 @@
       yAxis.setAttribute('y1', margin.top);
       yAxis.setAttribute('y2', margin.top + innerHeight);
 
-      xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
+      xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 100);
       xAxisLabel.setAttribute('y', margin.top + innerHeight + 30);
       yAxisOverlayLabel.style.left = `${margin.left - 24}px`;
       yAxisOverlayLabel.style.top = `${margin.top + innerHeight / 2}px`;

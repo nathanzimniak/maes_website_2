@@ -528,7 +528,7 @@ section {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 120px;
+  min-width: 200px;
   height: 28px;
   font-size: 14px;
   color: var(--color-axis-label);
