@@ -509,7 +509,7 @@ section {
     ". x";
   gap: 0;
   --axis-label-offset-x: var(--space-3);
-  --axis-label-offset-y: var(--space-2);
+  --axis-label-offset-y: var(--space-3);
 }
 
 .chart__plot-area {
