@@ -664,14 +664,26 @@
       const yLabelWidth = yBounds.width || yAxisOverlayLabel.offsetWidth || 0;
       const yLabelHeight = yBounds.height || yAxisOverlayLabel.offsetHeight || 0;
 
+      if (!chartContainer.dataset.basePaddingLeft) {
+        chartContainer.dataset.basePaddingLeft = `${paddingLeft}`;
+      }
+
+      const basePaddingLeft = parseFloat(chartContainer.dataset.basePaddingLeft) || paddingLeft;
+      const desiredPaddingLeft = Math.max(basePaddingLeft, yLabelWidth + 16);
+
+      if (desiredPaddingLeft !== paddingLeft) {
+        chartContainer.style.setProperty('--chart-padding-left', `${desiredPaddingLeft}px`);
+      }
+
+      const resolvedPaddingLeft = desiredPaddingLeft;
       const xPaddingSpace = Math.max(paddingBottom - xLabelHeight, 0);
       const xLabelTop = containerHeight - paddingBottom + xPaddingSpace / 2;
       const minXLabelTop = containerHeight - paddingBottom;
       const maxXLabelTop = containerHeight - xLabelHeight;
-      const xLabelLeft = paddingLeft + (containerWidth - paddingLeft - paddingRight) / 2;
-      const yLabelLeft = paddingLeft - yLabelWidth / 2;
+      const xLabelLeft = resolvedPaddingLeft + (containerWidth - resolvedPaddingLeft - paddingRight) / 2;
+      const yLabelLeft = resolvedPaddingLeft / 2;
       const minYLabelLeft = yLabelWidth / 2;
-      const maxYLabelLeft = Math.max(paddingLeft - yLabelWidth / 2, minYLabelLeft);
+      const maxYLabelLeft = Math.max(resolvedPaddingLeft - yLabelWidth / 2, minYLabelLeft);
       const yLabelTop = paddingTop + (containerHeight - paddingTop - paddingBottom) / 2;
       const minYLabelTop = paddingTop + yLabelHeight / 2;
       const maxYLabelTop = containerHeight - paddingBottom - yLabelHeight / 2;
