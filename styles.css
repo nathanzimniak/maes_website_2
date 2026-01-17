@@ -546,6 +546,8 @@ section {
   font-weight: 400;
   font-size: 0.82rem;
   position: absolute;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .chart__axis-label--y {
