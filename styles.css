@@ -500,7 +500,7 @@ section {
 
 .chart__plot {
   --axis-label-size: 28px;
-  --axis-label-gap: 20px;
+  --axis-label-gap: 28px;
   --axis-label-space: calc(var(--axis-label-size) + var(--axis-label-gap));
   --plot-area-pad-x: 0px;
   --plot-area-pad-y: 0px;
