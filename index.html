@@ -647,10 +647,7 @@
       yAxis.setAttribute('y1', margin.top);
       yAxis.setAttribute('y2', margin.top + innerHeight);
 
-      xAxisOverlayLabel.style.left = `${margin.left + innerWidth / 2}px`;
-      xAxisOverlayLabel.style.top = `${margin.top + innerHeight + 18}px`;
-      yAxisOverlayLabel.style.left = `${margin.left - 32}px`;
-      yAxisOverlayLabel.style.top = `${margin.top + innerHeight / 2}px`;
+      positionAxisLabels();
     }
 
     function positionAxisLabels() {
@@ -667,17 +664,19 @@
       const yLabelWidth = yBounds.width || yAxisOverlayLabel.offsetWidth || 0;
       const yLabelHeight = yBounds.height || yAxisOverlayLabel.offsetHeight || 0;
 
-      const xLabelTop = margin.top + innerHeight + 18;
-      const maxXLabelTop = containerHeight - paddingBottom - xLabelHeight;
-      const xLabelLeft = margin.left + innerWidth / 2;
-      const yLabelLeft = margin.left - 32;
-      const minYLabelLeft = paddingLeft + yLabelWidth / 2;
-      const maxYLabelLeft = containerWidth - paddingRight - yLabelWidth / 2;
-      const yLabelTop = margin.top + innerHeight / 2;
+      const xPaddingSpace = Math.max(paddingBottom - xLabelHeight, 0);
+      const xLabelTop = containerHeight - paddingBottom + xPaddingSpace / 2;
+      const minXLabelTop = containerHeight - paddingBottom;
+      const maxXLabelTop = containerHeight - xLabelHeight;
+      const xLabelLeft = paddingLeft + (containerWidth - paddingLeft - paddingRight) / 2;
+      const yLabelLeft = paddingLeft - yLabelWidth / 2;
+      const minYLabelLeft = yLabelWidth / 2;
+      const maxYLabelLeft = Math.max(paddingLeft - yLabelWidth / 2, minYLabelLeft);
+      const yLabelTop = paddingTop + (containerHeight - paddingTop - paddingBottom) / 2;
       const minYLabelTop = paddingTop + yLabelHeight / 2;
       const maxYLabelTop = containerHeight - paddingBottom - yLabelHeight / 2;
 
-      xAxisOverlayLabel.style.top = `${Math.min(xLabelTop, maxXLabelTop)}px`;
+      xAxisOverlayLabel.style.top = `${Math.min(Math.max(xLabelTop, minXLabelTop), maxXLabelTop)}px`;
       xAxisOverlayLabel.style.left = `${xLabelLeft}px`;
       yAxisOverlayLabel.style.left = `${Math.min(Math.max(yLabelLeft, minYLabelLeft), maxYLabelLeft)}px`;
       yAxisOverlayLabel.style.top = `${Math.min(Math.max(yLabelTop, minYLabelTop), maxYLabelTop)}px`;
