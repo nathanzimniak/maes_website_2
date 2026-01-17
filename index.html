@@ -213,7 +213,20 @@
         </div>
         <div class="chart__figure">
           <div class="chart__plot" role="img" aria-label="Graphique en nuage de points">
-            <div class="chart__plot-area"></div>
+            <div class="chart__plot-area">
+              <div class="chart__axis-label chart__axis-label--y">
+                <span class="chart__axis-label-text">Vitesse</span>
+                <span class="chart__axis-label-math">
+                  <span class="math-label" data-latex="v"></span>
+                </span>
+              </div>
+              <div class="chart__axis-label chart__axis-label--x">
+                <span class="chart__axis-label-text">Rayon</span>
+                <span class="chart__axis-label-math">
+                  <span class="math-label" data-latex="r"></span>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="chart__hovered chart__hovered--solution" aria-live="polite">
@@ -520,11 +533,12 @@
     let width = 0;
     let height = 0;
     const outerMargin = 24;
+    const tickLabelPadding = 18;
     const margin = {
       top: outerMargin,
       right: outerMargin,
-      bottom: outerMargin,
-      left: outerMargin
+      bottom: outerMargin + tickLabelPadding,
+      left: outerMargin + tickLabelPadding
     };
 
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -554,11 +568,14 @@
         chartBody.style.setProperty('--chart-controls-height', `${chartControls.offsetHeight}px`);
       }
 
+      const axisLabelOffsetX = 6;
+      const axisLabelOffsetY = 12;
+
       if (chartPlot) {
         const plotStyles = window.getComputedStyle(chartPlot);
         const axisLabelSize = parseFloat(plotStyles.getPropertyValue('--axis-label-size')) || 28;
         const axisLabelGap = parseFloat(plotStyles.getPropertyValue('--axis-label-gap')) || 20;
-        const axisLabelSpace = axisLabelSize + axisLabelGap;
+        const axisLabelSpace = axisLabelSize + axisLabelGap + Math.max(axisLabelOffsetX, axisLabelOffsetY);
         const availableWidth = Math.max(0, chartPlot.clientWidth - axisLabelSpace);
         const availableHeight = Math.max(0, chartPlot.clientHeight - axisLabelSpace);
         const availableInnerWidth = Math.max(0, availableWidth - margin.left - margin.right);
@@ -576,6 +593,24 @@
       innerHeight = height - margin.top - margin.bottom;
 
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+      if (chartPlot) {
+        const axisCenterX = margin.left + innerWidth / 2;
+        const axisCenterY = margin.top + innerHeight / 2;
+        const tickSize = 6;
+        const axisLabelOffset = tickSize + 24;
+        const tickLabelOffsetY = margin.top + innerHeight + axisLabelOffset;
+        const tickLabelOffsetX = margin.left - axisLabelOffset;
+        const axisLabelPositionY = tickLabelOffsetY + axisLabelOffsetX;
+        const axisLabelPositionX = tickLabelOffsetX - axisLabelOffsetY;
+
+        chartPlot.style.setProperty('--axis-center-x', `${axisCenterX}px`);
+        chartPlot.style.setProperty('--axis-center-y', `${axisCenterY}px`);
+        chartPlot.style.setProperty('--tick-label-x', `${tickLabelOffsetX}px`);
+        chartPlot.style.setProperty('--tick-label-y', `${tickLabelOffsetY}px`);
+        chartPlot.style.setProperty('--axis-label-x', `${axisLabelPositionX}px`);
+        chartPlot.style.setProperty('--axis-label-y', `${axisLabelPositionY}px`);
+      }
 
     }
 
