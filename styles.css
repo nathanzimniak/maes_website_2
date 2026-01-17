@@ -499,8 +499,8 @@ section {
 }
 
 .chart__plot {
-  --axis-label-size: 0px;
-  --axis-label-gap: 0px;
+  --axis-label-size: 28px;
+  --axis-label-gap: 20px;
   --axis-label-space: calc(var(--axis-label-size) + var(--axis-label-gap));
   width: 100%;
   height: 100%;
@@ -548,10 +548,11 @@ section {
   position: absolute;
   flex-wrap: nowrap;
   white-space: nowrap;
+  z-index: 2;
 }
 
 .chart__axis-label--y {
-  top: calc(var(--plot-size, 0px) / 2);
+  top: var(--axis-center-y, 50%);
   left: 0;
   width: var(--axis-label-size);
   transform: translateY(-50%) rotate(-90deg);
@@ -566,9 +567,10 @@ section {
 }
 
 .chart__axis-label--x {
-  left: var(--axis-label-space);
+  left: var(--axis-center-x, 50%);
   top: calc(var(--plot-size, 0px) + var(--axis-label-gap));
-  width: var(--plot-size, 100%);
+  width: max-content;
+  transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
