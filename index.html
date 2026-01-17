@@ -595,8 +595,9 @@
         const axisCenterX = margin.left + innerWidth / 2;
         const axisCenterY = margin.top + innerHeight / 2;
         const tickSize = 6;
-        const tickLabelOffsetY = margin.top + innerHeight + tickSize + 14;
-        const tickLabelOffsetX = margin.left - tickSize - 6;
+        const axisLabelOffset = tickSize + 14;
+        const tickLabelOffsetY = margin.top + innerHeight + axisLabelOffset;
+        const tickLabelOffsetX = margin.left - axisLabelOffset;
 
         chartPlot.style.setProperty('--axis-center-x', `${axisCenterX}px`);
         chartPlot.style.setProperty('--axis-center-y', `${axisCenterY}px`);
