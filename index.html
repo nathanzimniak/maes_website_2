@@ -540,6 +540,10 @@
 
     svg.appendChild(gridGroup);
 
+    const axisGroup = document.createElementNS(svgNS, 'g');
+    axisGroup.classList.add('chart__axes');
+    svg.appendChild(axisGroup);
+
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
 
@@ -746,6 +750,7 @@
 
     function renderAxes(xDomain, yDomain, xScale, yScale, xType, yType, xTicks, yTicks) {
       gridGroup.innerHTML = '';
+      axisGroup.innerHTML = '';
 
       const resolvedXTicks = xTicks ?? buildTicks(xDomain, xType);
       const resolvedYTicks = yTicks ?? buildTicks(yDomain, yType);
@@ -769,6 +774,69 @@
         gridLine.setAttribute('y2', yPos);
         gridGroup.appendChild(gridLine);
       });
+
+      const axisX = margin.left;
+      const axisY = margin.top + innerHeight;
+      const tickSize = 6;
+
+      const axisLines = document.createElementNS(svgNS, 'g');
+      axisLines.classList.add('chart__axis-lines');
+      const xAxisLine = document.createElementNS(svgNS, 'line');
+      xAxisLine.setAttribute('x1', margin.left);
+      xAxisLine.setAttribute('x2', margin.left + innerWidth);
+      xAxisLine.setAttribute('y1', axisY);
+      xAxisLine.setAttribute('y2', axisY);
+      axisLines.appendChild(xAxisLine);
+
+      const yAxisLine = document.createElementNS(svgNS, 'line');
+      yAxisLine.setAttribute('x1', axisX);
+      yAxisLine.setAttribute('x2', axisX);
+      yAxisLine.setAttribute('y1', margin.top);
+      yAxisLine.setAttribute('y2', margin.top + innerHeight);
+      axisLines.appendChild(yAxisLine);
+      axisGroup.appendChild(axisLines);
+
+      const tickGroup = document.createElementNS(svgNS, 'g');
+      tickGroup.classList.add('chart__ticks');
+      const labelGroup = document.createElementNS(svgNS, 'g');
+      labelGroup.classList.add('chart__tick-labels');
+
+      resolvedXTicks.forEach((xValue) => {
+        const xPos = xScale(xValue);
+        const tick = document.createElementNS(svgNS, 'line');
+        tick.setAttribute('x1', xPos);
+        tick.setAttribute('x2', xPos);
+        tick.setAttribute('y1', axisY);
+        tick.setAttribute('y2', axisY + tickSize);
+        tickGroup.appendChild(tick);
+
+        const label = document.createElementNS(svgNS, 'text');
+        label.setAttribute('x', xPos);
+        label.setAttribute('y', axisY + tickSize + 14);
+        label.setAttribute('text-anchor', 'middle');
+        label.textContent = formatTick(xValue);
+        labelGroup.appendChild(label);
+      });
+
+      resolvedYTicks.forEach((yValue) => {
+        const yPos = yScale(yValue);
+        const tick = document.createElementNS(svgNS, 'line');
+        tick.setAttribute('x1', axisX - tickSize);
+        tick.setAttribute('x2', axisX);
+        tick.setAttribute('y1', yPos);
+        tick.setAttribute('y2', yPos);
+        tickGroup.appendChild(tick);
+
+        const label = document.createElementNS(svgNS, 'text');
+        label.setAttribute('x', axisX - tickSize - 6);
+        label.setAttribute('y', yPos + 4);
+        label.setAttribute('text-anchor', 'end');
+        label.textContent = formatTick(yValue);
+        labelGroup.appendChild(label);
+      });
+
+      axisGroup.appendChild(tickGroup);
+      axisGroup.appendChild(labelGroup);
     }
 
     function positionTooltip(event) {
