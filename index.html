@@ -586,7 +586,16 @@
 
     let width = 0;
     let height = 0;
-    const margin = { top: 24, right: 24, bottom: 48, left: 64 };
+    const tickSize = 6;
+    const tickLabelGap = 18;
+    const outerMargin = 24;
+    const labelMargin = tickSize + tickLabelGap;
+    const margin = {
+      top: outerMargin,
+      right: outerMargin,
+      bottom: outerMargin + labelMargin,
+      left: outerMargin + labelMargin
+    };
 
     const svgNS = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(svgNS, 'svg');
@@ -853,14 +862,14 @@
         xTick.setAttribute('x1', xPos);
         xTick.setAttribute('x2', xPos);
         xTick.setAttribute('y1', margin.top + innerHeight);
-        xTick.setAttribute('y2', margin.top + innerHeight + 6);
+        xTick.setAttribute('y2', margin.top + innerHeight + tickSize);
         xTick.setAttribute('stroke', 'var(--color-line)');
         xTicksGroup.appendChild(xTick);
 
         const xTickLabel = document.createElementNS(svgNS, 'text');
         xTickLabel.textContent = formatTick(xValue);
         xTickLabel.setAttribute('x', xPos);
-        xTickLabel.setAttribute('y', margin.top + innerHeight + 24);
+        xTickLabel.setAttribute('y', margin.top + innerHeight + tickSize + tickLabelGap);
         xTickLabel.setAttribute('fill', 'var(--color-axis-label)');
         xTickLabel.setAttribute('stroke', 'none');
         xTickLabel.setAttribute('font-size', '14');
@@ -871,7 +880,7 @@
       yTicks.forEach((yValue) => {
         const yPos = yScale(yValue);
         const yTick = document.createElementNS(svgNS, 'line');
-        yTick.setAttribute('x1', margin.left - 6);
+        yTick.setAttribute('x1', margin.left - tickSize);
         yTick.setAttribute('x2', margin.left);
         yTick.setAttribute('y1', yPos);
         yTick.setAttribute('y2', yPos);
@@ -880,7 +889,7 @@
 
         const yTickLabel = document.createElementNS(svgNS, 'text');
         yTickLabel.textContent = formatTick(yValue);
-        yTickLabel.setAttribute('x', margin.left - 24);
+        yTickLabel.setAttribute('x', margin.left - tickSize - tickLabelGap);
         yTickLabel.setAttribute('y', yPos + 4);
         yTickLabel.setAttribute('fill', 'var(--color-axis-label)');
         yTickLabel.setAttribute('stroke', 'none');
