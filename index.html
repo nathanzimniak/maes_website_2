@@ -598,9 +598,8 @@
         const axisCenterX = margin.left + innerWidth / 2;
         const axisCenterY = margin.top + innerHeight / 2;
         const tickSize = 6;
-        const axisLabelOffset = tickSize + 24;
-        const tickLabelOffsetY = margin.top + innerHeight + axisLabelOffset;
-        const tickLabelOffsetX = margin.left - axisLabelOffset;
+        const tickLabelOffsetY = margin.top + innerHeight + tickSize + 14;
+        const tickLabelOffsetX = margin.left - tickSize - 6;
         const axisLabelPositionY = tickLabelOffsetY + axisLabelOffsetX;
         const axisLabelPositionX = tickLabelOffsetX - axisLabelOffsetY;
 
