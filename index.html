@@ -588,14 +588,16 @@
     let width = 0;
     let height = 0;
     const tickSize = 6;
-    const tickLabelGap = 18;
+    const tickLabelGapX = 18;
+    const tickLabelGapY = 12;
     const outerMargin = 24;
-    const labelMargin = tickSize + tickLabelGap;
+    const labelMarginX = tickSize + tickLabelGapX;
+    const labelMarginY = tickSize + tickLabelGapY;
     const margin = {
       top: outerMargin,
       right: outerMargin,
-      bottom: outerMargin + labelMargin,
-      left: outerMargin + labelMargin
+      bottom: outerMargin + labelMarginX,
+      left: outerMargin + labelMarginY
     };
 
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -883,7 +885,7 @@
         const xTickLabel = document.createElementNS(svgNS, 'text');
         xTickLabel.textContent = formatTick(xValue);
         xTickLabel.setAttribute('x', xPos);
-        xTickLabel.setAttribute('y', margin.top + innerHeight + tickSize + tickLabelGap);
+        xTickLabel.setAttribute('y', margin.top + innerHeight + tickSize + tickLabelGapX);
         xTickLabel.setAttribute('fill', 'var(--color-axis-label)');
         xTickLabel.setAttribute('stroke', 'none');
         xTickLabel.setAttribute('font-size', '14');
@@ -903,7 +905,7 @@
 
         const yTickLabel = document.createElementNS(svgNS, 'text');
         yTickLabel.textContent = formatTick(yValue);
-        yTickLabel.setAttribute('x', margin.left - tickSize - tickLabelGap);
+        yTickLabel.setAttribute('x', margin.left - tickSize - tickLabelGapY);
         yTickLabel.setAttribute('y', yPos + 4);
         yTickLabel.setAttribute('fill', 'var(--color-axis-label)');
         yTickLabel.setAttribute('stroke', 'none');
