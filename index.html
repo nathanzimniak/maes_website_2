@@ -590,14 +590,15 @@
     const tickSize = 6;
     const tickLabelGapX = 18;
     const tickLabelGapY = 4;
+    const tickLabelFontSize = 14;
     const outerMargin = 24;
-    const labelMarginX = tickSize + tickLabelGapX;
-    const labelMarginY = tickSize + tickLabelGapY;
+    const textMeasurer = document.createElement('canvas');
+    const textContext = textMeasurer.getContext('2d');
     const margin = {
       top: outerMargin,
       right: outerMargin,
-      bottom: outerMargin + labelMarginX,
-      left: outerMargin + labelMarginY
+      bottom: outerMargin + tickSize + tickLabelGapX + tickLabelFontSize,
+      left: outerMargin + tickSize + tickLabelGapY
     };
 
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -847,15 +848,31 @@
       return Math.abs(value) >= 100 ? value.toFixed(0) : value.toFixed(1);
     }
 
-    function renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xType, yType) {
+    function measureTickLabelWidth(labels) {
+      if (!textContext) return 0;
+      textContext.font = `${tickLabelFontSize}px Inter, sans-serif`;
+      return labels.reduce((maxWidth, label) => {
+        const width = textContext.measureText(label).width;
+        return Math.max(maxWidth, width);
+      }, 0);
+    }
+
+    function updateMargins(xTicks, yTicks) {
+      const yLabels = yTicks.map((value) => formatTick(value));
+      const maxYLabelWidth = measureTickLabelWidth(yLabels);
+      margin.left = outerMargin + tickSize + tickLabelGapY + maxYLabelWidth;
+      margin.bottom = outerMargin + tickSize + tickLabelGapX + tickLabelFontSize;
+    }
+
+    function renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xType, yType, xTicks, yTicks) {
       gridGroup.innerHTML = '';
       xTicksGroup.innerHTML = '';
       yTicksGroup.innerHTML = '';
 
-      const xTicks = buildTicks(xDomain, xType);
-      const yTicks = buildTicks(yDomain, yType);
+      const resolvedXTicks = xTicks ?? buildTicks(xDomain, xType);
+      const resolvedYTicks = yTicks ?? buildTicks(yDomain, yType);
 
-      xTicks.forEach((xValue) => {
+      resolvedXTicks.forEach((xValue) => {
         const xPos = xScale(xValue);
         const gridLine = document.createElementNS(svgNS, 'line');
         gridLine.setAttribute('x1', xPos);
@@ -865,7 +882,7 @@
         gridGroup.appendChild(gridLine);
       });
 
-      yTicks.forEach((yValue) => {
+      resolvedYTicks.forEach((yValue) => {
         const yPos = yScale(yValue);
         const gridLine = document.createElementNS(svgNS, 'line');
         gridLine.setAttribute('x1', margin.left);
@@ -875,7 +892,7 @@
         gridGroup.appendChild(gridLine);
       });
 
-      xTicks.forEach((xValue) => {
+      resolvedXTicks.forEach((xValue) => {
         const xPos = xScale(xValue);
         const xTick = document.createElementNS(svgNS, 'line');
         xTick.setAttribute('x1', xPos);
@@ -896,7 +913,7 @@
         xTicksGroup.appendChild(xTickLabel);
       });
 
-      yTicks.forEach((yValue) => {
+      resolvedYTicks.forEach((yValue) => {
         const yPos = yScale(yValue);
         const yTick = document.createElementNS(svgNS, 'line');
         yTick.setAttribute('x1', margin.left - tickSize);
@@ -1535,7 +1552,6 @@
     }
 
     function updateChart() {
-      resizeChart();
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
         if (slider.labelValue) {
@@ -1554,11 +1570,16 @@
 
       const xDomain = getDomain(solutions.map(solution => solution[xKey]), xScaleType);
       const yDomain = getDomain(solutions.map(solution => solution[yKey]), yScaleType);
+      const xTicks = buildTicks(xDomain, xScaleType);
+      const yTicks = buildTicks(yDomain, yScaleType);
+
+      updateMargins(xTicks, yTicks);
+      resizeChart();
 
       const xScale = createScale(xDomain, xScaleType, 'x');
       const yScale = createScale(yDomain, yScaleType, 'y');
 
-      renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xScaleType, yScaleType);
+      renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xScaleType, yScaleType, xTicks, yTicks);
       renderPoints(solutions, xKey, yKey, xScale, yScale);
     }
 
