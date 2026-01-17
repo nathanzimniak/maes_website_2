@@ -723,7 +723,7 @@ section {
   top: 0;
   left: var(--plot-area-pad-x, 0px);
   width: var(--plot-size, 100%);
-  height: 100%;
+  height: var(--plot-size, 100%);
 }
 
 .chart__grid line {
