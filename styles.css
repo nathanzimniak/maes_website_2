@@ -519,6 +519,10 @@ section {
   overflow: visible;
 }
 
+.chart__plot-area > * {
+  transform: translateX(15px);
+}
+
 .chart__axis-overlay {
   position: absolute;
   top: var(--space-3);
@@ -559,7 +563,7 @@ section {
   top: var(--axis-center-y, 50%);
   left: calc(var(--axis-label-x, var(--tick-label-x, 0)) + var(--plot-area-offset-x, 0px));
   width: max-content;
-  transform: translate(-50%, -50%) rotate(-90deg);
+  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%) rotate(-90deg);
   transform-origin: center;
   display: inline-flex;
   align-items: center;
@@ -574,7 +578,7 @@ section {
   left: calc(var(--axis-center-x, 50%) + var(--plot-area-offset-x, 0px));
   top: var(--axis-label-y, var(--tick-label-y, calc(var(--plot-size, 0px) + var(--axis-label-gap))));
   width: max-content;
-  transform: translate(-50%, -50%);
+  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
