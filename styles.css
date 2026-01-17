@@ -528,11 +528,12 @@ section {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 200px;
+  min-width: 160px;
   height: 28px;
   font-size: 14px;
   color: var(--color-axis-label);
   pointer-events: none;
+  margin-left: -24px;
 }
 
 .chart__axis-label-x {
