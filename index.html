@@ -541,6 +541,7 @@
     chartContainer.appendChild(svg);
 
     function resizeChart() {
+      const chartBody = document.querySelector('.chart__body');
       if (chartControls && chartBody) {
         chartBody.style.setProperty('--chart-controls-height', `${chartControls.offsetHeight}px`);
       }
