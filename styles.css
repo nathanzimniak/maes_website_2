@@ -518,6 +518,10 @@ section {
   overflow: visible;
 }
 
+.chart__plot-area > * {
+  transform: translateX(10px);
+}
+
 .chart__axis-overlay {
   position: absolute;
   top: var(--space-3);
