@@ -654,7 +654,10 @@
         const axisLabelSpace = axisLabelSize + axisLabelGap;
         const availableWidth = Math.max(0, chartPlot.clientWidth - axisLabelSpace);
         const availableHeight = Math.max(0, chartPlot.clientHeight - axisLabelSpace);
-        const plotSize = Math.floor(Math.min(availableWidth, availableHeight));
+        const availableInnerWidth = Math.max(0, availableWidth - margin.left - margin.right);
+        const availableInnerHeight = Math.max(0, availableHeight - margin.top - margin.bottom);
+        const innerPlotSize = Math.floor(Math.min(availableInnerWidth, availableInnerHeight));
+        const plotSize = innerPlotSize + margin.left + margin.right;
         chartPlot.style.setProperty('--plot-size', `${plotSize}px`);
         chartContainer.style.width = `${plotSize}px`;
         chartContainer.style.height = `${plotSize}px`;
