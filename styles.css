@@ -499,17 +499,15 @@ section {
 }
 
 .chart__plot {
-  width: fit-content;
+  width: max-content;
   height: 100%;
   display: grid;
-  grid-template-columns: auto max-content;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-columns: max-content max-content;
+  grid-template-rows: minmax(0, 1fr) max-content;
   grid-template-areas:
     "y plot"
     ". x";
-  gap: 0;
-  --axis-label-offset-x: 20px;
-  --axis-label-offset-y: 20px;
+  gap: 20px;
 }
 
 .chart__plot-area {
@@ -568,7 +566,6 @@ section {
   font-size: 14px;
   color: var(--color-axis-label);
   pointer-events: none;
-  margin-right: calc(-1 * var(--axis-label-offset-y));
 }
 
 .chart__axis-label--x {
@@ -581,7 +578,6 @@ section {
   font-size: 14px;
   color: var(--color-axis-label);
   pointer-events: none;
-  margin-top: calc(-1 * var(--axis-label-offset-x));
 }
 
 .chart__axis-label-text {
