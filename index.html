@@ -520,11 +520,12 @@
     let width = 0;
     let height = 0;
     const outerMargin = 24;
+    const tickLabelPadding = 18;
     const margin = {
       top: outerMargin,
       right: outerMargin,
-      bottom: outerMargin,
-      left: outerMargin
+      bottom: outerMargin + tickLabelPadding,
+      left: outerMargin + tickLabelPadding
     };
 
     const svgNS = 'http://www.w3.org/2000/svg';
