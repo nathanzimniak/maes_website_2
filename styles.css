@@ -484,7 +484,7 @@ section {
 
 .chart__figure {
   width: calc(var(--plot-size, auto) + var(--plot-area-pad-x, 0px) + (var(--space-4) * 2));
-  height: var(--chart-controls-height, auto);
+  height: auto;
   aspect-ratio: auto;
   min-height: 0;
   padding: var(--space-4);
@@ -493,7 +493,7 @@ section {
   overflow: hidden;
   position: relative;
   margin: 0;
-  align-self: flex-start;
+  align-self: stretch;
   flex: 0 0 auto;
   display: flex;
 }
@@ -723,7 +723,7 @@ section {
   top: 0;
   left: var(--plot-area-pad-x, 0px);
   width: var(--plot-size, 100%);
-  height: var(--plot-size, 100%);
+  height: 100%;
 }
 
 .chart__grid line {
@@ -751,7 +751,7 @@ section {
 .chart__body {
   display: flex;
   gap: var(--space-5);
-  align-items: flex-start;
+  align-items: stretch;
   --chart-controls-height: auto;
 }
 
