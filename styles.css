@@ -507,7 +507,9 @@ section {
   grid-template-areas:
     "y plot"
     ". x";
-  gap: var(--space-1);
+  gap: 0;
+  --axis-label-offset-x: var(--space-3);
+  --axis-label-offset-y: var(--space-4);
 }
 
 .chart__plot-area {
@@ -563,7 +565,7 @@ section {
   font-size: 14px;
   color: var(--color-axis-label);
   pointer-events: none;
-  margin-right: calc(-1 * var(--space-1));
+  margin-right: calc(-1 * var(--axis-label-offset-y));
 }
 
 .chart__axis-label--x {
@@ -576,7 +578,7 @@ section {
   font-size: 14px;
   color: var(--color-axis-label);
   pointer-events: none;
-  margin-top: calc(-1 * var(--space-1));
+  margin-top: calc(-1 * var(--axis-label-offset-x));
 }
 
 .chart__axis-label-text {
