@@ -592,8 +592,16 @@
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
 
       if (chartPlot) {
-        chartPlot.style.setProperty('--axis-center-x', `${margin.left + innerWidth / 2}px`);
-        chartPlot.style.setProperty('--axis-center-y', `${margin.top + innerHeight / 2}px`);
+        const axisCenterX = margin.left + innerWidth / 2;
+        const axisCenterY = margin.top + innerHeight / 2;
+        const tickSize = 6;
+        const tickLabelOffsetY = margin.top + innerHeight + tickSize + 14;
+        const tickLabelOffsetX = margin.left - tickSize - 6;
+
+        chartPlot.style.setProperty('--axis-center-x', `${axisCenterX}px`);
+        chartPlot.style.setProperty('--axis-center-y', `${axisCenterY}px`);
+        chartPlot.style.setProperty('--tick-label-x', `${tickLabelOffsetX}px`);
+        chartPlot.style.setProperty('--tick-label-y', `${tickLabelOffsetY}px`);
       }
 
     }

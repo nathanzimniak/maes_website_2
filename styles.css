@@ -553,9 +553,9 @@ section {
 
 .chart__axis-label--y {
   top: var(--axis-center-y, 50%);
-  left: 0;
-  width: var(--axis-label-size);
-  transform: translateY(-50%) rotate(-90deg);
+  left: var(--tick-label-x, 0);
+  width: max-content;
+  transform: translate(-50%, -50%) rotate(-90deg);
   transform-origin: center;
   display: inline-flex;
   align-items: center;
@@ -568,9 +568,9 @@ section {
 
 .chart__axis-label--x {
   left: var(--axis-center-x, 50%);
-  top: calc(var(--plot-size, 0px) + var(--axis-label-gap));
+  top: var(--tick-label-y, calc(var(--plot-size, 0px) + var(--axis-label-gap)));
   width: max-content;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
