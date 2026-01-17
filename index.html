@@ -212,74 +212,8 @@
           </div>
         </div>
         <div class="chart__figure">
-          <div class="chart__axis-overlay" aria-label="Réglages rapides des axes">
-            <div class="chart__axis-overlay-grid">
-              <div class="chart__axis-overlay-labels" aria-hidden="true">
-                <p class="chart__axis-title">X-axis</p>
-                <p class="chart__axis-title">Y-axis</p>
-              </div>
-              <div class="chart__axis-control">
-                <select id="x-axis-select" class="chart__select chart__select--axis" aria-label="Choisir la grandeur pour l'axe X">
-                  <option value="g1">g1</option>
-                  <option value="g2">g2</option>
-                  <option value="g3">g3</option>
-                  <option value="g4">g4</option>
-                  <option value="g5">g5</option>
-                  <option value="g6">g6</option>
-                  <option value="g7">g7</option>
-                  <option value="g8">g8</option>
-                  <option value="g9">g9</option>
-                  <option value="g10">g10</option>
-                  <option value="g11">g11</option>
-                  <option value="g12">g12</option>
-                  <option value="g13">g13</option>
-                  <option value="g14">g14</option>
-                  <option value="g15">g15</option>
-                  <option value="g16">g16</option>
-                  <option value="g17">g17</option>
-                  <option value="g18">g18</option>
-                  <option value="g19">g19</option>
-                  <option value="g20">g20</option>
-                </select>
-                <select id="y-axis-select" class="chart__select chart__select--axis" aria-label="Choisir la grandeur pour l'axe Y">
-                  <option value="g2">g2</option>
-                  <option value="g1">g1</option>
-                  <option value="g3">g3</option>
-                  <option value="g4">g4</option>
-                  <option value="g5">g5</option>
-                  <option value="g6">g6</option>
-                  <option value="g7">g7</option>
-                  <option value="g8">g8</option>
-                  <option value="g9">g9</option>
-                  <option value="g10">g10</option>
-                  <option value="g11">g11</option>
-                  <option value="g12">g12</option>
-                  <option value="g13">g13</option>
-                  <option value="g14">g14</option>
-                  <option value="g15">g15</option>
-                  <option value="g16">g16</option>
-                  <option value="g17">g17</option>
-                  <option value="g18">g18</option>
-                  <option value="g19">g19</option>
-                  <option value="g20">g20</option>
-                </select>
-              </div>
-              <div class="chart__axis-control">
-                <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
-                  <option value="linear">Linear</option>
-                  <option value="log">Logarithmic</option>
-                </select>
-                <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
-                  <option value="linear">Linear</option>
-                  <option value="log">Logarithmic</option>
-                </select>
-              </div>
-            </div>
-          </div>
           <div class="chart__plot" role="img" aria-label="Graphique en nuage de points">
-            <div class="chart__axis-label chart__axis-label--y" aria-hidden="true"></div>
             <div class="chart__plot-area"></div>
-            <div class="chart__axis-label chart__axis-label--x" aria-hidden="true"></div>
           </div>
         </div>
         <div class="chart__hovered chart__hovered--solution" aria-live="polite">
@@ -479,8 +413,6 @@
 
   <script>
     const chartContainer = document.querySelector('.chart__plot-area');
-    const xAxisOverlayLabel = document.querySelector('.chart__axis-label--x');
-    const yAxisOverlayLabel = document.querySelector('.chart__axis-label--y');
     const chartControls = document.querySelector('.chart__controls');
     const chartBody = document.querySelector('.chart__body');
     const chartPlot = document.querySelector('.chart__plot');
@@ -524,8 +456,8 @@
         labelValue: document.getElementById('p5-label-value')
       },
     ];
-    const xAxisSelect = document.getElementById('x-axis-select');
-    const yAxisSelect = document.getElementById('y-axis-select');
+    const xAxisKey = 'g1';
+    const yAxisKey = 'g2';
     let xScaleType = 'linear';
     let yScaleType = 'linear';
     let selectedScenario = 'SM';
@@ -587,18 +519,12 @@
 
     let width = 0;
     let height = 0;
-    const tickSize = 6;
-    const tickLabelGapX = 18;
-    const tickLabelGapY = 4;
-    const tickLabelFontSize = 14;
     const outerMargin = 24;
-    const textMeasurer = document.createElement('canvas');
-    const textContext = textMeasurer.getContext('2d');
     const margin = {
       top: outerMargin,
       right: outerMargin,
-      bottom: outerMargin + tickSize + tickLabelGapX + tickLabelFontSize,
-      left: outerMargin + tickSize + tickLabelGapY
+      bottom: outerMargin,
+      left: outerMargin
     };
 
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -612,31 +538,7 @@
     const gridGroup = document.createElementNS(svgNS, 'g');
     gridGroup.classList.add('chart__grid');
 
-    const axes = document.createElementNS(svgNS, 'g');
-    axes.setAttribute('stroke-width', '1.5');
-    axes.setAttribute('shape-rendering', 'crispEdges');
-
-    const xAxis = document.createElementNS(svgNS, 'line');
-    xAxis.setAttribute('x1', margin.left);
-    xAxis.setAttribute('x2', margin.left + innerWidth);
-    xAxis.setAttribute('y1', margin.top + innerHeight);
-    xAxis.setAttribute('y2', margin.top + innerHeight);
-    xAxis.setAttribute('stroke', 'none');
-    axes.appendChild(xAxis);
-
-    const yAxis = document.createElementNS(svgNS, 'line');
-    yAxis.setAttribute('x1', margin.left);
-    yAxis.setAttribute('x2', margin.left);
-    yAxis.setAttribute('stroke', 'none');
-    axes.appendChild(yAxis);
-
-    const xTicksGroup = document.createElementNS(svgNS, 'g');
-    const yTicksGroup = document.createElementNS(svgNS, 'g');
-
-    axes.appendChild(xTicksGroup);
-    axes.appendChild(yTicksGroup);
     svg.appendChild(gridGroup);
-    svg.appendChild(axes);
 
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
@@ -670,12 +572,6 @@
       innerHeight = height - margin.top - margin.bottom;
 
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-
-      xAxis.setAttribute('x2', margin.left + innerWidth);
-      xAxis.setAttribute('y1', margin.top + innerHeight);
-      xAxis.setAttribute('y2', margin.top + innerHeight);
-      yAxis.setAttribute('y1', margin.top);
-      yAxis.setAttribute('y2', margin.top + innerHeight);
 
     }
 
@@ -848,26 +744,8 @@
       return Math.abs(value) >= 100 ? value.toFixed(0) : value.toFixed(1);
     }
 
-    function measureTickLabelWidth(labels) {
-      if (!textContext) return 0;
-      textContext.font = `${tickLabelFontSize}px Inter, sans-serif`;
-      return labels.reduce((maxWidth, label) => {
-        const width = textContext.measureText(label).width;
-        return Math.max(maxWidth, width);
-      }, 0);
-    }
-
-    function updateMargins(xTicks, yTicks) {
-      const yLabels = yTicks.map((value) => formatTick(value));
-      const maxYLabelWidth = measureTickLabelWidth(yLabels);
-      margin.left = outerMargin + tickSize + tickLabelGapY + maxYLabelWidth;
-      margin.bottom = outerMargin + tickSize + tickLabelGapX + tickLabelFontSize;
-    }
-
-    function renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xType, yType, xTicks, yTicks) {
+    function renderAxes(xDomain, yDomain, xScale, yScale, xType, yType, xTicks, yTicks) {
       gridGroup.innerHTML = '';
-      xTicksGroup.innerHTML = '';
-      yTicksGroup.innerHTML = '';
 
       const resolvedXTicks = xTicks ?? buildTicks(xDomain, xType);
       const resolvedYTicks = yTicks ?? buildTicks(yDomain, yType);
@@ -891,69 +769,6 @@
         gridLine.setAttribute('y2', yPos);
         gridGroup.appendChild(gridLine);
       });
-
-      resolvedXTicks.forEach((xValue) => {
-        const xPos = xScale(xValue);
-        const xTick = document.createElementNS(svgNS, 'line');
-        xTick.setAttribute('x1', xPos);
-        xTick.setAttribute('x2', xPos);
-        xTick.setAttribute('y1', margin.top + innerHeight);
-        xTick.setAttribute('y2', margin.top + innerHeight + tickSize);
-        xTick.setAttribute('stroke', 'var(--color-line)');
-        xTicksGroup.appendChild(xTick);
-
-        const xTickLabel = document.createElementNS(svgNS, 'text');
-        xTickLabel.textContent = formatTick(xValue);
-        xTickLabel.setAttribute('x', xPos);
-        xTickLabel.setAttribute('y', margin.top + innerHeight + tickSize + tickLabelGapX);
-        xTickLabel.setAttribute('fill', 'var(--color-axis-label)');
-        xTickLabel.setAttribute('stroke', 'none');
-        xTickLabel.setAttribute('font-size', '14');
-        xTickLabel.setAttribute('text-anchor', 'middle');
-        xTicksGroup.appendChild(xTickLabel);
-      });
-
-      resolvedYTicks.forEach((yValue) => {
-        const yPos = yScale(yValue);
-        const yTick = document.createElementNS(svgNS, 'line');
-        yTick.setAttribute('x1', margin.left - tickSize);
-        yTick.setAttribute('x2', margin.left);
-        yTick.setAttribute('y1', yPos);
-        yTick.setAttribute('y2', yPos);
-        yTick.setAttribute('stroke', 'var(--color-line)');
-        yTicksGroup.appendChild(yTick);
-
-        const yTickLabel = document.createElementNS(svgNS, 'text');
-        yTickLabel.textContent = formatTick(yValue);
-        yTickLabel.setAttribute('x', margin.left - tickSize - tickLabelGapY);
-        yTickLabel.setAttribute('y', yPos + 4);
-        yTickLabel.setAttribute('fill', 'var(--color-axis-label)');
-        yTickLabel.setAttribute('stroke', 'none');
-        yTickLabel.setAttribute('font-size', '14');
-        yTickLabel.setAttribute('text-anchor', 'end');
-        yTicksGroup.appendChild(yTickLabel);
-      });
-
-      const xInfo = getHoveredMetricLabel(xKey);
-      const yInfo = getHoveredMetricLabel(yKey);
-      xAxisOverlayLabel.innerHTML = `
-        <span class="chart__axis-label">
-          <span class="chart__axis-label-text">${xInfo.label}</span>
-          <span class="chart__axis-label-math">
-            <span class="math-label" data-latex="${xInfo.latex}"></span>
-          </span>
-        </span>
-      `;
-      yAxisOverlayLabel.innerHTML = `
-        <span class="chart__axis-label">
-          <span class="chart__axis-label-text">${yInfo.label}</span>
-          <span class="chart__axis-label-math">
-            <span class="math-label" data-latex="${yInfo.latex}"></span>
-          </span>
-        </span>
-      `;
-      renderMathLabels(xAxisOverlayLabel);
-      renderMathLabels(yAxisOverlayLabel);
     }
 
     function positionTooltip(event) {
@@ -1009,19 +824,6 @@
 
     function getMetricLatex(key) {
       return getHoveredMetricLabel(key).latex ?? key.toUpperCase();
-    }
-
-    function updateAxisOptionLabels() {
-      if (!xAxisSelect || !yAxisSelect) return;
-
-      [xAxisSelect, yAxisSelect].forEach((select) => {
-        Array.from(select.options).forEach((option) => {
-          const { label, latex } = getHoveredMetricLabel(option.value);
-          option.textContent = label;
-          option.title = label;
-          option.dataset.latex = latex ?? option.value.toUpperCase();
-        });
-      });
     }
 
     function updateCustomSelectDisplay(select) {
@@ -1561,8 +1363,8 @@
         return acc;
       }, {});
 
-      const xKey = xAxisSelect.value;
-      const yKey = yAxisSelect.value;
+      const xKey = xAxisKey;
+      const yKey = yAxisKey;
       const solutions = buildSolutions(baseParams, selectedScenario);
       currentSolutions = solutions;
       resetProfiles();
@@ -1573,25 +1375,16 @@
       const xTicks = buildTicks(xDomain, xScaleType);
       const yTicks = buildTicks(yDomain, yScaleType);
 
-      updateMargins(xTicks, yTicks);
       resizeChart();
 
       const xScale = createScale(xDomain, xScaleType, 'x');
       const yScale = createScale(yDomain, yScaleType, 'y');
 
-      renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xScaleType, yScaleType, xTicks, yTicks);
+      renderAxes(xDomain, yDomain, xScale, yScale, xScaleType, yScaleType, xTicks, yTicks);
       renderPoints(solutions, xKey, yKey, xScale, yScale);
     }
 
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
-    xAxisSelect.addEventListener('change', () => {
-      updateCustomSelectDisplay(xAxisSelect);
-      updateChart();
-    });
-    yAxisSelect.addEventListener('change', () => {
-      updateCustomSelectDisplay(yAxisSelect);
-      updateChart();
-    });
 
     scaleSelects.forEach((select) => {
       select.addEventListener('change', () => {
@@ -1617,27 +1410,6 @@
       });
     });
 
-    updateAxisOptionLabels();
-    buildCustomSelect(xAxisSelect, {
-      usesMath: true,
-      renderLabel: (label, select) => {
-        const latex = getMetricLatex(select.value);
-        label.innerHTML = `<span class="math-label" data-latex="${latex}"></span>`;
-      },
-      renderOption: (item, option) => {
-        item.innerHTML = `<span class="math-label" data-latex="${getMetricLatex(option.value)}"></span>`;
-      },
-    });
-    buildCustomSelect(yAxisSelect, {
-      usesMath: true,
-      renderLabel: (label, select) => {
-        const latex = getMetricLatex(select.value);
-        label.innerHTML = `<span class="math-label" data-latex="${latex}"></span>`;
-      },
-      renderOption: (item, option) => {
-        item.innerHTML = `<span class="math-label" data-latex="${getMetricLatex(option.value)}"></span>`;
-      },
-    });
     scaleSelects.forEach((select) => {
       buildCustomSelect(select, {
         renderLabel: (label, select) => {
