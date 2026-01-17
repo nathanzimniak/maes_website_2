@@ -414,7 +414,6 @@
   <script>
     const chartContainer = document.querySelector('.chart__plot-area');
     const chartControls = document.querySelector('.chart__controls');
-    const chartBody = document.querySelector('.chart__body');
     const chartPlot = document.querySelector('.chart__plot');
     const profileContent = document.getElementById('profile-content');
     const hoveredValues = document.getElementById('hovered-values');
@@ -542,28 +541,8 @@
     chartContainer.appendChild(svg);
 
     function resizeChart() {
-      let plotSize = 0;
-      if (chartControls && chartBody) {
-        chartBody.style.setProperty('--chart-controls-height', `${chartControls.offsetHeight}px`);
-      }
-
-      if (chartPlot) {
-        const chartFigure = chartPlot.closest('.chart__figure');
-        const plotStyles = window.getComputedStyle(chartPlot);
-        const availableWidth = Math.max(0, chartPlot.clientWidth);
-        const availableHeight = Math.max(0, chartPlot.clientHeight);
-        const availableInnerWidth = Math.max(0, availableWidth - margin.left - margin.right);
-        const availableInnerHeight = Math.max(0, availableHeight - margin.top - margin.bottom);
-        const innerPlotSize = Math.floor(availableInnerHeight);
-        plotSize = innerPlotSize + margin.left + margin.right;
-        chartPlot.style.setProperty('--plot-size', `${plotSize}px`);
-        if (chartFigure) {
-          chartFigure.style.setProperty('--plot-size', `${plotSize}px`);
-        }
-      }
-
-      width = plotSize || chartContainer.clientWidth || 720;
-      height = plotSize || chartContainer.clientHeight || 320;
+      width = chartContainer.clientWidth || 720;
+      height = chartContainer.clientHeight || 320;
       innerWidth = width - margin.left - margin.right;
       innerHeight = height - margin.top - margin.bottom;
 
@@ -581,19 +560,12 @@
         const adjustedTickLabelOffsetX = tickLabelOffsetX + plotAreaPadX;
         const adjustedTickLabelOffsetY = tickLabelOffsetY + plotAreaPadY;
 
-        const chartFigure = chartPlot.closest('.chart__figure');
-
         chartPlot.style.setProperty('--axis-center-x', `${axisCenterX}px`);
         chartPlot.style.setProperty('--axis-center-y', `${axisCenterY}px`);
         chartPlot.style.setProperty('--plot-area-pad-x', `${plotAreaPadX}px`);
         chartPlot.style.setProperty('--plot-area-pad-y', `${plotAreaPadY}px`);
         chartPlot.style.setProperty('--tick-label-x', `${adjustedTickLabelOffsetX}px`);
         chartPlot.style.setProperty('--tick-label-y', `${adjustedTickLabelOffsetY}px`);
-
-        if (chartFigure) {
-          chartFigure.style.setProperty('--plot-area-pad-x', `${plotAreaPadX}px`);
-          chartFigure.style.setProperty('--plot-area-pad-y', `${plotAreaPadY}px`);
-        }
       }
 
     }
