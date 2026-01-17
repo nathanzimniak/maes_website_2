@@ -573,6 +573,7 @@
       const axisLabelOffsetY = 28;
 
       if (chartPlot) {
+        const chartFigure = chartPlot.closest('.chart__figure');
         const plotStyles = window.getComputedStyle(chartPlot);
         const axisLabelSize = parseFloat(plotStyles.getPropertyValue('--axis-label-size')) || 28;
         const axisLabelGap = parseFloat(plotStyles.getPropertyValue('--axis-label-gap')) || 20;
@@ -581,9 +582,12 @@
         const availableHeight = Math.max(0, chartPlot.clientHeight - axisLabelSpace);
         const availableInnerWidth = Math.max(0, availableWidth - margin.left - margin.right);
         const availableInnerHeight = Math.max(0, availableHeight - margin.top - margin.bottom);
-        const innerPlotSize = Math.floor(Math.min(availableInnerWidth, availableInnerHeight));
+        const innerPlotSize = Math.floor(availableInnerHeight);
         plotSize = innerPlotSize + margin.left + margin.right;
         chartPlot.style.setProperty('--plot-size', `${plotSize}px`);
+        if (chartFigure) {
+          chartFigure.style.setProperty('--plot-size', `${plotSize}px`);
+        }
       }
 
       width = plotSize || chartContainer.clientWidth || 720;
@@ -620,6 +624,8 @@
         const adjustedAxisLabelPositionX = axisLabelPositionX + plotAreaPadX;
         const adjustedAxisLabelPositionY = axisLabelPositionY + plotAreaPadY;
 
+        const chartFigure = chartPlot.closest('.chart__figure');
+
         chartPlot.style.setProperty('--axis-center-x', `${axisCenterX}px`);
         chartPlot.style.setProperty('--axis-center-y', `${axisCenterY}px`);
         chartPlot.style.setProperty('--plot-area-pad-x', `${plotAreaPadX}px`);
@@ -628,6 +634,11 @@
         chartPlot.style.setProperty('--tick-label-y', `${adjustedTickLabelOffsetY}px`);
         chartPlot.style.setProperty('--axis-label-x', `${adjustedAxisLabelPositionX}px`);
         chartPlot.style.setProperty('--axis-label-y', `${adjustedAxisLabelPositionY}px`);
+
+        if (chartFigure) {
+          chartFigure.style.setProperty('--plot-area-pad-x', `${plotAreaPadX}px`);
+          chartFigure.style.setProperty('--plot-area-pad-y', `${plotAreaPadY}px`);
+        }
       }
 
     }
