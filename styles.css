@@ -499,8 +499,8 @@ section {
 }
 
 .chart__plot {
-  --axis-label-size: 28px;
-  --axis-label-gap: 20px;
+  --axis-label-size: 0px;
+  --axis-label-gap: 0px;
   --axis-label-space: calc(var(--axis-label-size) + var(--axis-label-gap));
   width: 100%;
   height: 100%;
@@ -510,7 +510,7 @@ section {
 .chart__plot-area {
   position: absolute;
   top: 0;
-  left: var(--axis-label-space);
+  left: 0;
   width: var(--plot-size, 100%);
   height: var(--plot-size, 100%);
 }
