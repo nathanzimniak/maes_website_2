@@ -510,6 +510,7 @@ section {
 }
 
 .chart__plot-area {
+  --plot-area-offset-x: 10px;
   position: absolute;
   top: 0;
   left: calc(var(--plot-area-pad-x, 0px) * -1);
@@ -562,7 +563,7 @@ section {
   top: var(--axis-center-y, 50%);
   left: var(--axis-label-x, var(--tick-label-x, 0));
   width: max-content;
-  transform: translate(-50%, -50%) rotate(-90deg);
+  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%) rotate(-90deg);
   transform-origin: center;
   display: inline-flex;
   align-items: center;
@@ -577,7 +578,7 @@ section {
   left: var(--axis-center-x, 50%);
   top: var(--axis-label-y, var(--tick-label-y, calc(var(--plot-size, 0px) + var(--axis-label-gap))));
   width: max-content;
-  transform: translate(-50%, -50%);
+  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -725,7 +726,7 @@ section {
 .chart__plot-area svg {
   position: absolute;
   top: 0;
-  left: var(--plot-area-pad-x, 0px);
+  left: calc(var(--plot-area-pad-x, 0px) + var(--plot-area-offset-x, 0px));
   width: var(--plot-size, 100%);
   height: var(--plot-size, 100%);
 }
