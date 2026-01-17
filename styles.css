@@ -561,7 +561,7 @@ section {
 
 .chart__axis-label--y {
   top: var(--axis-center-y, 50%);
-  left: var(--axis-label-x, var(--tick-label-x, 0));
+  left: calc(var(--axis-label-x, var(--tick-label-x, 0)) + var(--plot-area-offset-x, 0px));
   width: max-content;
   transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%) rotate(-90deg);
   transform-origin: center;
@@ -575,7 +575,7 @@ section {
 }
 
 .chart__axis-label--x {
-  left: var(--axis-center-x, 50%);
+  left: calc(var(--axis-center-x, 50%) + var(--plot-area-offset-x, 0px));
   top: var(--axis-label-y, var(--tick-label-y, calc(var(--plot-size, 0px) + var(--axis-label-gap))));
   width: max-content;
   transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%);
