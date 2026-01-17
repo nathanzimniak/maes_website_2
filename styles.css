@@ -519,7 +519,7 @@ section {
 }
 
 .chart__plot-area > * {
-  transform: translateX(-10px);
+  transform: translateX(50px);
 }
 
 .chart__axis-overlay {
