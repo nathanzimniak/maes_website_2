@@ -213,20 +213,7 @@
         </div>
         <div class="chart__figure">
           <div class="chart__plot" role="img" aria-label="Graphique en nuage de points">
-            <div class="chart__plot-area">
-              <div class="chart__axis-label chart__axis-label--y">
-                <span class="chart__axis-label-text">Vitesse</span>
-                <span class="chart__axis-label-math">
-                  <span class="math-label" data-latex="v"></span>
-                </span>
-              </div>
-              <div class="chart__axis-label chart__axis-label--x">
-                <span class="chart__axis-label-text">Rayon</span>
-                <span class="chart__axis-label-math">
-                  <span class="math-label" data-latex="r"></span>
-                </span>
-              </div>
-            </div>
+            <div class="chart__plot-area"></div>
           </div>
         </div>
         <div class="chart__hovered chart__hovered--solution" aria-live="polite">
@@ -429,10 +416,6 @@
     const chartControls = document.querySelector('.chart__controls');
     const chartBody = document.querySelector('.chart__body');
     const chartPlot = document.querySelector('.chart__plot');
-    const tooltip = document.createElement('div');
-    tooltip.className = 'chart__tooltip';
-    chartContainer.appendChild(tooltip);
-
     const profileContent = document.getElementById('profile-content');
     const hoveredValues = document.getElementById('hovered-values');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
@@ -533,12 +516,11 @@
     let width = 0;
     let height = 0;
     const outerMargin = 24;
-    const tickLabelPadding = 18;
     const margin = {
       top: outerMargin,
       right: outerMargin,
-      bottom: outerMargin + tickLabelPadding,
-      left: outerMargin + tickLabelPadding
+      bottom: outerMargin,
+      left: outerMargin
     };
 
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -554,44 +536,18 @@
 
     svg.appendChild(gridGroup);
 
-    const axisGroup = document.createElementNS(svgNS, 'g');
-    axisGroup.classList.add('chart__axes');
-    svg.appendChild(axisGroup);
-
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
 
     chartContainer.appendChild(svg);
 
     function resizeChart() {
-      let plotSize = 0;
       if (chartControls && chartBody) {
         chartBody.style.setProperty('--chart-controls-height', `${chartControls.offsetHeight}px`);
       }
 
-      const axisLabelOffsetX = 12;
-      const axisLabelOffsetY = 32;
-
-      if (chartPlot) {
-        const chartFigure = chartPlot.closest('.chart__figure');
-        const plotStyles = window.getComputedStyle(chartPlot);
-        const axisLabelSize = parseFloat(plotStyles.getPropertyValue('--axis-label-size')) || 28;
-        const axisLabelGap = parseFloat(plotStyles.getPropertyValue('--axis-label-gap')) || 20;
-        const axisLabelSpace = axisLabelSize + axisLabelGap + Math.max(axisLabelOffsetX, axisLabelOffsetY);
-        const availableWidth = Math.max(0, chartPlot.clientWidth - axisLabelSpace);
-        const availableHeight = Math.max(0, chartPlot.clientHeight - axisLabelSpace);
-        const availableInnerWidth = Math.max(0, availableWidth - margin.left - margin.right);
-        const availableInnerHeight = Math.max(0, availableHeight - margin.top - margin.bottom);
-        const innerPlotSize = Math.floor(availableInnerHeight);
-        plotSize = innerPlotSize + margin.left + margin.right;
-        chartPlot.style.setProperty('--plot-size', `${plotSize}px`);
-        if (chartFigure) {
-          chartFigure.style.setProperty('--plot-size', `${plotSize}px`);
-        }
-      }
-
-      width = plotSize || chartContainer.clientWidth || 720;
-      height = plotSize || chartContainer.clientHeight || 320;
+      width = chartContainer.clientWidth || 720;
+      height = chartContainer.clientHeight || 320;
       innerWidth = width - margin.left - margin.right;
       innerHeight = height - margin.top - margin.bottom;
 
@@ -603,28 +559,11 @@
         const tickSize = 6;
         const tickLabelOffsetY = margin.top + innerHeight + tickSize + 14;
         const tickLabelOffsetX = margin.left - tickSize - 6;
-        const axisLabelPositionY = tickLabelOffsetY + axisLabelOffsetX;
-        const axisLabelPositionX = tickLabelOffsetX - axisLabelOffsetY;
         let plotAreaPadX = 0;
         let plotAreaPadY = 0;
 
-        const xAxisLabel = chartPlot.querySelector('.chart__axis-label--x');
-        const yAxisLabel = chartPlot.querySelector('.chart__axis-label--y');
-
-        if (chartContainer && xAxisLabel && yAxisLabel) {
-          const plotRect = chartContainer.getBoundingClientRect();
-          const xLabelRect = xAxisLabel.getBoundingClientRect();
-          const yLabelRect = yAxisLabel.getBoundingClientRect();
-          plotAreaPadX = Math.max(0, plotRect.left - yLabelRect.left);
-          plotAreaPadY = Math.max(0, xLabelRect.bottom - plotRect.bottom);
-        }
-
         const adjustedTickLabelOffsetX = tickLabelOffsetX + plotAreaPadX;
         const adjustedTickLabelOffsetY = tickLabelOffsetY + plotAreaPadY;
-        const adjustedAxisLabelPositionX = axisLabelPositionX + plotAreaPadX;
-        const adjustedAxisLabelPositionY = axisLabelPositionY + plotAreaPadY;
-
-        const chartFigure = chartPlot.closest('.chart__figure');
 
         chartPlot.style.setProperty('--axis-center-x', `${axisCenterX}px`);
         chartPlot.style.setProperty('--axis-center-y', `${axisCenterY}px`);
@@ -632,13 +571,6 @@
         chartPlot.style.setProperty('--plot-area-pad-y', `${plotAreaPadY}px`);
         chartPlot.style.setProperty('--tick-label-x', `${adjustedTickLabelOffsetX}px`);
         chartPlot.style.setProperty('--tick-label-y', `${adjustedTickLabelOffsetY}px`);
-        chartPlot.style.setProperty('--axis-label-x', `${adjustedAxisLabelPositionX}px`);
-        chartPlot.style.setProperty('--axis-label-y', `${adjustedAxisLabelPositionY}px`);
-
-        if (chartFigure) {
-          chartFigure.style.setProperty('--plot-area-pad-x', `${plotAreaPadX}px`);
-          chartFigure.style.setProperty('--plot-area-pad-y', `${plotAreaPadY}px`);
-        }
       }
 
     }
@@ -814,7 +746,6 @@
 
     function renderAxes(xDomain, yDomain, xScale, yScale, xType, yType, xTicks, yTicks) {
       gridGroup.innerHTML = '';
-      axisGroup.innerHTML = '';
 
       const resolvedXTicks = xTicks ?? buildTicks(xDomain, xType);
       const resolvedYTicks = yTicks ?? buildTicks(yDomain, yType);
@@ -838,77 +769,6 @@
         gridLine.setAttribute('y2', yPos);
         gridGroup.appendChild(gridLine);
       });
-
-      const axisX = margin.left;
-      const axisY = margin.top + innerHeight;
-      const tickSize = 6;
-
-      const axisLines = document.createElementNS(svgNS, 'g');
-      axisLines.classList.add('chart__axis-lines');
-      const xAxisLine = document.createElementNS(svgNS, 'line');
-      xAxisLine.setAttribute('x1', margin.left);
-      xAxisLine.setAttribute('x2', margin.left + innerWidth);
-      xAxisLine.setAttribute('y1', axisY);
-      xAxisLine.setAttribute('y2', axisY);
-      axisLines.appendChild(xAxisLine);
-
-      const yAxisLine = document.createElementNS(svgNS, 'line');
-      yAxisLine.setAttribute('x1', axisX);
-      yAxisLine.setAttribute('x2', axisX);
-      yAxisLine.setAttribute('y1', margin.top);
-      yAxisLine.setAttribute('y2', margin.top + innerHeight);
-      axisLines.appendChild(yAxisLine);
-      axisGroup.appendChild(axisLines);
-
-      const tickGroup = document.createElementNS(svgNS, 'g');
-      tickGroup.classList.add('chart__ticks');
-      const labelGroup = document.createElementNS(svgNS, 'g');
-      labelGroup.classList.add('chart__tick-labels');
-
-      resolvedXTicks.forEach((xValue) => {
-        const xPos = xScale(xValue);
-        const tick = document.createElementNS(svgNS, 'line');
-        tick.setAttribute('x1', xPos);
-        tick.setAttribute('x2', xPos);
-        tick.setAttribute('y1', axisY);
-        tick.setAttribute('y2', axisY + tickSize);
-        tickGroup.appendChild(tick);
-
-        const label = document.createElementNS(svgNS, 'text');
-        label.setAttribute('x', xPos);
-        label.setAttribute('y', axisY + tickSize + 14);
-        label.setAttribute('text-anchor', 'middle');
-        label.textContent = formatTick(xValue);
-        labelGroup.appendChild(label);
-      });
-
-      resolvedYTicks.forEach((yValue) => {
-        const yPos = yScale(yValue);
-        const tick = document.createElementNS(svgNS, 'line');
-        tick.setAttribute('x1', axisX - tickSize);
-        tick.setAttribute('x2', axisX);
-        tick.setAttribute('y1', yPos);
-        tick.setAttribute('y2', yPos);
-        tickGroup.appendChild(tick);
-
-        const label = document.createElementNS(svgNS, 'text');
-        label.setAttribute('x', axisX - tickSize - 6);
-        label.setAttribute('y', yPos + 4);
-        label.setAttribute('text-anchor', 'end');
-        label.textContent = formatTick(yValue);
-        labelGroup.appendChild(label);
-      });
-
-      axisGroup.appendChild(tickGroup);
-      axisGroup.appendChild(labelGroup);
-    }
-
-    function positionTooltip(event) {
-      const bounds = chartContainer.getBoundingClientRect();
-      const offsetX = event.clientX - bounds.left;
-      const offsetY = event.clientY - bounds.top;
-      tooltip.style.left = `${offsetX + 14}px`;
-      tooltip.style.top = `${offsetY + 14}px`;
     }
 
     function renderMathLabels(scope = document) {
@@ -1146,33 +1006,14 @@
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           const xValue = hovered[xKey];
           const yValue = hovered[yKey];
-          const rows = `
-            <li>
-              <span class="chart__tooltip-key math-label" data-latex="${getMetricLatex(xKey)}"></span>
-              <span class="chart__tooltip-value">${xValue.toFixed(1)}</span>
-            </li>
-            <li>
-              <span class="chart__tooltip-key math-label" data-latex="${getMetricLatex(yKey)}"></span>
-              <span class="chart__tooltip-value">${yValue.toFixed(1)}</span>
-            </li>
-          `;
-
-          tooltip.innerHTML = `<ul class="chart__tooltip-list">${rows}</ul>`;
-          tooltip.classList.add('chart__tooltip--visible');
-          positionTooltip(event);
           renderHoveredValues(hovered);
-          renderMathLabels(tooltip);
         });
 
-        circle.addEventListener('pointermove', positionTooltip);
-
         circle.addEventListener('pointerleave', () => {
-          tooltip.classList.remove('chart__tooltip--visible');
           restorePinnedValues();
         });
 
         circle.addEventListener('blur', () => {
-          tooltip.classList.remove('chart__tooltip--visible');
           restorePinnedValues();
         });
 
