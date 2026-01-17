@@ -483,10 +483,10 @@ section {
 }
 
 .chart__figure {
-  width: min(100%, var(--chart-controls-height, 100%));
+  width: 100%;
   aspect-ratio: 1 / 1;
   height: auto;
-  max-height: none;
+  max-height: var(--chart-controls-height, none);
   min-height: 0;
   padding: var(--space-4);
   border-radius: var(--radius);
@@ -494,7 +494,7 @@ section {
   overflow: hidden;
   position: relative;
   margin: 0;
-  align-self: flex-start;
+  align-self: stretch;
   flex: 1 1 0;
   display: flex;
 }
