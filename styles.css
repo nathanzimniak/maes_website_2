@@ -512,10 +512,9 @@ section {
 .chart__plot-area {
   position: absolute;
   top: 0;
-  left: 50%;
+  left: calc(var(--plot-area-pad-x, 0px) * -1);
   width: calc(var(--plot-size, 100%) + var(--plot-area-pad-x, 0px));
   height: 100%;
-  transform: translateX(-50%);
   overflow: visible;
 }
 
