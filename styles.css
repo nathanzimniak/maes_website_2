@@ -529,8 +529,8 @@ section {
   align-items: center;
   justify-content: center;
   min-width: 120px;
-  height: 24px;
-  font-size: 12px;
+  height: 28px;
+  font-size: 14px;
   color: var(--color-axis-label);
   pointer-events: none;
 }

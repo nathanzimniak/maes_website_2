@@ -619,13 +619,13 @@
     xAxisLabelContent.style.display = 'flex';
     xAxisLabelContent.style.alignItems = 'center';
     xAxisLabelContent.style.justifyContent = 'center';
-    xAxisLabelContent.style.fontSize = '12px';
+    xAxisLabelContent.style.fontSize = '14px';
     xAxisLabelContent.style.color = 'var(--color-axis-label)';
     xAxisLabel.appendChild(xAxisLabelContent);
     xAxisLabel.setAttribute('width', '120');
-    xAxisLabel.setAttribute('height', '24');
+    xAxisLabel.setAttribute('height', '28');
     xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
-    xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
+    xAxisLabel.setAttribute('y', margin.top + innerHeight + 30);
 
     axes.appendChild(xTicksGroup);
     axes.appendChild(yTicksGroup);
@@ -660,7 +660,7 @@
       yAxis.setAttribute('y2', margin.top + innerHeight);
 
       xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
-      xAxisLabel.setAttribute('y', margin.top + innerHeight + 28);
+      xAxisLabel.setAttribute('y', margin.top + innerHeight + 30);
       yAxisOverlayLabel.style.left = `${margin.left - 24}px`;
       yAxisOverlayLabel.style.top = `${margin.top + innerHeight / 2}px`;
     }
@@ -875,10 +875,10 @@
         const xTickLabel = document.createElementNS(svgNS, 'text');
         xTickLabel.textContent = formatTick(xValue);
         xTickLabel.setAttribute('x', xPos);
-        xTickLabel.setAttribute('y', margin.top + innerHeight + 22);
+        xTickLabel.setAttribute('y', margin.top + innerHeight + 24);
         xTickLabel.setAttribute('fill', 'var(--color-axis-label)');
         xTickLabel.setAttribute('stroke', 'none');
-        xTickLabel.setAttribute('font-size', '12');
+        xTickLabel.setAttribute('font-size', '14');
         xTickLabel.setAttribute('text-anchor', 'middle');
         xTicksGroup.appendChild(xTickLabel);
       });
@@ -899,7 +899,7 @@
         yTickLabel.setAttribute('y', yPos + 4);
         yTickLabel.setAttribute('fill', 'var(--color-axis-label)');
         yTickLabel.setAttribute('stroke', 'none');
-        yTickLabel.setAttribute('font-size', '12');
+        yTickLabel.setAttribute('font-size', '14');
         yTickLabel.setAttribute('text-anchor', 'end');
         yTicksGroup.appendChild(yTickLabel);
       });
