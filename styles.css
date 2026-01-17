@@ -502,6 +502,8 @@ section {
   --axis-label-size: 28px;
   --axis-label-gap: 20px;
   --axis-label-space: calc(var(--axis-label-size) + var(--axis-label-gap));
+  --plot-area-pad-x: 0px;
+  --plot-area-pad-y: 0px;
   width: 100%;
   height: 100%;
   position: relative;
@@ -510,9 +512,10 @@ section {
 .chart__plot-area {
   position: absolute;
   top: 0;
-  left: 0;
-  width: var(--plot-size, 100%);
-  height: var(--plot-size, 100%);
+  left: calc(var(--plot-area-pad-x, 0px) * -1);
+  width: calc(var(--plot-size, 100%) + var(--plot-area-pad-x, 0px));
+  height: calc(var(--plot-size, 100%) + var(--plot-area-pad-y, 0px));
+  overflow: visible;
 }
 
 .chart__axis-overlay {
@@ -713,6 +716,14 @@ section {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.chart__plot-area svg {
+  position: absolute;
+  top: 0;
+  left: var(--plot-area-pad-x, 0px);
+  width: var(--plot-size, 100%);
+  height: var(--plot-size, 100%);
 }
 
 .chart__grid line {

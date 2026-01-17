@@ -564,6 +564,7 @@
     chartContainer.appendChild(svg);
 
     function resizeChart() {
+      let plotSize = 0;
       if (chartControls && chartBody) {
         chartBody.style.setProperty('--chart-controls-height', `${chartControls.offsetHeight}px`);
       }
@@ -581,14 +582,12 @@
         const availableInnerWidth = Math.max(0, availableWidth - margin.left - margin.right);
         const availableInnerHeight = Math.max(0, availableHeight - margin.top - margin.bottom);
         const innerPlotSize = Math.floor(Math.min(availableInnerWidth, availableInnerHeight));
-        const plotSize = innerPlotSize + margin.left + margin.right;
+        plotSize = innerPlotSize + margin.left + margin.right;
         chartPlot.style.setProperty('--plot-size', `${plotSize}px`);
-        chartContainer.style.width = `${plotSize}px`;
-        chartContainer.style.height = `${plotSize}px`;
       }
 
-      width = chartContainer.clientWidth || 720;
-      height = chartContainer.clientHeight || 320;
+      width = plotSize || chartContainer.clientWidth || 720;
+      height = plotSize || chartContainer.clientHeight || 320;
       innerWidth = width - margin.left - margin.right;
       innerHeight = height - margin.top - margin.bottom;
 
@@ -602,13 +601,33 @@
         const tickLabelOffsetX = margin.left - tickSize - 6;
         const axisLabelPositionY = tickLabelOffsetY + axisLabelOffsetX;
         const axisLabelPositionX = tickLabelOffsetX - axisLabelOffsetY;
+        let plotAreaPadX = 0;
+        let plotAreaPadY = 0;
+
+        const xAxisLabel = chartPlot.querySelector('.chart__axis-label--x');
+        const yAxisLabel = chartPlot.querySelector('.chart__axis-label--y');
+
+        if (chartContainer && xAxisLabel && yAxisLabel) {
+          const plotRect = chartContainer.getBoundingClientRect();
+          const xLabelRect = xAxisLabel.getBoundingClientRect();
+          const yLabelRect = yAxisLabel.getBoundingClientRect();
+          plotAreaPadX = Math.max(0, plotRect.left - yLabelRect.left);
+          plotAreaPadY = Math.max(0, xLabelRect.bottom - plotRect.bottom);
+        }
+
+        const adjustedTickLabelOffsetX = tickLabelOffsetX + plotAreaPadX;
+        const adjustedTickLabelOffsetY = tickLabelOffsetY + plotAreaPadY;
+        const adjustedAxisLabelPositionX = axisLabelPositionX + plotAreaPadX;
+        const adjustedAxisLabelPositionY = axisLabelPositionY + plotAreaPadY;
 
         chartPlot.style.setProperty('--axis-center-x', `${axisCenterX}px`);
         chartPlot.style.setProperty('--axis-center-y', `${axisCenterY}px`);
-        chartPlot.style.setProperty('--tick-label-x', `${tickLabelOffsetX}px`);
-        chartPlot.style.setProperty('--tick-label-y', `${tickLabelOffsetY}px`);
-        chartPlot.style.setProperty('--axis-label-x', `${axisLabelPositionX}px`);
-        chartPlot.style.setProperty('--axis-label-y', `${axisLabelPositionY}px`);
+        chartPlot.style.setProperty('--plot-area-pad-x', `${plotAreaPadX}px`);
+        chartPlot.style.setProperty('--plot-area-pad-y', `${plotAreaPadY}px`);
+        chartPlot.style.setProperty('--tick-label-x', `${adjustedTickLabelOffsetX}px`);
+        chartPlot.style.setProperty('--tick-label-y', `${adjustedTickLabelOffsetY}px`);
+        chartPlot.style.setProperty('--axis-label-x', `${adjustedAxisLabelPositionX}px`);
+        chartPlot.style.setProperty('--axis-label-y', `${adjustedAxisLabelPositionY}px`);
       }
 
     }
