@@ -661,8 +661,11 @@
       const paddingRight = parseFloat(styles.paddingRight) || 0;
       const containerWidth = chartContainer.clientWidth || 720;
       const containerHeight = chartContainer.clientHeight || 320;
-      const xLabelHeight = xAxisOverlayLabel.offsetHeight || 0;
-      const yLabelWidth = yAxisOverlayLabel.offsetWidth || 0;
+      const xBounds = xAxisOverlayLabel.getBoundingClientRect();
+      const yBounds = yAxisOverlayLabel.getBoundingClientRect();
+      const xLabelHeight = xBounds.height || xAxisOverlayLabel.offsetHeight || 0;
+      const yLabelWidth = yBounds.width || yAxisOverlayLabel.offsetWidth || 0;
+      const yLabelHeight = yBounds.height || yAxisOverlayLabel.offsetHeight || 0;
 
       const xLabelTop = margin.top + innerHeight + 18;
       const maxXLabelTop = containerHeight - paddingBottom - xLabelHeight;
@@ -671,8 +674,8 @@
       const minYLabelLeft = paddingLeft + yLabelWidth / 2;
       const maxYLabelLeft = containerWidth - paddingRight - yLabelWidth / 2;
       const yLabelTop = margin.top + innerHeight / 2;
-      const minYLabelTop = paddingTop + 14;
-      const maxYLabelTop = containerHeight - paddingBottom - 14;
+      const minYLabelTop = paddingTop + yLabelHeight / 2;
+      const maxYLabelTop = containerHeight - paddingBottom - yLabelHeight / 2;
 
       xAxisOverlayLabel.style.top = `${Math.min(xLabelTop, maxXLabelTop)}px`;
       xAxisOverlayLabel.style.left = `${xLabelLeft}px`;
