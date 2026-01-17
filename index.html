@@ -213,7 +213,20 @@
         </div>
         <div class="chart__figure">
           <div class="chart__plot" role="img" aria-label="Graphique en nuage de points">
-            <div class="chart__plot-area"></div>
+            <div class="chart__plot-area">
+              <div class="chart__axis-label chart__axis-label--y">
+                <span class="chart__axis-label-text">Vitesse</span>
+                <span class="chart__axis-label-math">
+                  <span class="math-label" data-latex="v"></span>
+                </span>
+              </div>
+              <div class="chart__axis-label chart__axis-label--x">
+                <span class="chart__axis-label-text">Rayon</span>
+                <span class="chart__axis-label-math">
+                  <span class="math-label" data-latex="r"></span>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="chart__hovered chart__hovered--solution" aria-live="polite">
@@ -520,11 +533,12 @@
     let width = 0;
     let height = 0;
     const outerMargin = 24;
+    const tickLabelPadding = 18;
     const margin = {
       top: outerMargin,
       right: outerMargin,
-      bottom: outerMargin,
-      left: outerMargin
+      bottom: outerMargin + tickLabelPadding,
+      left: outerMargin + tickLabelPadding
     };
 
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -576,6 +590,20 @@
       innerHeight = height - margin.top - margin.bottom;
 
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+      if (chartPlot) {
+        const axisCenterX = margin.left + innerWidth / 2;
+        const axisCenterY = margin.top + innerHeight / 2;
+        const tickSize = 6;
+        const axisLabelOffset = tickSize + 14;
+        const tickLabelOffsetY = margin.top + innerHeight + axisLabelOffset;
+        const tickLabelOffsetX = margin.left - axisLabelOffset;
+
+        chartPlot.style.setProperty('--axis-center-x', `${axisCenterX}px`);
+        chartPlot.style.setProperty('--axis-center-y', `${axisCenterY}px`);
+        chartPlot.style.setProperty('--tick-label-x', `${tickLabelOffsetX}px`);
+        chartPlot.style.setProperty('--tick-label-y', `${tickLabelOffsetY}px`);
+      }
 
     }
 
