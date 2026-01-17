@@ -548,6 +548,7 @@ section {
   position: absolute;
   flex-wrap: nowrap;
   white-space: nowrap;
+  z-index: 2;
 }
 
 .chart__axis-label--y {
