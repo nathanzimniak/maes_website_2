@@ -501,18 +501,18 @@ section {
 .chart__plot {
   --axis-label-size: 28px;
   --axis-label-gap: 20px;
+  --axis-label-space: calc(var(--axis-label-size) + var(--axis-label-gap));
   width: 100%;
   height: 100%;
   position: relative;
-  padding-left: calc(var(--axis-label-size) + var(--axis-label-gap));
-  padding-bottom: calc(var(--axis-label-size) + var(--axis-label-gap));
 }
 
 .chart__plot-area {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 1 / 1;
+  position: absolute;
+  top: 0;
+  left: var(--axis-label-space);
+  width: var(--plot-size, 100%);
+  height: var(--plot-size, 100%);
 }
 
 .chart__axis-overlay {
@@ -549,7 +549,7 @@ section {
 }
 
 .chart__axis-label--y {
-  top: 50%;
+  top: calc(var(--plot-size, 0px) / 2);
   left: 0;
   width: var(--axis-label-size);
   transform: translateY(-50%) rotate(-90deg);
@@ -564,9 +564,9 @@ section {
 }
 
 .chart__axis-label--x {
-  left: calc(var(--axis-label-size) + var(--axis-label-gap));
-  right: 0;
-  bottom: 0;
+  left: var(--axis-label-space);
+  top: calc(var(--plot-size, 0px) + var(--axis-label-gap));
+  width: var(--plot-size, 100%);
   display: inline-flex;
   align-items: center;
   justify-content: center;

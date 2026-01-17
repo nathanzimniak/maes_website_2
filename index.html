@@ -483,6 +483,7 @@
     const yAxisOverlayLabel = document.querySelector('.chart__axis-label--y');
     const chartControls = document.querySelector('.chart__controls');
     const chartBody = document.querySelector('.chart__body');
+    const chartPlot = document.querySelector('.chart__plot');
     const tooltip = document.createElement('div');
     tooltip.className = 'chart__tooltip';
     chartContainer.appendChild(tooltip);
@@ -642,6 +643,19 @@
     function resizeChart() {
       if (chartControls && chartBody) {
         chartBody.style.setProperty('--chart-controls-height', `${chartControls.offsetHeight}px`);
+      }
+
+      if (chartPlot) {
+        const plotStyles = window.getComputedStyle(chartPlot);
+        const axisLabelSize = parseFloat(plotStyles.getPropertyValue('--axis-label-size')) || 28;
+        const axisLabelGap = parseFloat(plotStyles.getPropertyValue('--axis-label-gap')) || 20;
+        const axisLabelSpace = axisLabelSize + axisLabelGap;
+        const availableWidth = Math.max(0, chartPlot.clientWidth - axisLabelSpace);
+        const availableHeight = Math.max(0, chartPlot.clientHeight - axisLabelSpace);
+        const plotSize = Math.floor(Math.min(availableWidth, availableHeight));
+        chartPlot.style.setProperty('--plot-size', `${plotSize}px`);
+        chartContainer.style.width = `${plotSize}px`;
+        chartContainer.style.height = `${plotSize}px`;
       }
 
       width = chartContainer.clientWidth || 720;
