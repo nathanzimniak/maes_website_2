@@ -575,7 +575,7 @@ section {
 }
 
 .chart__axis-label--x {
-  left: calc(var(--axis-center-x, 50%) + var(--plot-area-offset-x, 0px));
+  left: calc(var(--axis-center-x, 50%) + var(--plot-area-pad-x, 0px) + var(--plot-area-offset-x, 0px));
   top: var(--axis-label-y, var(--tick-label-y, calc(var(--plot-size, 0px) + var(--axis-label-gap))));
   width: max-content;
   transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%);
