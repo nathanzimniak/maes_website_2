@@ -483,12 +483,12 @@ section {
 }
 
 .chart__figure {
-  width: var(--chart-controls-height, auto);
+  width: fit-content;
   max-width: none;
   height: var(--chart-controls-height, auto);
   max-height: var(--chart-controls-height, none);
   min-height: 0;
-  padding: 0;
+  padding: var(--space-4);
   border-radius: var(--radius);
   background: var(--color-surface-muted);
   overflow: hidden;
@@ -499,20 +499,22 @@ section {
 }
 
 .chart__plot {
-  --axis-label-offset: 20px;
-  --axis-label-size: 28px;
-  --axis-label-space: calc(var(--axis-label-offset) + var(--axis-label-size));
-  width: 100%;
+  width: max-content;
   height: 100%;
-  position: relative;
-  padding-left: var(--axis-label-space);
-  padding-bottom: var(--axis-label-space);
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-template-rows: minmax(0, 1fr) max-content;
+  grid-template-areas:
+    "y plot"
+    ". x";
+  gap: 20px;
 }
 
 .chart__plot-area {
+  grid-area: plot;
   position: relative;
   height: 100%;
-  width: 100%;
+  width: auto;
   aspect-ratio: 1 / 1;
   min-width: 0;
   min-height: 0;
@@ -551,27 +553,28 @@ section {
 }
 
 .chart__axis-label--y {
-  position: absolute;
-  top: calc(50% - (var(--axis-label-space) / 2));
-  left: calc(var(--axis-label-space) - var(--axis-label-offset));
-  transform: translate(-100%, -50%) rotate(-90deg);
+  grid-area: y;
+  transform: rotate(-90deg);
   transform-origin: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  align-self: center;
+  justify-self: center;
+  min-width: 160px;
+  height: 28px;
   font-size: 14px;
   color: var(--color-axis-label);
   pointer-events: none;
 }
 
 .chart__axis-label--x {
-  position: absolute;
-  top: calc(100% - var(--axis-label-space) + var(--axis-label-offset));
-  left: calc(50% + (var(--axis-label-space) / 2));
-  transform: translateX(-50%);
+  grid-area: x;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 260px;
+  height: 28px;
   font-size: 14px;
   color: var(--color-axis-label);
   pointer-events: none;
