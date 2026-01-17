@@ -211,8 +211,8 @@
             </div>
           </div>
         </div>
-        <div class="chart__figure" role="img" aria-label="Graphique en nuage de points">
-            <div class="chart__axis-overlay" aria-label="Réglages rapides des axes">
+        <div class="chart__figure">
+          <div class="chart__axis-overlay" aria-label="Réglages rapides des axes">
             <div class="chart__axis-overlay-grid">
               <div class="chart__axis-overlay-labels" aria-hidden="true">
                 <p class="chart__axis-title">X-axis</p>
@@ -275,6 +275,11 @@
                 </select>
               </div>
             </div>
+          </div>
+          <div class="chart__plot" role="img" aria-label="Graphique en nuage de points">
+            <div class="chart__axis-label chart__axis-label--y" aria-hidden="true"></div>
+            <div class="chart__plot-area"></div>
+            <div class="chart__axis-label chart__axis-label--x" aria-hidden="true"></div>
           </div>
         </div>
         <div class="chart__hovered chart__hovered--solution" aria-live="polite">
@@ -473,7 +478,9 @@
   </section>
 
   <script>
-    const chartContainer = document.querySelector('.chart__figure');
+    const chartContainer = document.querySelector('.chart__plot-area');
+    const xAxisOverlayLabel = document.querySelector('.chart__axis-label--x');
+    const yAxisOverlayLabel = document.querySelector('.chart__axis-label--y');
     const chartControls = document.querySelector('.chart__controls');
     const chartBody = document.querySelector('.chart__body');
     const tooltip = document.createElement('div');
@@ -622,12 +629,6 @@
     svg.appendChild(pointsGroup);
 
     chartContainer.appendChild(svg);
-    const xAxisOverlayLabel = document.createElement('div');
-    xAxisOverlayLabel.className = 'chart__axis-label-x';
-    chartContainer.appendChild(xAxisOverlayLabel);
-    const yAxisOverlayLabel = document.createElement('div');
-    yAxisOverlayLabel.className = 'chart__axis-label-y';
-    chartContainer.appendChild(yAxisOverlayLabel);
 
     function resizeChart() {
       if (chartControls && chartBody) {
@@ -647,51 +648,6 @@
       yAxis.setAttribute('y1', margin.top);
       yAxis.setAttribute('y2', margin.top + innerHeight);
 
-      positionAxisLabels();
-    }
-
-    function positionAxisLabels() {
-      const styles = getComputedStyle(chartContainer);
-      const paddingLeft = parseFloat(styles.paddingLeft) || 0;
-      const paddingBottom = parseFloat(styles.paddingBottom) || 0;
-      const paddingTop = parseFloat(styles.paddingTop) || 0;
-      const paddingRight = parseFloat(styles.paddingRight) || 0;
-      const containerWidth = chartContainer.clientWidth || 720;
-      const containerHeight = chartContainer.clientHeight || 320;
-      const xBounds = xAxisOverlayLabel.getBoundingClientRect();
-      const yBounds = yAxisOverlayLabel.getBoundingClientRect();
-      const xLabelHeight = xBounds.height || xAxisOverlayLabel.offsetHeight || 0;
-      const yLabelWidth = yBounds.width || yAxisOverlayLabel.offsetWidth || 0;
-      const yLabelHeight = yBounds.height || yAxisOverlayLabel.offsetHeight || 0;
-
-      if (!chartContainer.dataset.basePaddingLeft) {
-        chartContainer.dataset.basePaddingLeft = `${paddingLeft}`;
-      }
-
-      const basePaddingLeft = parseFloat(chartContainer.dataset.basePaddingLeft) || paddingLeft;
-      const desiredPaddingLeft = Math.max(basePaddingLeft, yLabelWidth + 16);
-
-      if (desiredPaddingLeft !== paddingLeft) {
-        chartContainer.style.setProperty('--chart-padding-left', `${desiredPaddingLeft}px`);
-      }
-
-      const resolvedPaddingLeft = desiredPaddingLeft;
-      const xPaddingSpace = Math.max(paddingBottom - xLabelHeight, 0);
-      const xLabelTop = containerHeight - paddingBottom + xPaddingSpace / 2;
-      const minXLabelTop = containerHeight - paddingBottom;
-      const maxXLabelTop = containerHeight - xLabelHeight;
-      const xLabelLeft = resolvedPaddingLeft + (containerWidth - resolvedPaddingLeft - paddingRight) / 2;
-      const yLabelLeft = resolvedPaddingLeft / 2;
-      const minYLabelLeft = yLabelWidth / 2;
-      const maxYLabelLeft = Math.max(resolvedPaddingLeft - yLabelWidth / 2, minYLabelLeft);
-      const yLabelTop = paddingTop + (containerHeight - paddingTop - paddingBottom) / 2;
-      const minYLabelTop = paddingTop + yLabelHeight / 2;
-      const maxYLabelTop = containerHeight - paddingBottom - yLabelHeight / 2;
-
-      xAxisOverlayLabel.style.top = `${Math.min(Math.max(xLabelTop, minXLabelTop), maxXLabelTop)}px`;
-      xAxisOverlayLabel.style.left = `${xLabelLeft}px`;
-      yAxisOverlayLabel.style.left = `${Math.min(Math.max(yLabelLeft, minYLabelLeft), maxYLabelLeft)}px`;
-      yAxisOverlayLabel.style.top = `${Math.min(Math.max(yLabelTop, minYLabelTop), maxYLabelTop)}px`;
     }
 
     function createScale(domain, scaleType, axis) {
@@ -953,7 +909,6 @@
       `;
       renderMathLabels(xAxisOverlayLabel);
       renderMathLabels(yAxisOverlayLabel);
-      positionAxisLabels();
     }
 
     function positionTooltip(event) {
