@@ -556,6 +556,8 @@ section {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  align-self: center;
+  justify-self: center;
   min-width: 160px;
   height: 28px;
   font-size: 14px;
