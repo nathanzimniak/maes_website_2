@@ -612,24 +612,9 @@
 
     const xTicksGroup = document.createElementNS(svgNS, 'g');
     const yTicksGroup = document.createElementNS(svgNS, 'g');
-    const xAxisLabel = document.createElementNS(svgNS, 'foreignObject');
-    const xAxisLabelContent = document.createElement('div');
-    xAxisLabelContent.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
-    xAxisLabelContent.className = 'chart__axis-math';
-    xAxisLabelContent.style.display = 'flex';
-    xAxisLabelContent.style.alignItems = 'center';
-    xAxisLabelContent.style.justifyContent = 'center';
-    xAxisLabelContent.style.fontSize = '14px';
-    xAxisLabelContent.style.color = 'var(--color-axis-label)';
-    xAxisLabel.appendChild(xAxisLabelContent);
-    xAxisLabel.setAttribute('width', '120');
-    xAxisLabel.setAttribute('height', '28');
-    xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
-    xAxisLabel.setAttribute('y', margin.top + innerHeight + 30);
 
     axes.appendChild(xTicksGroup);
     axes.appendChild(yTicksGroup);
-    axes.appendChild(xAxisLabel);
     svg.appendChild(gridGroup);
     svg.appendChild(axes);
 
@@ -637,6 +622,9 @@
     svg.appendChild(pointsGroup);
 
     chartContainer.appendChild(svg);
+    const xAxisOverlayLabel = document.createElement('div');
+    xAxisOverlayLabel.className = 'chart__axis-label-x';
+    chartContainer.appendChild(xAxisOverlayLabel);
     const yAxisOverlayLabel = document.createElement('div');
     yAxisOverlayLabel.className = 'chart__axis-label-y';
     chartContainer.appendChild(yAxisOverlayLabel);
@@ -659,8 +647,8 @@
       yAxis.setAttribute('y1', margin.top);
       yAxis.setAttribute('y2', margin.top + innerHeight);
 
-      xAxisLabel.setAttribute('x', margin.left + innerWidth / 2 - 60);
-      xAxisLabel.setAttribute('y', margin.top + innerHeight + 30);
+      xAxisOverlayLabel.style.left = `${margin.left + innerWidth / 2}px`;
+      xAxisOverlayLabel.style.top = `${margin.top + innerHeight + 30}px`;
       yAxisOverlayLabel.style.left = `${margin.left - 24}px`;
       yAxisOverlayLabel.style.top = `${margin.top + innerHeight / 2}px`;
     }
@@ -834,7 +822,7 @@
       return Math.abs(value) >= 100 ? value.toFixed(0) : value.toFixed(1);
     }
 
-    function renderAxes(xDomain, yDomain, xLabel, yLabel, xScale, yScale, xType, yType) {
+    function renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xType, yType) {
       gridGroup.innerHTML = '';
       xTicksGroup.innerHTML = '';
       yTicksGroup.innerHTML = '';
@@ -904,9 +892,25 @@
         yTicksGroup.appendChild(yTickLabel);
       });
 
-      xAxisLabelContent.innerHTML = `<span class="math-label" data-latex="${xLabel}"></span>`;
-      yAxisOverlayLabel.innerHTML = `<span class="math-label" data-latex="${yLabel}"></span>`;
-      renderMathLabels(xAxisLabelContent);
+      const xInfo = getHoveredMetricLabel(xKey);
+      const yInfo = getHoveredMetricLabel(yKey);
+      xAxisOverlayLabel.innerHTML = `
+        <span class="chart__axis-label">
+          <span class="chart__axis-label-text">${xInfo.label}</span>
+          <span class="chart__axis-label-math">
+            <span class="math-label" data-latex="${xInfo.latex}"></span>
+          </span>
+        </span>
+      `;
+      yAxisOverlayLabel.innerHTML = `
+        <span class="chart__axis-label">
+          <span class="chart__axis-label-text">${yInfo.label}</span>
+          <span class="chart__axis-label-math">
+            <span class="math-label" data-latex="${yInfo.latex}"></span>
+          </span>
+        </span>
+      `;
+      renderMathLabels(xAxisOverlayLabel);
       renderMathLabels(yAxisOverlayLabel);
     }
 
@@ -1529,7 +1533,7 @@
       const xScale = createScale(xDomain, xScaleType, 'x');
       const yScale = createScale(yDomain, yScaleType, 'y');
 
-      renderAxes(xDomain, yDomain, getMetricLatex(xKey), getMetricLatex(yKey), xScale, yScale, xScaleType, yScaleType);
+      renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xScaleType, yScaleType);
       renderPoints(solutions, xKey, yKey, xScale, yScale);
     }
 
