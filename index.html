@@ -615,7 +615,7 @@
     const xAxisLabel = document.createElementNS(svgNS, 'foreignObject');
     const xAxisLabelContent = document.createElement('div');
     xAxisLabelContent.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
-    xAxisLabelContent.className = 'chart__axis-math';
+    xAxisLabelContent.className = 'chart__axis-label';
     xAxisLabelContent.style.display = 'flex';
     xAxisLabelContent.style.alignItems = 'center';
     xAxisLabelContent.style.justifyContent = 'center';
@@ -834,7 +834,7 @@
       return Math.abs(value) >= 100 ? value.toFixed(0) : value.toFixed(1);
     }
 
-    function renderAxes(xDomain, yDomain, xLabel, yLabel, xScale, yScale, xType, yType) {
+    function renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xType, yType) {
       gridGroup.innerHTML = '';
       xTicksGroup.innerHTML = '';
       yTicksGroup.innerHTML = '';
@@ -904,8 +904,22 @@
         yTicksGroup.appendChild(yTickLabel);
       });
 
-      xAxisLabelContent.innerHTML = `<span class="math-label" data-latex="${xLabel}"></span>`;
-      yAxisOverlayLabel.innerHTML = `<span class="math-label" data-latex="${yLabel}"></span>`;
+      const xInfo = getHoveredMetricLabel(xKey);
+      const yInfo = getHoveredMetricLabel(yKey);
+      xAxisLabelContent.innerHTML = `
+        <span class="chart__axis-label-text">${xInfo.label}</span>
+        <span class="chart__axis-label-math">
+          <span class="math-label" data-latex="${xInfo.latex}"></span>
+        </span>
+      `;
+      yAxisOverlayLabel.innerHTML = `
+        <span class="chart__axis-label">
+          <span class="chart__axis-label-text">${yInfo.label}</span>
+          <span class="chart__axis-label-math">
+            <span class="math-label" data-latex="${yInfo.latex}"></span>
+          </span>
+        </span>
+      `;
       renderMathLabels(xAxisLabelContent);
       renderMathLabels(yAxisOverlayLabel);
     }
@@ -1529,7 +1543,7 @@
       const xScale = createScale(xDomain, xScaleType, 'x');
       const yScale = createScale(yDomain, yScaleType, 'y');
 
-      renderAxes(xDomain, yDomain, getMetricLatex(xKey), getMetricLatex(yKey), xScale, yScale, xScaleType, yScaleType);
+      renderAxes(xDomain, yDomain, xKey, yKey, xScale, yScale, xScaleType, yScaleType);
       renderPoints(solutions, xKey, yKey, xScale, yScale);
     }
 
