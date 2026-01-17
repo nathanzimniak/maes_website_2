@@ -572,7 +572,9 @@
         const plotStyles = window.getComputedStyle(chartPlot);
         const axisLabelSize = parseFloat(plotStyles.getPropertyValue('--axis-label-size')) || 28;
         const axisLabelGap = parseFloat(plotStyles.getPropertyValue('--axis-label-gap')) || 20;
-        const axisLabelSpace = axisLabelSize + axisLabelGap;
+        const axisLabelOffsetX = 6;
+        const axisLabelOffsetY = 12;
+        const axisLabelSpace = axisLabelSize + axisLabelGap + Math.max(axisLabelOffsetX, axisLabelOffsetY);
         const availableWidth = Math.max(0, chartPlot.clientWidth - axisLabelSpace);
         const availableHeight = Math.max(0, chartPlot.clientHeight - axisLabelSpace);
         const availableInnerWidth = Math.max(0, availableWidth - margin.left - margin.right);
@@ -598,8 +600,6 @@
         const axisLabelOffset = tickSize + 24;
         const tickLabelOffsetY = margin.top + innerHeight + axisLabelOffset;
         const tickLabelOffsetX = margin.left - axisLabelOffset;
-        const axisLabelOffsetX = 6;
-        const axisLabelOffsetY = 12;
         const axisLabelPositionY = tickLabelOffsetY + axisLabelOffsetX;
         const axisLabelPositionX = tickLabelOffsetX - axisLabelOffsetY;
 
