@@ -535,6 +535,19 @@ section {
   pointer-events: none;
 }
 
+.chart__axis-label-x {
+  position: absolute;
+  transform: translate(-50%, 0);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 260px;
+  height: 28px;
+  font-size: 14px;
+  color: var(--color-axis-label);
+  pointer-events: none;
+}
+
 .chart__axis-label {
   display: inline-flex;
   align-items: center;
