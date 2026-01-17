@@ -541,6 +541,10 @@
     chartContainer.appendChild(svg);
 
     function resizeChart() {
+      if (chartControls && chartBody) {
+        chartBody.style.setProperty('--chart-controls-height', `${chartControls.offsetHeight}px`);
+      }
+
       width = chartContainer.clientWidth || 720;
       height = chartContainer.clientHeight || 320;
       innerWidth = width - margin.left - margin.right;

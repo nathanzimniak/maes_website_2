@@ -486,6 +486,7 @@ section {
   width: 100%;
   aspect-ratio: 1 / 1;
   height: auto;
+  max-height: var(--chart-controls-height, none);
   min-height: 0;
   padding: var(--space-4);
   border-radius: var(--radius);
