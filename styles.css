@@ -484,8 +484,7 @@ section {
 
 .chart__figure {
   width: calc(var(--plot-size, auto) + var(--plot-area-pad-x, 0px) + (var(--space-4) * 2));
-  height: 100%;
-  max-height: 100%;
+  height: auto;
   aspect-ratio: auto;
   min-height: 0;
   padding: var(--space-4);
@@ -796,7 +795,6 @@ section {
   max-height: none;
   overflow-y: auto;
   flex: 0 0 310px;
-  align-self: stretch;
 }
 
 .chart__control {
