@@ -718,6 +718,23 @@ section {
   stroke-width: 1;
 }
 
+.chart__axes line {
+  stroke: var(--color-axis);
+  stroke-width: 1.2;
+  shape-rendering: crispEdges;
+}
+
+.chart__ticks line {
+  stroke: var(--color-axis);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.chart__tick-labels text {
+  fill: var(--color-axis-label);
+  font-size: 11px;
+}
+
 .chart__body {
   display: flex;
   gap: var(--space-5);
