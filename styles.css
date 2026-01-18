@@ -485,6 +485,7 @@ section {
 .chart__figure {
   width: 600px;
   max-width: 100%;
+  flex: 0 0 600px;
   aspect-ratio: 1 / 1;
   height: auto;
   max-height: var(--chart-controls-height, none);
@@ -496,7 +497,6 @@ section {
   position: relative;
   margin: 0;
   align-self: stretch;
-  flex: 1 1 0;
   display: flex;
 }
 
