@@ -518,6 +518,7 @@ section {
   width: calc(100% - (var(--plot-area-pad-x) * 2));
   height: calc(100% - (var(--plot-area-pad-y) * 2));
   overflow: visible;
+  transform: translateX(14px);
 }
 
 .chart__plot-area > * {
