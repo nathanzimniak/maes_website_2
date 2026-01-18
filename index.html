@@ -555,6 +555,18 @@
 
     svg.appendChild(gridGroup);
 
+    const axesGroup = document.createElementNS(svgNS, 'g');
+    axesGroup.classList.add('chart__axes');
+    svg.appendChild(axesGroup);
+
+    const ticksGroup = document.createElementNS(svgNS, 'g');
+    ticksGroup.classList.add('chart__ticks');
+    svg.appendChild(ticksGroup);
+
+    const tickLabelsGroup = document.createElementNS(svgNS, 'g');
+    tickLabelsGroup.classList.add('chart__tick-labels');
+    svg.appendChild(tickLabelsGroup);
+
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
 
@@ -767,9 +779,26 @@
 
     function renderAxes(xDomain, yDomain, xScale, yScale, xType, yType, xTicks, yTicks) {
       gridGroup.innerHTML = '';
+      axesGroup.innerHTML = '';
+      ticksGroup.innerHTML = '';
+      tickLabelsGroup.innerHTML = '';
 
       const resolvedXTicks = xTicks ?? buildTicks(xDomain, xType);
       const resolvedYTicks = yTicks ?? buildTicks(yDomain, yType);
+
+      const axisX = document.createElementNS(svgNS, 'line');
+      axisX.setAttribute('x1', margin.left);
+      axisX.setAttribute('x2', margin.left + innerWidth);
+      axisX.setAttribute('y1', margin.top + innerHeight);
+      axisX.setAttribute('y2', margin.top + innerHeight);
+      axesGroup.appendChild(axisX);
+
+      const axisY = document.createElementNS(svgNS, 'line');
+      axisY.setAttribute('x1', margin.left);
+      axisY.setAttribute('x2', margin.left);
+      axisY.setAttribute('y1', margin.top);
+      axisY.setAttribute('y2', margin.top + innerHeight);
+      axesGroup.appendChild(axisY);
 
       resolvedXTicks.forEach((xValue) => {
         const xPos = xScale(xValue);
@@ -779,6 +808,20 @@
         gridLine.setAttribute('y1', margin.top);
         gridLine.setAttribute('y2', margin.top + innerHeight);
         gridGroup.appendChild(gridLine);
+
+        const tick = document.createElementNS(svgNS, 'line');
+        tick.setAttribute('x1', xPos);
+        tick.setAttribute('x2', xPos);
+        tick.setAttribute('y1', margin.top + innerHeight);
+        tick.setAttribute('y2', margin.top + innerHeight + 6);
+        ticksGroup.appendChild(tick);
+
+        const label = document.createElementNS(svgNS, 'text');
+        label.setAttribute('x', xPos);
+        label.setAttribute('y', margin.top + innerHeight + 18);
+        label.setAttribute('text-anchor', 'middle');
+        label.textContent = formatTick(xValue);
+        tickLabelsGroup.appendChild(label);
       });
 
       resolvedYTicks.forEach((yValue) => {
@@ -789,6 +832,20 @@
         gridLine.setAttribute('y1', yPos);
         gridLine.setAttribute('y2', yPos);
         gridGroup.appendChild(gridLine);
+
+        const tick = document.createElementNS(svgNS, 'line');
+        tick.setAttribute('x1', margin.left - 6);
+        tick.setAttribute('x2', margin.left);
+        tick.setAttribute('y1', yPos);
+        tick.setAttribute('y2', yPos);
+        ticksGroup.appendChild(tick);
+
+        const label = document.createElementNS(svgNS, 'text');
+        label.setAttribute('x', margin.left - 10);
+        label.setAttribute('y', yPos + 4);
+        label.setAttribute('text-anchor', 'end');
+        label.textContent = formatTick(yValue);
+        tickLabelsGroup.appendChild(label);
       });
     }
 
