@@ -488,7 +488,8 @@ section {
   height: auto;
   max-height: var(--chart-controls-height, none);
   min-height: 0;
-  padding: var(--space-4);
+  --chart-figure-padding: var(--space-4);
+  padding: var(--chart-figure-padding);
   border-radius: var(--radius);
   background: var(--color-surface-muted);
   overflow: hidden;
@@ -503,8 +504,8 @@ section {
   width: 100%;
   height: 100%;
   position: relative;
-  --axis-label-x: calc(var(--tick-label-x, 0px) - 18px);
-  --axis-label-y: calc(var(--tick-label-y, 0px) + 16px);
+  --axis-label-x: calc(var(--tick-label-x, 0px) - var(--chart-figure-padding, 0px));
+  --axis-label-y: calc(var(--tick-label-y, 0px) + var(--chart-figure-padding, 0px));
 }
 
 .chart__plot-area {
