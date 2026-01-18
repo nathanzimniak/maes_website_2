@@ -534,6 +534,61 @@
       document.body.removeChild(ruler);
     };
 
+    const updateAxisSelectWidths = () => {
+      if (!axisSelects.length) {
+        return;
+      }
+
+      const ruler = document.createElement('span');
+      ruler.setAttribute('aria-hidden', 'true');
+      ruler.style.position = 'absolute';
+      ruler.style.visibility = 'hidden';
+      ruler.style.whiteSpace = 'nowrap';
+      document.body.appendChild(ruler);
+
+      const referenceButton = axisSelects
+        .map((select) => select.parentElement?.querySelector('.chart__latex-button'))
+        .find(Boolean);
+
+      const referenceStyles = window.getComputedStyle(referenceButton || axisSelects[0]);
+      ruler.style.fontFamily = referenceStyles.fontFamily;
+      ruler.style.fontSize = referenceStyles.fontSize;
+      ruler.style.fontWeight = referenceStyles.fontWeight;
+      ruler.style.letterSpacing = referenceStyles.letterSpacing;
+
+      let maxTextWidth = 0;
+      axisSelects.forEach((select) => {
+        Array.from(select.options).forEach((option) => {
+          ruler.textContent = option.textContent || '';
+          maxTextWidth = Math.max(maxTextWidth, ruler.getBoundingClientRect().width);
+        });
+      });
+
+      const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
+      const paddingRight = parseFloat(referenceStyles.paddingRight) || 0;
+      const borderLeft = parseFloat(referenceStyles.borderLeftWidth) || 0;
+      const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
+      const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
+      const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
+      const targetWidth = Math.ceil(
+        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+      );
+
+      axisSelects.forEach((select) => {
+        const wrapper = select.closest('.chart__latex-select');
+        const button = wrapper?.querySelector('.chart__latex-button');
+        if (wrapper) {
+          wrapper.style.width = `${targetWidth}px`;
+        }
+        if (button) {
+          button.style.width = `${targetWidth}px`;
+        }
+        select.style.width = `${targetWidth}px`;
+      });
+
+      document.body.removeChild(ruler);
+    };
+
     let width = 0;
     let height = 0;
     const outerMargin = 24;
@@ -1537,6 +1592,7 @@
     });
 
     updateScaleSelectWidths();
+    updateAxisSelectWidths();
     updateScaleSelect('x', xScaleType);
     updateScaleSelect('y', yScaleType);
 
@@ -1555,6 +1611,7 @@
 
     window.addEventListener('resize', () => {
       updateScaleSelectWidths();
+      updateAxisSelectWidths();
       updateChart();
     });
 
@@ -1572,12 +1629,14 @@
       renderMathLabels();
 
       updateScaleSelectWidths();
+      updateAxisSelectWidths();
       updateChart();
     });
 
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
         updateScaleSelectWidths();
+        updateAxisSelectWidths();
       });
     }
   </script>
