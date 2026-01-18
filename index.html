@@ -580,6 +580,15 @@
 
       width = chartContainer.clientWidth || 720;
       height = chartContainer.clientHeight || 320;
+      const plotSize = Math.min(width, height);
+      const offsetX = (width - plotSize) / 2;
+      const offsetY = (height - plotSize) / 2;
+
+      margin.left = outerMargin + offsetX;
+      margin.right = outerMargin + offsetX;
+      margin.top = outerMargin + offsetY;
+      margin.bottom = outerMargin + offsetY;
+
       innerWidth = width - margin.left - margin.right;
       innerHeight = height - margin.top - margin.bottom;
 
