@@ -484,7 +484,7 @@ section {
 
 .chart__figure {
   --chart-plot-size: 520px;
-  width: 600px;
+  width: 580px;
   max-width: 100%;
   flex: 0 0 auto;
   height: calc(var(--chart-plot-size) + (var(--space-4) * 2));
@@ -520,7 +520,7 @@ section {
   width: calc(100% - (var(--plot-area-pad-x) * 2));
   height: calc(100% - (var(--plot-area-pad-y) * 2));
   overflow: visible;
-  transform: translateX(14px);
+  transform: translateX(22px);
 }
 
 .chart__plot-area > * {
@@ -576,7 +576,7 @@ section {
     calc(100% - var(--axis-label-boundary))
   );
   width: max-content;
-  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px) - 24px), -50%);
+  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px) - 12px), -50%);
   transform-origin: center;
   display: inline-flex;
   align-items: center;
