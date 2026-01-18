@@ -579,8 +579,9 @@
         const tickSize = 6;
         const tickLabelOffsetY = margin.top + innerHeight + tickSize + 14;
         const tickLabelOffsetX = margin.left - tickSize - 6;
-        let plotAreaPadX = 0;
-        let plotAreaPadY = 0;
+        const plotAreaStyles = window.getComputedStyle(chartPlot);
+        const plotAreaPadX = parseFloat(plotAreaStyles.getPropertyValue('--plot-area-pad-x')) || 0;
+        const plotAreaPadY = parseFloat(plotAreaStyles.getPropertyValue('--plot-area-pad-y')) || 0;
 
         const adjustedTickLabelOffsetX = tickLabelOffsetX + plotAreaPadX;
         const adjustedTickLabelOffsetY = tickLabelOffsetY + plotAreaPadY;
