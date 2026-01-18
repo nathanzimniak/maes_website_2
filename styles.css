@@ -488,7 +488,7 @@ section {
   max-width: 100%;
   flex: 0 0 auto;
   height: var(--chart-controls-height, auto);
-  max-height: none;
+  max-height: var(--chart-controls-height, none);
   min-height: 0;
   padding: var(--space-4);
   border-radius: var(--radius);
