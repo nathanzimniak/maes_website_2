@@ -829,6 +829,7 @@ section {
   height: auto;
   max-height: none;
   overflow-y: auto;
+  align-self: flex-start;
   flex: 0 0 310px;
 }
 
