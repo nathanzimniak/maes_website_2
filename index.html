@@ -432,6 +432,8 @@
   <script>
     const chartContainer = document.querySelector('.chart__plot-area');
     const chartControls = document.querySelector('.chart__controls');
+    const chartFigure = document.querySelector('.chart__figure');
+    const chartHovered = document.querySelector('.chart__hovered');
     const chartPlot = document.querySelector('.chart__plot');
     const profileContent = document.getElementById('profile-content');
     const hoveredValues = document.getElementById('hovered-values');
@@ -575,7 +577,29 @@
     function resizeChart() {
       const chartBody = document.querySelector('.chart__body');
       if (chartControls && chartBody) {
-        chartBody.style.setProperty('--chart-controls-height', `${chartControls.offsetHeight}px`);
+        const controlsHeight = chartControls.offsetHeight;
+        chartBody.style.setProperty('--chart-controls-height', `${controlsHeight}px`);
+        const bodyStyles = window.getComputedStyle(chartBody);
+        const shouldSyncHeights = bodyStyles.flexDirection !== 'column';
+        if (shouldSyncHeights) {
+          if (chartFigure) {
+            chartFigure.style.height = `${controlsHeight}px`;
+            chartFigure.style.maxHeight = `${controlsHeight}px`;
+          }
+          if (chartHovered) {
+            chartHovered.style.height = `${controlsHeight}px`;
+            chartHovered.style.maxHeight = `${controlsHeight}px`;
+          }
+        } else {
+          if (chartFigure) {
+            chartFigure.style.height = '';
+            chartFigure.style.maxHeight = '';
+          }
+          if (chartHovered) {
+            chartHovered.style.height = '';
+            chartHovered.style.maxHeight = '';
+          }
+        }
       }
 
       width = chartContainer.clientWidth || 720;
