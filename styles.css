@@ -1354,18 +1354,20 @@ section {
   right: 0;
   max-height: 240px;
   overflow-y: auto;
+  display: none;
+  flex-direction: column;
+  white-space: normal;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) transparent;
   background: var(--color-surface);
   border-radius: 10px;
   padding: 4px;
   box-shadow: 0 18px 44px rgba(15, 23, 42, 0.14);
-  display: none;
   z-index: 20;
 }
 
 .chart__latex-menu--open {
-  display: block;
+  display: flex;
 }
 
 .chart__latex-menu::-webkit-scrollbar {
