@@ -632,6 +632,10 @@ section {
   box-shadow: none;
 }
 
+.chart__axis-label .chart__latex-option {
+  padding: 4px 10px;
+}
+
 .chart__axis-label-math {
   font-weight: 500;
   font-style: italic;
