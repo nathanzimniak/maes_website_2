@@ -561,7 +561,7 @@ section {
   top: var(--axis-center-y, 50%);
   left: calc(var(--axis-label-x, var(--tick-label-x, 0)) + var(--plot-area-offset-x, 0px));
   width: max-content;
-  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%) rotate(-90deg);
+  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%);
   transform-origin: center;
   display: inline-flex;
   align-items: center;
