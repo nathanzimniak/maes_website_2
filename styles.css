@@ -555,6 +555,7 @@ section {
   flex-wrap: nowrap;
   white-space: nowrap;
   z-index: 2;
+  pointer-events: auto;
 }
 
 .chart__axis-label--y {
@@ -569,7 +570,6 @@ section {
   height: var(--axis-label-size);
   font-size: 14px;
   color: var(--color-axis-label);
-  pointer-events: none;
 }
 
 .chart__axis-label--x {
@@ -583,12 +583,20 @@ section {
   height: var(--axis-label-size);
   font-size: 14px;
   color: var(--color-axis-label);
-  pointer-events: none;
 }
 
 .chart__axis-label-text {
   font-weight: 400;
   font-style: italic;
+}
+
+.chart__axis-label .chart__select--axis {
+  min-width: 160px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-1);
+  background-color: var(--color-surface);
+  font-size: 0.74rem;
 }
 
 .chart__axis-label-math {
