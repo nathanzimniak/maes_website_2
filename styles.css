@@ -587,7 +587,7 @@ section {
 .chart__axis-label--x {
   left: clamp(
     var(--axis-label-boundary),
-    calc(var(--axis-center-x, 50%) + var(--plot-area-pad-x, 0px) + var(--plot-area-offset-x, 0px)),
+    calc(50% + var(--plot-area-offset-x, 0px)),
     calc(100% - var(--axis-label-boundary))
   );
   top: clamp(
@@ -596,7 +596,7 @@ section {
     calc(100% - var(--axis-label-boundary))
   );
   width: max-content;
-  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%);
+  transform: translate(-50%, -50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
