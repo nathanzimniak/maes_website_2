@@ -509,6 +509,7 @@ section {
   --axis-label-boundary: var(--space-4);
   --plot-area-pad-x: var(--space-6);
   --plot-area-pad-y: var(--space-6);
+  --plot-area-offset-x: 14px;
 }
 
 .chart__plot-area {
@@ -518,6 +519,7 @@ section {
   width: calc(100% - (var(--plot-area-pad-x) * 2));
   height: calc(100% - (var(--plot-area-pad-y) * 2));
   overflow: visible;
+  transform: translateX(var(--plot-area-offset-x, 0px));
 }
 
 .chart__plot-area > * {
