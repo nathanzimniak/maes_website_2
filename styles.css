@@ -562,7 +562,11 @@ section {
 }
 
 .chart__axis-label--y {
-  top: clamp(var(--axis-label-boundary), var(--axis-center-y, 50%), calc(100% - var(--axis-label-boundary)));
+  top: clamp(
+    var(--axis-label-boundary),
+    calc(var(--axis-center-y, 50%) + var(--plot-area-pad-y, 0px)),
+    calc(100% - var(--axis-label-boundary))
+  );
   left: clamp(
     var(--axis-label-boundary),
     calc(var(--axis-label-x, var(--tick-label-x, 0)) + var(--plot-area-offset-x, 0px)),
