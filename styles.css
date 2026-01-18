@@ -506,21 +506,17 @@ section {
   width: min(100%, var(--chart-plot-size));
   height: min(100%, var(--chart-plot-size));
   position: relative;
-  --axis-label-x: calc(var(--tick-label-x, 0px) - 28px);
-  --axis-label-y: calc(var(--tick-label-y, 0px) + 16px);
-  --axis-label-boundary: var(--space-4);
   --plot-area-pad-x: var(--space-6);
   --plot-area-pad-y: var(--space-6);
 }
 
 .chart__plot-area {
   position: absolute;
-  top: var(--plot-area-pad-y);
-  left: var(--plot-area-pad-x);
+  top: var(--scatter-plot-y, var(--plot-area-pad-y));
+  left: var(--scatter-plot-x, var(--plot-area-pad-x));
   width: calc(100% - (var(--plot-area-pad-x) * 2));
   height: calc(100% - (var(--plot-area-pad-y) * 2));
   overflow: visible;
-  transform: translateX(28px) translateY(-10px);
 }
 
 .chart__plot-area > * {
@@ -565,18 +561,10 @@ section {
 }
 
 .chart__axis-label--y {
-  top: clamp(
-    var(--axis-label-boundary),
-    calc(var(--axis-center-y, 50%) + var(--plot-area-pad-y, 0px)),
-    calc(100% - var(--axis-label-boundary))
-  );
-  left: clamp(
-    var(--axis-label-boundary),
-    calc(var(--axis-label-x, var(--tick-label-x, 0)) + var(--plot-area-offset-x, 0px)),
-    calc(100% - var(--axis-label-boundary))
-  );
+  top: var(--axis-y-select-y, 50%);
+  left: var(--axis-y-select-x, 12px);
   width: max-content;
-  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px) - 12px), -50%);
+  transform: translate(-50%, -50%);
   transform-origin: center;
   display: inline-flex;
   align-items: center;
@@ -587,18 +575,10 @@ section {
 }
 
 .chart__axis-label--x {
-  left: clamp(
-    var(--axis-label-boundary),
-    calc(var(--axis-center-x, 50%) + var(--plot-area-pad-x, 0px) + var(--plot-area-offset-x, 0px)),
-    calc(100% - var(--axis-label-boundary))
-  );
-  top: clamp(
-    var(--axis-label-boundary),
-    var(--axis-label-y, var(--tick-label-y, calc(var(--plot-size, 0px) + var(--axis-label-gap)))),
-    calc(100% - var(--axis-label-boundary))
-  );
+  left: var(--axis-x-select-x, 50%);
+  top: var(--axis-x-select-y, 50%);
   width: max-content;
-  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px)), -50%);
+  transform: translate(-50%, -50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
