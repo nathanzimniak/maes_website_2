@@ -487,7 +487,7 @@ section {
   width: 580px;
   max-width: 100%;
   flex: 0 0 auto;
-  height: calc(var(--chart-plot-size) + (var(--space-4) * 2));
+  height: var(--chart-controls-height, auto);
   max-height: var(--chart-controls-height, none);
   min-height: 0;
   padding: var(--space-4);
@@ -786,7 +786,7 @@ section {
 .chart__body {
   display: flex;
   gap: var(--space-5);
-  align-items: flex-start;
+  align-items: stretch;
   --chart-controls-height: auto;
 }
 
