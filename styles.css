@@ -576,7 +576,7 @@ section {
     calc(100% - var(--axis-label-boundary))
   );
   width: max-content;
-  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px) - 10px), -50%);
+  transform: translate(calc(-50% + var(--plot-area-offset-x, 0px) - 18px), -50%);
   transform-origin: center;
   display: inline-flex;
   align-items: center;
