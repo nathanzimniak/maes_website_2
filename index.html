@@ -214,11 +214,25 @@
         <div class="chart__figure">
           <div class="chart__plot" role="img" aria-label="Graphique en nuage de points">
             <div class="chart__plot-area"></div>
-            <div class="chart__axis-label chart__axis-label--y" aria-hidden="true">
-              <span class="chart__axis-label-text">y</span>
+            <div class="chart__axis-label chart__axis-label--y">
+              <label class="chart__axis-label-text" for="y-axis-select">Axe Y</label>
+              <select id="y-axis-select" class="chart__select chart__select--axis" aria-label="Choisir la donnée de l'axe Y">
+                <option value="aspect-ratio">Aspect ratio</option>
+                <option value="magnetic-diffusivity">Magnetic diffusivity</option>
+                <option value="magnetic-diffusivity-anisotropy">Magnetic diffusivity anisotropy</option>
+                <option value="magnetic-prandtl-number">Magnetic Prandtl number</option>
+                <option value="turbulent-magnetic-pressure">Turbulent magnetic pressure</option>
+              </select>
             </div>
-            <div class="chart__axis-label chart__axis-label--x" aria-hidden="true">
-              <span class="chart__axis-label-text">x</span>
+            <div class="chart__axis-label chart__axis-label--x">
+              <label class="chart__axis-label-text" for="x-axis-select">Axe X</label>
+              <select id="x-axis-select" class="chart__select chart__select--axis" aria-label="Choisir la donnée de l'axe X">
+                <option value="aspect-ratio">Aspect ratio</option>
+                <option value="magnetic-diffusivity">Magnetic diffusivity</option>
+                <option value="magnetic-diffusivity-anisotropy">Magnetic diffusivity anisotropy</option>
+                <option value="magnetic-prandtl-number">Magnetic Prandtl number</option>
+                <option value="turbulent-magnetic-pressure">Turbulent magnetic pressure</option>
+              </select>
             </div>
           </div>
         </div>
