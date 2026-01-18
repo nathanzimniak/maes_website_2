@@ -216,20 +216,20 @@
             <div class="chart__plot-area"></div>
             <div class="chart__axis-label chart__axis-label--y">
               <select id="y-axis-select" class="chart__select chart__select--profile chart__select--axis" aria-label="Choisir la donnée de l'axe Y">
-                <option value="aspect-ratio">Aspect ratio</option>
-                <option value="magnetic-diffusivity">Magnetic diffusivity</option>
-                <option value="magnetic-diffusivity-anisotropy">Magnetic diffusivity anisotropy</option>
-                <option value="magnetic-prandtl-number">Magnetic Prandtl number</option>
-                <option value="turbulent-magnetic-pressure">Turbulent magnetic pressure</option>
+                <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
+                <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
+                <option value="magnetic-diffusivity-anisotropy" data-latex="\chi_m">χₘ</option>
+                <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
+                <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
               </select>
             </div>
             <div class="chart__axis-label chart__axis-label--x">
               <select id="x-axis-select" class="chart__select chart__select--profile chart__select--axis" aria-label="Choisir la donnée de l'axe X">
-                <option value="aspect-ratio">Aspect ratio</option>
-                <option value="magnetic-diffusivity">Magnetic diffusivity</option>
-                <option value="magnetic-diffusivity-anisotropy">Magnetic diffusivity anisotropy</option>
-                <option value="magnetic-prandtl-number">Magnetic Prandtl number</option>
-                <option value="turbulent-magnetic-pressure">Turbulent magnetic pressure</option>
+                <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
+                <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
+                <option value="magnetic-diffusivity-anisotropy" data-latex="\chi_m">χₘ</option>
+                <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
+                <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
               </select>
             </div>
           </div>
@@ -438,6 +438,8 @@
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
     const scaleSelects = Array.from(document.querySelectorAll('[data-scale-select]'));
     const profileSelects = Array.from(document.querySelectorAll('.chart__select--profile'));
+    const axisSelects = profileSelects.filter((select) => select.classList.contains('chart__select--axis'));
+    const profileLabelSelects = profileSelects.filter((select) => !select.classList.contains('chart__select--axis'));
     const resizeObserver = 'ResizeObserver' in window
       ? new ResizeObserver(() => updateChart())
       : null;
@@ -1412,7 +1414,7 @@
         },
       });
     });
-    profileSelects.forEach((select) => {
+    profileLabelSelects.forEach((select) => {
       buildCustomSelect(select, {
         renderLabel: (label, select) => {
           const selectedOption = select.options[select.selectedIndex];
@@ -1420,6 +1422,25 @@
         },
         renderOption: (item, option) => {
           item.textContent = option.textContent;
+        },
+      });
+    });
+
+    axisSelects.forEach((select) => {
+      buildCustomSelect(select, {
+        usesMath: true,
+        renderLabel: (label, select) => {
+          const selectedOption = select.options[select.selectedIndex];
+          const latex = selectedOption?.dataset.latex;
+          label.innerHTML = latex
+            ? `<span class="math-label" data-latex="${latex}"></span>`
+            : (selectedOption ? selectedOption.textContent : select.value);
+        },
+        renderOption: (item, option) => {
+          const latex = option.dataset.latex;
+          item.innerHTML = latex
+            ? `<span class="math-label" data-latex="${latex}"></span>`
+            : option.textContent;
         },
       });
     });
