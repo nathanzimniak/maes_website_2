@@ -504,7 +504,7 @@ section {
   width: 100%;
   height: 100%;
   position: relative;
-  --axis-label-x: calc(var(--tick-label-x, 0px) + 12px);
+  --axis-label-x: calc(var(--tick-label-x, 0px) - 28px);
   --axis-label-y: calc(var(--tick-label-y, 0px) + 16px);
   --axis-label-boundary: var(--space-4);
   --plot-area-pad-x: var(--space-6);
