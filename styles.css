@@ -615,11 +615,21 @@ section {
 .chart__axis-label .chart__select--axis {
   min-width: 160px;
   max-width: calc(100% - var(--space-4));
-  padding: var(--space-2) var(--space-3);
+  padding: 4px var(--space-3);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-1);
-  background-color: var(--color-surface);
+  background: none;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
   font-size: 0.74rem;
+}
+
+.chart__axis-label .chart__latex-button {
+  padding: 4px var(--space-3);
+  background: none;
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .chart__axis-label-math {
