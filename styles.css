@@ -627,6 +627,7 @@ section {
 
 .chart__axis-label .chart__latex-button {
   padding: 4px var(--space-3);
+  gap: var(--space-1);
   background: none;
   background-color: transparent;
   box-shadow: none;
