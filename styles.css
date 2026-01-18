@@ -555,6 +555,7 @@ section {
   flex-wrap: nowrap;
   white-space: nowrap;
   z-index: 2;
+  pointer-events: auto;
 }
 
 .chart__axis-label--y {
@@ -569,7 +570,6 @@ section {
   height: var(--axis-label-size);
   font-size: 14px;
   color: var(--color-axis-label);
-  pointer-events: none;
 }
 
 .chart__axis-label--x {
@@ -583,7 +583,6 @@ section {
   height: var(--axis-label-size);
   font-size: 14px;
   color: var(--color-axis-label);
-  pointer-events: none;
 }
 
 .chart__axis-label-text {
