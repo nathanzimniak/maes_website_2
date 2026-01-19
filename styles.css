@@ -612,6 +612,15 @@ section {
   align-items: center;
 }
 
+.chart__settings-controls .chart__latex-select,
+.chart__settings-controls .chart__latex-button {
+  height: 32px;
+}
+
+.chart__settings-controls .chart__latex-button {
+  padding: 4px 10px;
+}
+
 .chart__settings-controls .chart__select--axis {
   min-width: 0;
   max-width: 100%;
