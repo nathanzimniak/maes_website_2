@@ -913,7 +913,7 @@ section {
 
 .chart__tick-labels text {
   fill: var(--color-axis-label);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .chart__body {
