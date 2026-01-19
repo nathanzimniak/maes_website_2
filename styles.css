@@ -1418,7 +1418,7 @@ section {
 
 .chart__latex-button {
   width: 100%;
-  min-width: 50px;
+  min-width: 60px;
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px solid transparent;
