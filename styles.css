@@ -717,7 +717,7 @@ section {
   align-items: center;
   justify-content: center;
   height: var(--axis-label-size);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--color-axis-label);
 }
 
