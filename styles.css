@@ -506,8 +506,14 @@ section {
   width: min(100%, var(--chart-plot-size));
   height: min(100%, var(--chart-plot-size));
   position: relative;
-  --plot-area-pad-x: var(--space-6);
-  --plot-area-pad-y: var(--space-6);
+  --plot-area-pad-x: 10px;
+  --plot-area-pad-y: 10px;
+  --scatter-plot-x: 55px;
+  --scatter-plot-y: 2px;
+  --axis-x-select-x: 306px;
+  --axis-x-select-y: 516px;
+  --axis-y-select-x: 18px;
+  --axis-y-select-y: 250px;
 }
 
 .chart__plot-area {

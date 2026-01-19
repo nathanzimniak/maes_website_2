@@ -674,25 +674,14 @@
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
 
       if (chartPlot) {
-        const axisCenterX = margin.left + innerWidth / 2;
-        const axisCenterY = margin.top + innerHeight / 2;
-        const tickSize = 6;
-        const tickLabelOffsetY = margin.top + innerHeight + tickSize + 14;
-        const tickLabelOffsetX = margin.left - tickSize - 6;
-        const plotAreaStyles = window.getComputedStyle(chartPlot);
-        const plotAreaPadX = parseFloat(plotAreaStyles.getPropertyValue('--plot-area-pad-x')) || 0;
-        const plotAreaPadY = parseFloat(plotAreaStyles.getPropertyValue('--plot-area-pad-y')) || 0;
-        const plotOffsetX = 28;
-        const plotOffsetY = -10;
-
-        chartPlot.style.setProperty('--plot-area-pad-x', `${plotAreaPadX}px`);
-        chartPlot.style.setProperty('--plot-area-pad-y', `${plotAreaPadY}px`);
-        chartPlot.style.setProperty('--scatter-plot-x', `${plotAreaPadX + plotOffsetX}px`);
-        chartPlot.style.setProperty('--scatter-plot-y', `${plotAreaPadY + plotOffsetY}px`);
-        chartPlot.style.setProperty('--axis-x-select-x', `${axisCenterX}px`);
-        chartPlot.style.setProperty('--axis-x-select-y', `${tickLabelOffsetY}px`);
-        chartPlot.style.setProperty('--axis-y-select-x', `${tickLabelOffsetX}px`);
-        chartPlot.style.setProperty('--axis-y-select-y', `${axisCenterY}px`);
+        chartPlot.style.removeProperty('--plot-area-pad-x');
+        chartPlot.style.removeProperty('--plot-area-pad-y');
+        chartPlot.style.removeProperty('--scatter-plot-x');
+        chartPlot.style.removeProperty('--scatter-plot-y');
+        chartPlot.style.removeProperty('--axis-x-select-x');
+        chartPlot.style.removeProperty('--axis-x-select-y');
+        chartPlot.style.removeProperty('--axis-y-select-x');
+        chartPlot.style.removeProperty('--axis-y-select-y');
       }
 
     }
