@@ -552,14 +552,11 @@ section {
   font-weight: 600;
   font-size: 0.78rem;
   cursor: pointer;
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
   transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
 }
 
 .chart__settings-button:hover {
   transform: translateY(-1px);
-  border-color: #c9cccb;
-  box-shadow: 0 14px 24px rgba(15, 23, 42, 0.16);
 }
 
 .chart__settings-button:focus-visible {
@@ -583,7 +580,6 @@ section {
   padding: var(--space-3);
   border-radius: calc(var(--radius) - 6px);
   background: var(--color-surface);
-  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.16);
   display: grid;
   gap: var(--space-2);
 }
