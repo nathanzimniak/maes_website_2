@@ -606,9 +606,8 @@ section {
 }
 
 .chart__settings-controls {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-1);
+  display: flex;
+  gap: var(--space-0);
   align-items: center;
 }
 
@@ -622,8 +621,14 @@ section {
 }
 
 .chart__settings-controls .chart__select--axis {
+  flex: 1 1 0;
   min-width: 0;
   max-width: 100%;
+}
+
+.chart__settings-controls .chart__select--scale {
+  flex: 0 0 40%;
+  min-width: 0;
 }
 
 .chart__axis-overlay {
