@@ -574,19 +574,16 @@ section {
   width: 24px;
   height: 24px;
   stroke: currentColor;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
 }
 
 .chart__settings-icon svg path {
-  fill: none;
-  stroke: currentColor;
+  fill: #bdbdbd;
+  stroke: #0000;
 }
 
 .chart__settings-icon svg circle {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
+  fill: var(--color-surface-muted);
+  stroke: var(--color-surface-muted);
 }
 
 .chart__settings-panel {
