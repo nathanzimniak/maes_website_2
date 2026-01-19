@@ -596,7 +596,7 @@ section {
   display: grid;
   grid-template-columns: 1fr;
   align-items: flex-start;
-  gap: var(--space-2);
+  gap: var(--space-0);
 }
 
 .chart__settings-label {
@@ -607,7 +607,7 @@ section {
 
 .chart__settings-controls {
   display: flex;
-  gap: var(--space-0);
+  gap: var(--space-2);
   align-items: center;
 }
 
