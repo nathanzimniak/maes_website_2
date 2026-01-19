@@ -225,10 +225,6 @@
                 <div class="chart__settings-row">
                   <label class="chart__settings-label" for="x-scale-select">X-axis</label>
                   <div class="chart__settings-controls">
-                    <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
-                      <option value="linear">Linéaire</option>
-                      <option value="log">Logarithmique</option>
-                    </select>
                     <select id="x-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="x" aria-label="Grandeur de l'axe X">
                       <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
                       <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
@@ -236,21 +232,25 @@
                       <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
                       <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
                     </select>
+                    <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
+                      <option value="linear">Linéaire</option>
+                      <option value="log">Logarithmique</option>
+                    </select>
                   </div>
                 </div>
                 <div class="chart__settings-row">
                   <label class="chart__settings-label" for="y-scale-select">Y-axis</label>
                   <div class="chart__settings-controls">
-                    <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
-                      <option value="linear">Linéaire</option>
-                      <option value="log">Logarithmique</option>
-                    </select>
                     <select id="y-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="y" aria-label="Grandeur de l'axe Y">
                       <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
                       <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
                       <option value="magnetic-diffusivity-anisotropy" data-latex="\chi_m">χₘ</option>
                       <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
                       <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
+                    </select>
+                    <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
+                      <option value="linear">Linéaire</option>
+                      <option value="log">Logarithmique</option>
                     </select>
                   </div>
                 </div>
