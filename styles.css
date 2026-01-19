@@ -577,12 +577,12 @@ section {
 }
 
 .chart__settings-icon svg path {
-  fill: #000;
+  fill: none;
   stroke: #000;
 }
 
 .chart__settings-icon svg circle {
-  fill: var(--color-surface-muted);
+  fill: #fff;
   stroke: #000;
 }
 
