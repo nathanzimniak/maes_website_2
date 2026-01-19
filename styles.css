@@ -581,6 +581,9 @@ section {
 }
 
 .chart__settings-panel {
+  position: absolute;
+  top: 0;
+  right: calc(100% + var(--space-2));
   min-width: 200px;
   padding: var(--space-3);
   border-radius: calc(var(--radius) - 6px);
