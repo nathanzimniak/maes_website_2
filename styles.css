@@ -510,8 +510,8 @@ section {
   --plot-area-pad-y: 10px;
   --scatter-plot-x: 28px;
   --scatter-plot-y: 2px;
-  --settings-gear-x: calc(100% - var(--space-3));
-  --settings-gear-y: var(--space-3);
+  --settings-gear-x: 510px;
+  --settings-gear-y: 28px;
   --axis-x-select-x: 278px;
   --axis-x-select-y: 514px;
   --axis-y-select-x: 14px;
