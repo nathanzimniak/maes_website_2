@@ -646,6 +646,29 @@ section {
   max-width: 100%;
 }
 
+.chart__axis-text {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 4px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-1);
+  font-size: 0.74rem;
+  color: var(--color-axis-label);
+  background: transparent;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.chart__axis-text .chart__axis-name {
+  font-weight: 500;
+}
+
+.chart__axis-symbol {
+  font-style: italic;
+  font-weight: 500;
+}
+
 .chart__settings-controls .chart__select--scale {
   flex: 0 0 40%;
   min-width: 0;
@@ -723,7 +746,10 @@ section {
 
 .chart__axis-label-text {
   font-weight: 400;
-  font-style: italic;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-axis-label);
 }
 
 .chart__axis-label .chart__select--axis {
