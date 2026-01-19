@@ -577,7 +577,7 @@ section {
 }
 
 .chart__settings-icon svg path {
-  fill: none;
+  fill: #000;
   stroke: #000;
 }
 
