@@ -722,7 +722,18 @@ section {
 }
 
 .chart__axis-label-text {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
   font-weight: 400;
+}
+
+.chart__axis-label-name {
+  font-style: normal;
+  font-weight: 500;
+}
+
+.chart__axis-label-symbol {
   font-style: italic;
 }
 

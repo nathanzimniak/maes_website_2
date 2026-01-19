@@ -227,11 +227,11 @@
                   <label class="chart__settings-label" for="x-scale-select">X-axis</label>
                   <div class="chart__settings-controls">
                     <select id="x-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="x" aria-label="Grandeur de l'axe X">
-                      <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
-                      <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
-                      <option value="magnetic-diffusivity-anisotropy" data-latex="\chi_m">χₘ</option>
-                      <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
-                      <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
+                      <option value="aspect-ratio" data-name="Aspect ratio" data-latex="\varepsilon">ε</option>
+                      <option value="magnetic-diffusivity" data-name="Magnetic diffusivity" data-latex="\alpha_m">αₘ</option>
+                      <option value="magnetic-diffusivity-anisotropy" data-name="Magnetic diffusivity anisotropy" data-latex="\chi_m">χₘ</option>
+                      <option value="magnetic-prandtl-number" data-name="Magnetic Prandtl number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
+                      <option value="turbulent-magnetic-pressure" data-name="Turbulent magnetic pressure" data-latex="\alpha_p">αₚ</option>
                     </select>
                     <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
                       <option value="linear">Linéaire</option>
@@ -243,11 +243,11 @@
                   <label class="chart__settings-label" for="y-scale-select">Y-axis</label>
                   <div class="chart__settings-controls">
                     <select id="y-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="y" aria-label="Grandeur de l'axe Y">
-                      <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
-                      <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
-                      <option value="magnetic-diffusivity-anisotropy" data-latex="\chi_m">χₘ</option>
-                      <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
-                      <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
+                      <option value="aspect-ratio" data-name="Aspect ratio" data-latex="\varepsilon">ε</option>
+                      <option value="magnetic-diffusivity" data-name="Magnetic diffusivity" data-latex="\alpha_m">αₘ</option>
+                      <option value="magnetic-diffusivity-anisotropy" data-name="Magnetic diffusivity anisotropy" data-latex="\chi_m">χₘ</option>
+                      <option value="magnetic-prandtl-number" data-name="Magnetic Prandtl number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
+                      <option value="turbulent-magnetic-pressure" data-name="Turbulent magnetic pressure" data-latex="\alpha_p">αₚ</option>
                     </select>
                     <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
                       <option value="linear">Linéaire</option>
@@ -258,23 +258,11 @@
               </div>
             </div>
             <div class="chart__plot-area"></div>
-            <div class="chart__axis-label chart__axis-label--y">
-              <select id="y-axis-select" class="chart__select chart__select--profile chart__select--axis" aria-label="Choisir la donnée de l'axe Y">
-                <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
-                <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
-                <option value="magnetic-diffusivity-anisotropy" data-latex="\chi_m">χₘ</option>
-                <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
-                <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
-              </select>
+            <div class="chart__axis-label chart__axis-label--y" aria-label="Grandeur de l'axe Y">
+              <span id="y-axis-label" class="chart__axis-label-text"></span>
             </div>
-            <div class="chart__axis-label chart__axis-label--x">
-              <select id="x-axis-select" class="chart__select chart__select--profile chart__select--axis" aria-label="Choisir la donnée de l'axe X">
-                <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
-                <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
-                <option value="magnetic-diffusivity-anisotropy" data-latex="\chi_m">χₘ</option>
-                <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
-                <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
-              </select>
+            <div class="chart__axis-label chart__axis-label--x" aria-label="Grandeur de l'axe X">
+              <span id="x-axis-label" class="chart__axis-label-text"></span>
             </div>
           </div>
         </div>
@@ -483,6 +471,10 @@
     const chartSettingsPanel = document.getElementById('chart-settings-panel');
     const profileContent = document.getElementById('profile-content');
     const hoveredValues = document.getElementById('hovered-values');
+    const axisLabelElements = {
+      x: document.getElementById('x-axis-label'),
+      y: document.getElementById('y-axis-label'),
+    };
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
     const scaleSelects = Array.from(document.querySelectorAll('[data-scale-select]'));
     const profileSelects = Array.from(document.querySelectorAll('.chart__select--profile'));
@@ -1548,12 +1540,31 @@
     }
 
     function syncAxisSelect(axis, value, sourceSelect) {
-      const targetSelects = axisSelects.filter((select) => select.dataset.axisSettings === axis || select.id === `${axis}-axis-select`);
+      const targetSelects = axisSelects.filter((select) => select.dataset.axisSettings === axis);
       targetSelects.forEach((select) => {
         if (select === sourceSelect) return;
         select.value = value;
         updateCustomSelectDisplay(select);
       });
+      updateAxisLabel(axis);
+    }
+
+    function updateAxisLabel(axis) {
+      const select = axisSelects.find((option) => option.dataset.axisSettings === axis);
+      const label = axisLabelElements[axis];
+      if (!select || !label) return;
+
+      const selectedOption = select.options[select.selectedIndex];
+      const name = selectedOption?.dataset.name || selectedOption?.textContent || select.value;
+      const latex = selectedOption?.dataset.latex;
+
+      label.innerHTML = `
+        <span class="chart__axis-label-name">${name}</span>
+        <span class="chart__axis-label-symbol">
+          ${latex ? `<span class="math-label" data-latex="${latex}"></span>` : ''}
+        </span>
+      `;
+      renderMathLabels(label);
     }
 
     function updateChart() {
@@ -1666,6 +1677,8 @@
     updateAxisSelectWidths();
     updateScaleSelect('x', xScaleType);
     updateScaleSelect('y', yScaleType);
+    updateAxisLabel('x');
+    updateAxisLabel('y');
 
     scenarioButtons.forEach((button) => {
       button.addEventListener('click', () => {
