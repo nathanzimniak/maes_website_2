@@ -573,17 +573,17 @@ section {
 .chart__settings-icon svg {
   width: 16px;
   height: 16px;
-  stroke: #000;
+  stroke: currentColor;
 }
 
 .chart__settings-icon svg path {
-  fill: #000;
-  stroke: #000;
+  fill: none;
+  stroke: currentColor;
 }
 
 .chart__settings-icon svg circle {
-  fill: var(--color-surface-muted);
-  stroke: #000;
+  fill: var(--color-surface);
+  stroke: currentColor;
 }
 
 .chart__settings-panel {
