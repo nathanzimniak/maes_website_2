@@ -571,8 +571,8 @@ section {
 }
 
 .chart__settings-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   stroke: currentColor;
 }
 
@@ -869,8 +869,8 @@ section {
 }
 
 .chart__settings-button .chart__settings-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
 }
 
 .chart__plot-area svg {
