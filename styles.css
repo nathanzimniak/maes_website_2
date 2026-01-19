@@ -594,8 +594,8 @@ section {
 
 .chart__settings-row {
   display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
+  grid-template-columns: 1fr;
+  align-items: flex-start;
   gap: var(--space-2);
 }
 
