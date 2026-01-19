@@ -578,7 +578,7 @@ section {
 
 .chart__settings-icon svg path {
   fill: var(--color-surface-subtle);
-  stroke: var(--color-surface-subtle);
+  stroke: #0000;
 }
 
 .chart__settings-icon svg circle {
