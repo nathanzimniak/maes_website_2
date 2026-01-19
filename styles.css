@@ -567,6 +567,7 @@ section {
   width: 24px;
   height: 24px;
   stroke: currentColor;
+  transform-origin: 50% 50%;
 }
 
 .chart__settings-icon svg path {
@@ -586,6 +587,21 @@ section {
   background: var(--color-surface);
   display: grid;
   gap: var(--space-2);
+}
+
+@keyframes gear-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.chart__settings-button:hover .chart__settings-icon svg,
+.chart__settings-button:focus-visible .chart__settings-icon svg {
+  animation: gear-spin 0.8s linear 1;
 }
 
 .chart__settings-panel[hidden] {
