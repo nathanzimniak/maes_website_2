@@ -527,8 +527,8 @@
         labelValue: document.getElementById('p5-label-value')
       },
     ];
-    const xAxisKey = 'g1';
-    const yAxisKey = 'g2';
+    let xAxisKey = 'g1';
+    let yAxisKey = 'g2';
     let xScaleType = 'linear';
     let yScaleType = 'linear';
     let selectedScenario = 'SM';
@@ -1032,6 +1032,32 @@
 
     function getMetricLatex(key) {
       return getHoveredMetricLabel(key).latex ?? key.toUpperCase();
+    }
+
+    function populateAxisSelects() {
+      if (!axisSelects.length) return;
+
+      const metricKeys = Object.keys(hoveredMetricLabels)
+        .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
+      const defaultValues = { x: xAxisKey, y: yAxisKey };
+
+      axisSelects.forEach((select) => {
+        const axis = select.dataset.axisSettings || (select.id.startsWith('x-') ? 'x' : 'y');
+        const currentValue = select.value || defaultValues[axis] || metricKeys[0];
+        select.innerHTML = '';
+
+        metricKeys.forEach((key) => {
+          const { label, latex, symbol } = getHoveredMetricLabel(key);
+          const option = document.createElement('option');
+          option.value = key;
+          option.dataset.name = label;
+          option.dataset.latex = latex;
+          option.textContent = symbol || label || key.toUpperCase();
+          select.appendChild(option);
+        });
+
+        select.value = metricKeys.includes(currentValue) ? currentValue : defaultValues[axis] || metricKeys[0];
+      });
     }
 
     function updateCustomSelectDisplay(select) {
@@ -1565,7 +1591,14 @@
         select.value = value;
         updateCustomSelectDisplay(select);
       });
+      if (axis === 'x') {
+        xAxisKey = value;
+      }
+      if (axis === 'y') {
+        yAxisKey = value;
+      }
       updateAxisLabel(axis);
+      updateChart();
     }
 
     function updateAxisLabel(axis) {
@@ -1650,6 +1683,8 @@
       });
     });
 
+    populateAxisSelects();
+
     scaleSelects.forEach((select) => {
       buildCustomSelect(select, {
         renderLabel: (label, select) => {
@@ -1685,8 +1720,9 @@
         },
         renderOption: (item, option) => {
           const latex = option.dataset.latex;
+          const name = option.dataset.name || option.textContent;
           item.innerHTML = latex
-            ? `<span class="math-label" data-latex="${latex}"></span>`
+            ? `<span class="chart__latex-option-name">${name}</span><span class="math-label" data-latex="${latex}"></span>`
             : option.textContent;
         },
       });

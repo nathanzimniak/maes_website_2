@@ -1534,6 +1534,11 @@ section {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.chart__latex-option-name {
+  margin-right: 8px;
+  font-weight: 600;
+}
+
 .chart__latex-option:hover,
 .chart__latex-option--selected {
   background: var(--color-surface-muted);
