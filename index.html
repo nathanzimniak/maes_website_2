@@ -1063,6 +1063,12 @@
       const shouldOpen = chartSettingsPanel.hidden;
       chartSettingsPanel.hidden = !shouldOpen;
       chartSettingsButton.setAttribute('aria-expanded', String(shouldOpen));
+      if (shouldOpen) {
+        requestAnimationFrame(() => {
+          updateScaleSelectWidths();
+          updateAxisSelectWidths();
+        });
+      }
     }
 
     function buildCustomSelect(select, { renderLabel, renderOption, usesMath = false, wrapperClass = '' }) {
