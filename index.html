@@ -225,17 +225,35 @@
                 <p class="chart__axis-title">Échelles des axes</p>
                 <div class="chart__settings-row">
                   <label class="chart__settings-label" for="x-scale-select">Axe X</label>
-                  <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x">
-                    <option value="linear">Linéaire</option>
-                    <option value="log">Logarithmique</option>
-                  </select>
+                  <div class="chart__settings-controls">
+                    <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
+                      <option value="linear">Linéaire</option>
+                      <option value="log">Logarithmique</option>
+                    </select>
+                    <select id="x-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="x" aria-label="Grandeur de l'axe X">
+                      <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
+                      <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
+                      <option value="magnetic-diffusivity-anisotropy" data-latex="\chi_m">χₘ</option>
+                      <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
+                      <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
+                    </select>
+                  </div>
                 </div>
                 <div class="chart__settings-row">
                   <label class="chart__settings-label" for="y-scale-select">Axe Y</label>
-                  <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y">
-                    <option value="linear">Linéaire</option>
-                    <option value="log">Logarithmique</option>
-                  </select>
+                  <div class="chart__settings-controls">
+                    <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
+                      <option value="linear">Linéaire</option>
+                      <option value="log">Logarithmique</option>
+                    </select>
+                    <select id="y-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="y" aria-label="Grandeur de l'axe Y">
+                      <option value="aspect-ratio" data-latex="\varepsilon">ε</option>
+                      <option value="magnetic-diffusivity" data-latex="\alpha_m">αₘ</option>
+                      <option value="magnetic-diffusivity-anisotropy" data-latex="\chi_m">χₘ</option>
+                      <option value="magnetic-prandtl-number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
+                      <option value="turbulent-magnetic-pressure" data-latex="\alpha_p">αₚ</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1523,6 +1541,15 @@
       updateCustomSelectDisplay(select);
     }
 
+    function syncAxisSelect(axis, value, sourceSelect) {
+      const targetSelects = axisSelects.filter((select) => select.dataset.axisSettings === axis || select.id === `${axis}-axis-select`);
+      targetSelects.forEach((select) => {
+        if (select === sourceSelect) return;
+        select.value = value;
+        updateCustomSelectDisplay(select);
+      });
+    }
+
     function updateChart() {
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
@@ -1577,6 +1604,13 @@
     profileSelects.forEach((select) => {
       select.addEventListener('change', () => {
         updateCustomSelectDisplay(select);
+      });
+    });
+
+    axisSelects.forEach((select) => {
+      select.addEventListener('change', () => {
+        const axis = select.dataset.axisSettings || (select.id.startsWith('x-') ? 'x' : 'y');
+        syncAxisSelect(axis, select.value, select);
       });
     });
 

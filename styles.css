@@ -594,14 +594,27 @@ section {
 
 .chart__settings-row {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-1);
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .chart__settings-label {
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--color-muted);
+}
+
+.chart__settings-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.chart__settings-controls .chart__select--axis {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .chart__axis-overlay {
