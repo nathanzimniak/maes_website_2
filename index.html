@@ -213,6 +213,32 @@
         </div>
         <div class="chart__figure">
           <div class="chart__plot" role="img" aria-label="Graphique en nuage de points">
+            <div class="chart__settings">
+              <button class="chart__settings-button" type="button" id="chart-settings-button" aria-label="Réglages" aria-expanded="false" aria-controls="chart-settings-panel">
+                <span class="chart__settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                    <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm9 3.5a7.67 7.67 0 0 0-.08-1.06l2.03-1.58a1 1 0 0 0 .24-1.32l-1.92-3.32a1 1 0 0 0-1.23-.45l-2.39.96a7.9 7.9 0 0 0-1.83-1.06l-.36-2.54a1 1 0 0 0-.99-.85H9.53a1 1 0 0 0-.99.85l-.36 2.54c-.64.25-1.25.6-1.82 1.06l-2.4-.96a1 1 0 0 0-1.23.45L.81 7.98a1 1 0 0 0 .24 1.32l2.03 1.58A7.67 7.67 0 0 0 3 12c0 .36.03.71.08 1.06l-2.03 1.58a1 1 0 0 0-.24 1.32l1.92 3.32a1 1 0 0 0 1.23.45l2.39-.96c.57.46 1.18.8 1.83 1.06l.36 2.54a1 1 0 0 0 .99.85h3.94a1 1 0 0 0 .99-.85l.36-2.54c.65-.26 1.26-.6 1.83-1.06l2.39.96a1 1 0 0 0 1.23-.45l1.92-3.32a1 1 0 0 0-.24-1.32l-2.03-1.58c.05-.35.08-.7.08-1.06Z" fill="currentColor"></path>
+                  </svg>
+                </span>
+              </button>
+              <div class="chart__settings-panel" id="chart-settings-panel" role="group" aria-label="Réglages des axes" hidden>
+                <p class="chart__axis-title">Échelles des axes</p>
+                <div class="chart__settings-row">
+                  <label class="chart__settings-label" for="x-scale-select">Axe X</label>
+                  <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x">
+                    <option value="linear">Linéaire</option>
+                    <option value="log">Logarithmique</option>
+                  </select>
+                </div>
+                <div class="chart__settings-row">
+                  <label class="chart__settings-label" for="y-scale-select">Axe Y</label>
+                  <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y">
+                    <option value="linear">Linéaire</option>
+                    <option value="log">Logarithmique</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             <div class="chart__plot-area"></div>
             <div class="chart__axis-label chart__axis-label--y">
               <select id="y-axis-select" class="chart__select chart__select--profile chart__select--axis" aria-label="Choisir la donnée de l'axe Y">
@@ -435,6 +461,8 @@
     const chartFigure = document.querySelector('.chart__figure');
     const chartHovered = document.querySelector('.chart__hovered');
     const chartPlot = document.querySelector('.chart__plot');
+    const chartSettingsButton = document.getElementById('chart-settings-button');
+    const chartSettingsPanel = document.getElementById('chart-settings-panel');
     const profileContent = document.getElementById('profile-content');
     const hoveredValues = document.getElementById('hovered-values');
     const scenarioButtons = Array.from(document.querySelectorAll('[data-scenario]'));
@@ -1005,6 +1033,19 @@
           button.setAttribute('aria-expanded', 'false');
         }
       });
+    }
+
+    function closeSettingsPanel() {
+      if (!chartSettingsPanel || !chartSettingsButton) return;
+      chartSettingsPanel.hidden = true;
+      chartSettingsButton.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleSettingsPanel() {
+      if (!chartSettingsPanel || !chartSettingsButton) return;
+      const shouldOpen = chartSettingsPanel.hidden;
+      chartSettingsPanel.hidden = !shouldOpen;
+      chartSettingsButton.setAttribute('aria-expanded', String(shouldOpen));
     }
 
     function buildCustomSelect(select, { renderLabel, renderOption, usesMath = false, wrapperClass = '' }) {
@@ -1607,7 +1648,26 @@
 
     document.addEventListener('click', () => {
       closeCustomMenus();
+      closeSettingsPanel();
     });
+
+    if (chartSettingsButton && chartSettingsPanel) {
+      chartSettingsButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        toggleSettingsPanel();
+      });
+
+      chartSettingsPanel.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeSettingsPanel();
+          closeCustomMenus();
+        }
+      });
+    }
 
     updateChart();
 
