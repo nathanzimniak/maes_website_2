@@ -573,6 +573,17 @@ section {
 .chart__settings-icon svg {
   width: 16px;
   height: 16px;
+  stroke: #000;
+}
+
+.chart__settings-icon svg path {
+  fill: #000;
+  stroke: #000;
+}
+
+.chart__settings-icon svg circle {
+  fill: none;
+  stroke: #000;
 }
 
 .chart__settings-panel {
