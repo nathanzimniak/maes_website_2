@@ -508,11 +508,11 @@ section {
   position: relative;
   --plot-area-pad-x: 10px;
   --plot-area-pad-y: 10px;
-  --scatter-plot-x: 55px;
+  --scatter-plot-x: 28px;
   --scatter-plot-y: 2px;
-  --axis-x-select-x: 306px;
-  --axis-x-select-y: 516px;
-  --axis-y-select-x: 18px;
+  --axis-x-select-x: 278px;
+  --axis-x-select-y: 514px;
+  --axis-y-select-x: 14px;
   --axis-y-select-y: 250px;
 }
 
