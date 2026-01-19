@@ -508,14 +508,14 @@ section {
   position: relative;
   --plot-area-pad-x: 10px;
   --plot-area-pad-y: 10px;
-  --scatter-plot-x: 28px;
-  --scatter-plot-y: 2px;
+  --scatter-plot-x: 32px;
+  --scatter-plot-y: -2px;
   --settings-gear-x: 498px;
-  --settings-gear-y: 32px;
-  --axis-x-select-x: 278px;
+  --settings-gear-y: 30px;
+  --axis-x-select-x: 282px;
   --axis-x-select-y: 514px;
-  --axis-y-select-x: 4px;
-  --axis-y-select-y: 252px;
+  --axis-y-select-x: 2px;
+  --axis-y-select-y: 248px;
 }
 
 .chart__plot-area {
