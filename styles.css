@@ -601,7 +601,7 @@ section {
 
 .chart__settings-button:hover .chart__settings-icon svg,
 .chart__settings-button:focus-visible .chart__settings-icon svg {
-  animation: gear-spin 0.8s linear 1;
+  animation: gear-spin 0.1s linear 1;
 }
 
 .chart__settings-panel[hidden] {
