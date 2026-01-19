@@ -577,13 +577,13 @@ section {
 }
 
 .chart__settings-icon svg path {
-  fill: #000;
-  stroke: #000;
+  fill: var(--color-surface-subtle);
+  stroke: var(--color-surface-subtle);
 }
 
 .chart__settings-icon svg circle {
-  fill: #fff;
-  stroke: #000;
+  fill: var(--color-surface-muted);
+  stroke: var(--color-surface-muted);
 }
 
 .chart__settings-panel {
