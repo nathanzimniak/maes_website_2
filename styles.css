@@ -589,6 +589,7 @@ section {
   padding: var(--space-3);
   border-radius: calc(var(--radius) - 6px);
   background: var(--color-surface);
+  opacity: 0.8;
   display: grid;
   gap: var(--space-2);
 }
