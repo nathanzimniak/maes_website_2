@@ -539,7 +539,7 @@ section {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: var(--space-2);
+  gap: var(--space-0);
   z-index: 4;
 }
 
@@ -548,7 +548,7 @@ section {
   align-items: center;
   gap: var(--space-2);
   border: none;
-  border-radius: 8px;
+  border-radius: 999px;
   padding: 4px;
   background: var(--color-surface-subtle);
   color: var(--color-text);
@@ -556,16 +556,6 @@ section {
   font-size: 0.78rem;
   cursor: pointer;
   transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
-}
-
-.chart__settings-button:hover {
-  transform: translateY(-1px);
-}
-
-.chart__settings-button:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px var(--color-accent-soft);
 }
 
 .chart__settings-icon {
