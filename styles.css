@@ -828,6 +828,11 @@ section {
   display: block;
 }
 
+.chart__settings-button .chart__settings-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
 .chart__plot-area svg {
   position: absolute;
   top: 0;
