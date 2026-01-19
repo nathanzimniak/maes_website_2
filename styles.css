@@ -589,19 +589,20 @@ section {
   gap: var(--space-2);
 }
 
-@keyframes gear-spin {
-  from {
-    transform: rotate(0deg);
+@keyframes gear-pulse {
+  0%,
+  100% {
+    transform: scale(1);
   }
 
-  to {
-    transform: rotate(360deg);
+  50% {
+    transform: scale(1.08);
   }
 }
 
 .chart__settings-button:hover .chart__settings-icon svg,
 .chart__settings-button:focus-visible .chart__settings-icon svg {
-  animation: gear-spin 0.3s linear 1;
+  animation: gear-pulse 250ms ease-out 1;
 }
 
 .chart__settings-panel[hidden] {
