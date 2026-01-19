@@ -514,8 +514,8 @@ section {
   --settings-gear-y: 32px;
   --axis-x-select-x: 278px;
   --axis-x-select-y: 514px;
-  --axis-y-select-x: 14px;
-  --axis-y-select-y: 250px;
+  --axis-y-select-x: 4px;
+  --axis-y-select-y: 252px;
 }
 
 .chart__plot-area {
