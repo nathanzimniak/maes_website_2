@@ -510,6 +510,8 @@ section {
   --plot-area-pad-y: 10px;
   --scatter-plot-x: 28px;
   --scatter-plot-y: 2px;
+  --settings-gear-x: calc(100% - var(--space-3));
+  --settings-gear-y: var(--space-3);
   --axis-x-select-x: 278px;
   --axis-x-select-y: 514px;
   --axis-y-select-x: 14px;
@@ -531,8 +533,9 @@ section {
 
 .chart__settings {
   position: absolute;
-  top: var(--space-3);
-  right: var(--space-3);
+  top: var(--settings-gear-y, var(--space-3));
+  left: var(--settings-gear-x, calc(100% - var(--space-3)));
+  transform: translateX(-100%);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
