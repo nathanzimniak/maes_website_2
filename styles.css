@@ -901,14 +901,12 @@ section {
   stroke-width: 1;
 }
 
-.chart__axes line {
-  stroke: var(--color-axis);
-  stroke-width: 1.2;
-  shape-rendering: crispEdges;
+.chart__axes {
+  display: none;
 }
 
 .chart__ticks line {
-  stroke: var(--color-axis);
+  stroke: var(--color-line);
   stroke-width: 1;
   shape-rendering: crispEdges;
 }
