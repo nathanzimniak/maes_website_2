@@ -573,7 +573,7 @@ section {
 .chart__settings-icon svg {
   width: 16px;
   height: 16px;
-  stroke: #000;
+  stroke: currentColor;
 }
 
 .chart__settings-icon svg path {
