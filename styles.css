@@ -729,7 +729,7 @@ section {
 }
 
 .chart__axis-label-name {
-  font-style: normal;
+  font-style: italic;
   font-weight: 500;
 }
 
