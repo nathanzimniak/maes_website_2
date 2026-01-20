@@ -1403,10 +1403,11 @@
         const markerTop = gridOffsetY + (markerY - gridBox.y) * gridScaleY;
         const desiredLeft = markerLeft - tooltipWidth / 2;
         const desiredTop = markerTop - tooltipHeight - 12;
-        const minLeft = gridOffsetX;
-        const maxLeft = Math.max(minLeft, gridOffsetX + gridBounds.width - tooltipWidth);
-        const minTop = gridOffsetY;
-        const maxTop = Math.max(minTop, gridOffsetY + gridBounds.height - tooltipHeight);
+        const tooltipPadding = 4;
+        const minLeft = gridOffsetX + tooltipPadding;
+        const maxLeft = Math.max(minLeft, gridOffsetX + gridBounds.width - tooltipWidth - tooltipPadding);
+        const minTop = gridOffsetY + tooltipPadding;
+        const maxTop = Math.max(minTop, gridOffsetY + gridBounds.height - tooltipHeight - tooltipPadding);
 
         tooltip.style.left = `${clamp(desiredLeft, minLeft, maxLeft)}px`;
         tooltip.style.top = `${clamp(desiredTop, minTop, maxTop)}px`;
