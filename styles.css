@@ -1099,6 +1099,27 @@ section {
   font-size: 0.75rem;
 }
 
+.chart__hovered--solution {
+  width: max-content;
+}
+
+.chart__hovered--solution .chart__hovered-header > div {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+.chart__hovered--solution .chart__hovered-list {
+  width: max-content;
+}
+
+.chart__hovered--solution .chart__control-label--aspect {
+  width: max-content;
+}
+
+.chart__hovered--solution .chart__control-label--aspect .chart__label-math {
+  margin-left: 0;
+}
+
 .chart__control-label--aspect .chart__label-math {
   margin-left: auto;
   display: inline-flex;
@@ -1810,6 +1831,10 @@ section {
 
   .chart__hovered {
     width: 100%;
+  }
+
+  .chart__hovered--solution {
+    width: max-content;
   }
 
   .chart__figure {
