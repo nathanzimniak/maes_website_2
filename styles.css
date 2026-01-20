@@ -1737,11 +1737,11 @@ section {
 
 .chart__sparkline-tooltip {
   position: absolute;
-  padding: var(--space-1) var(--space-2);
+  padding: calc(var(--space-1) * 0.6) var(--space-1);
   border-radius: var(--radius-1);
   background: rgba(255, 255, 255, 0.9);
   color: var(--color-text);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   pointer-events: none;
   opacity: 0;
   transform: translateY(4px);
@@ -1757,7 +1757,7 @@ section {
 .chart__sparkline-tooltip-row {
   display: flex;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .chart__sparkline-tooltip-key {
