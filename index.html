@@ -1368,12 +1368,10 @@
         const ctm = sparkline.getScreenCTM();
         if (!ctm) return;
         const transformed = svgPoint.matrixTransform(ctm.inverse());
-        const localX = clamp(
-          transformed.x,
-          chart.padding.left,
-          chart.width - chart.padding.right
-        );
-        const xValue = chart.xMin + ((localX - chart.padding.left) / chart.plotWidth) * (chart.xMax - chart.xMin);
+        const gridXMin = gridBox.x;
+        const gridXMax = gridBox.x + gridBox.width;
+        const localX = clamp(transformed.x, gridXMin, gridXMax);
+        const xValue = chart.xMin + ((localX - gridXMin) / (gridBox.width || 1)) * (chart.xMax - chart.xMin);
         const rawIndex = (xValue - chart.xMin) / chart.step;
         const lowerIndex = clampIndex(Math.floor(rawIndex), xValues.length - 1);
         const upperIndex = clampIndex(Math.ceil(rawIndex), xValues.length - 1);
