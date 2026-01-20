@@ -1652,7 +1652,7 @@ section {
 .chart__profile-title {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
   font-weight: 700;
   font-style: italic;
   letter-spacing: -0.01em;
