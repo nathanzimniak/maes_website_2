@@ -424,6 +424,7 @@ section {
   padding: var(--card-padding);
   display: grid;
   gap: var(--space-5);
+  justify-items: start;
 }
 
 .chart__status {
@@ -918,11 +919,10 @@ section {
 }
 
 .chart__body {
-  display: flex;
+  display: inline-flex;
   gap: var(--space-5);
   align-items: stretch;
   --chart-controls-height: auto;
-  width: max-content;
   justify-self: start;
 }
 
