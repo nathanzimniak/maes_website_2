@@ -1715,7 +1715,7 @@ section {
 }
 
 .chart__sparkline-line {
-  stroke-linecap: round;
+  stroke-linecap: square;
   stroke-linejoin: round;
 }
 
