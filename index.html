@@ -226,13 +226,7 @@
                 <div class="chart__settings-row">
                   <label class="chart__settings-label" for="x-scale-select">X-axis</label>
                   <div class="chart__settings-controls">
-                    <select id="x-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="x" aria-label="Grandeur de l'axe X">
-                      <option value="aspect-ratio" data-name="Aspect ratio" data-latex="\varepsilon">ε</option>
-                      <option value="magnetic-diffusivity" data-name="Magnetic diffusivity" data-latex="\alpha_m">αₘ</option>
-                      <option value="magnetic-diffusivity-anisotropy" data-name="Magnetic diffusivity anisotropy" data-latex="\chi_m">χₘ</option>
-                      <option value="magnetic-prandtl-number" data-name="Magnetic Prandtl number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
-                      <option value="turbulent-magnetic-pressure" data-name="Turbulent magnetic pressure" data-latex="\alpha_p">αₚ</option>
-                    </select>
+                    <select id="x-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="x" aria-label="Grandeur de l'axe X"></select>
                     <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
                       <option value="linear">Linéaire</option>
                       <option value="log">Logarithmique</option>
@@ -242,13 +236,7 @@
                 <div class="chart__settings-row">
                   <label class="chart__settings-label" for="y-scale-select">Y-axis</label>
                   <div class="chart__settings-controls">
-                    <select id="y-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="y" aria-label="Grandeur de l'axe Y">
-                      <option value="aspect-ratio" data-name="Aspect ratio" data-latex="\varepsilon">ε</option>
-                      <option value="magnetic-diffusivity" data-name="Magnetic diffusivity" data-latex="\alpha_m">αₘ</option>
-                      <option value="magnetic-diffusivity-anisotropy" data-name="Magnetic diffusivity anisotropy" data-latex="\chi_m">χₘ</option>
-                      <option value="magnetic-prandtl-number" data-name="Magnetic Prandtl number" data-latex="\mathcal{P}_m">𝒫ₘ</option>
-                      <option value="turbulent-magnetic-pressure" data-name="Turbulent magnetic pressure" data-latex="\alpha_p">αₚ</option>
-                    </select>
+                    <select id="y-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="y" aria-label="Grandeur de l'axe Y"></select>
                     <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
                       <option value="linear">Linéaire</option>
                       <option value="log">Logarithmique</option>
@@ -527,8 +515,8 @@
         labelValue: document.getElementById('p5-label-value')
       },
     ];
-    const xAxisKey = 'g1';
-    const yAxisKey = 'g2';
+    let xAxisKey = 'g1';
+    let yAxisKey = 'g2';
     let xScaleType = 'linear';
     let yScaleType = 'linear';
     let selectedScenario = 'SM';
@@ -1020,6 +1008,33 @@
       g21: { label: 'Grandeur 21', latex: '\\varepsilon', symbol: 'ε' },
       g22: { label: 'Grandeur 22', latex: '\\varepsilon', symbol: 'ε' }
     };
+
+    function populateAxisSelectOptions() {
+      axisSelects.forEach((select) => {
+        select.innerHTML = '';
+        const entries = Object.keys(hoveredMetricLabels)
+          .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
+
+        entries.forEach((key) => {
+          const { label, latex, symbol } = getHoveredMetricLabel(key);
+          const option = document.createElement('option');
+          option.value = key;
+          option.dataset.name = label;
+          option.dataset.latex = latex;
+          option.textContent = symbol || key.toUpperCase();
+          select.appendChild(option);
+        });
+      });
+
+      const xSelect = axisSelects.find((select) => select.dataset.axisSettings === 'x');
+      const ySelect = axisSelects.find((select) => select.dataset.axisSettings === 'y');
+      if (xSelect) {
+        xSelect.value = xAxisKey;
+      }
+      if (ySelect) {
+        ySelect.value = yAxisKey;
+      }
+    }
 
     function getHoveredMetricLabel(key) {
       const fallbackIndex = Number(key.slice(1));
@@ -1647,8 +1662,16 @@
       select.addEventListener('change', () => {
         const axis = select.dataset.axisSettings || (select.id.startsWith('x-') ? 'x' : 'y');
         syncAxisSelect(axis, select.value, select);
+        if (axis === 'x') {
+          xAxisKey = select.value;
+        } else if (axis === 'y') {
+          yAxisKey = select.value;
+        }
+        updateChart();
       });
     });
+
+    populateAxisSelectOptions();
 
     scaleSelects.forEach((select) => {
       buildCustomSelect(select, {
