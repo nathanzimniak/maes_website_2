@@ -573,7 +573,7 @@ section {
 }
 
 .chart__settings-icon svg path {
-  fill: var(--color-muted);
+  fill: #808080;
   stroke: #0000;
 }
 
