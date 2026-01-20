@@ -1099,10 +1099,6 @@ section {
   font-size: 0.75rem;
 }
 
-.chart__hovered--solution {
-  width: max-content;
-}
-
 .chart__control-label--aspect .chart__label-math {
   margin-left: auto;
   display: inline-flex;
@@ -1814,10 +1810,6 @@ section {
 
   .chart__hovered {
     width: 100%;
-  }
-
-  .chart__hovered--solution {
-    width: max-content;
   }
 
   .chart__figure {
