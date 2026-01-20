@@ -1482,7 +1482,18 @@ section {
   box-shadow: 0 0 0 4px var(--color-accent-soft);
 }
 
+#chart-settings-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+
 .chart__latex-button[aria-expanded="true"] {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-soft);
+}
+
+#chart-settings-button[aria-expanded="true"] {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 2px var(--color-accent-soft);
 }
