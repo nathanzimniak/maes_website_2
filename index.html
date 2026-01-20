@@ -471,6 +471,7 @@
     const chartFigure = document.querySelector('.chart__figure');
     const chartHovered = document.querySelector('.chart__hovered');
     const chartPlot = document.querySelector('.chart__plot');
+    const chartProfiles = document.querySelector('.chart__profiles');
     const chartSettingsButton = document.getElementById('chart-settings-button');
     const chartSettingsPanel = document.getElementById('chart-settings-panel');
     const profileContent = document.getElementById('profile-content');
@@ -697,6 +698,9 @@
             chartHovered.style.maxHeight = '';
           }
         }
+      }
+      if (chartBody && chartProfiles) {
+        chartProfiles.style.width = `${chartBody.offsetWidth}px`;
       }
 
       width = chartContainer.clientWidth || 720;
