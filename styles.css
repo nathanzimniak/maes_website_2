@@ -690,9 +690,8 @@ section {
   top: var(--axis-y-select-y, 50%);
   left: var(--axis-y-select-x, 12px);
   width: max-content;
-  transform: translate(-50%, -50%);
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  transform-origin: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
