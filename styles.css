@@ -1597,7 +1597,7 @@ section {
   background: var(--color-surface-subtle);
   box-shadow: none;
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .chart__profiles-header {
