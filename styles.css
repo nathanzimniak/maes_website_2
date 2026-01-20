@@ -924,6 +924,7 @@ section {
   --chart-controls-height: auto;
   width: fit-content;
   max-width: 100%;
+  justify-self: start;
 }
 
 .chart__presets {
