@@ -690,7 +690,7 @@ section {
   top: var(--axis-y-select-y, 50%);
   left: var(--axis-y-select-x, 12px);
   width: max-content;
-  transform: translate3d(-50%, -50%, 0) rotate(-90deg);
+  transform: translate(-50%, -50%) rotate(-90deg);
   transform-origin: center;
   display: inline-flex;
   align-items: center;
@@ -698,8 +698,6 @@ section {
   height: var(--axis-label-size);
   font-size: 14px;
   color: var(--color-axis-label);
-  backface-visibility: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
 .chart__axis-label--x {
