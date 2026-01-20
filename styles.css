@@ -424,6 +424,7 @@ section {
   padding: var(--card-padding);
   display: grid;
   gap: var(--space-5);
+  justify-items: start;
 }
 
 .chart__status {
@@ -787,7 +788,8 @@ section {
   max-height: var(--chart-controls-height, none);
   min-height: 0;
   align-self: flex-start;
-  flex: 0 0 300px;
+  flex: 0 0 auto;
+  width: max-content;
 }
 
 .chart__hovered-header {
@@ -918,10 +920,11 @@ section {
 }
 
 .chart__body {
-  display: flex;
+  display: inline-flex;
   gap: var(--space-5);
   align-items: stretch;
   --chart-controls-height: auto;
+  justify-self: start;
 }
 
 .chart__presets {
@@ -964,7 +967,8 @@ section {
   max-height: none;
   overflow-y: auto;
   align-self: flex-start;
-  flex: 0 0 310px;
+  flex: 0 0 auto;
+  width: max-content;
 }
 
 .chart__control {
@@ -1793,13 +1797,19 @@ section {
   .chart__body {
     flex-direction: column;
     gap: var(--space-5);
+    width: 100%;
   }
 
   .chart__controls {
     flex: none;
+    width: 100%;
     height: auto;
     min-height: 0;
     max-height: none;
+  }
+
+  .chart__hovered {
+    width: 100%;
   }
 
   .chart__figure {
