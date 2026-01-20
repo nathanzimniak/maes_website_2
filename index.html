@@ -1351,6 +1351,7 @@
 
       const updateHover = (event) => {
         const bounds = sparkline.getBoundingClientRect();
+        const wrapperBounds = sparkline.parentElement?.getBoundingClientRect() || bounds;
         const gridBounds = sparklineGrid?.getBoundingClientRect() || bounds;
         const gridBox = sparklineGrid?.getBBox?.() || {
           x: chart.padding.left,
@@ -1358,8 +1359,8 @@
           width: chart.plotWidth,
           height: chart.plotHeight,
         };
-        const gridOffsetX = gridBounds.left - bounds.left;
-        const gridOffsetY = gridBounds.top - bounds.top;
+        const gridOffsetX = gridBounds.left - wrapperBounds.left;
+        const gridOffsetY = gridBounds.top - wrapperBounds.top;
         const gridScaleX = gridBox.width ? gridBounds.width / gridBox.width : bounds.width / chart.width;
         const gridScaleY = gridBox.height ? gridBounds.height / gridBox.height : bounds.height / chart.height;
         const svgPoint = sparkline.createSVGPoint();
