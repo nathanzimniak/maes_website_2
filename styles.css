@@ -1651,6 +1651,7 @@ section {
 
 .chart__profile-title {
   font-weight: 700;
+  font-style: italic;
   letter-spacing: -0.01em;
 }
 
