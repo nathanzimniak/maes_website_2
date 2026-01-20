@@ -511,8 +511,8 @@ section {
   --plot-area-pad-y: 10px;
   --scatter-plot-x: 34px;
   --scatter-plot-y: -4px;
-  --settings-gear-x: 498px;
-  --settings-gear-y: 30px;
+  --settings-gear-x: 510px;
+  --settings-gear-y: 20px;
   --axis-x-select-x: 284px;
   --axis-x-select-y: 514px;
   --axis-y-select-x: 2px;
@@ -549,8 +549,8 @@ section {
   align-items: center;
   gap: var(--space-2);
   border: 2px solid #eaeaea;
-  border-radius: 14px;
-  padding: 4px;
+  border-radius: 0px 0px 0px 10px;
+  padding: 5px;
   background: var(--color-surface-subtle);
   color: var(--color-text);
   font-weight: 600;
@@ -573,7 +573,7 @@ section {
 }
 
 .chart__settings-icon svg path {
-  fill: #b0b0b0;
+  fill: var(--color-muted);
   stroke: #0000;
 }
 
