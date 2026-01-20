@@ -1659,6 +1659,7 @@ section {
   font-style: italic;
   font-size: var(--font-size-xs);
   letter-spacing: -0.01em;
+  color: var(--color-axis-label);
 }
 
 .chart__sparkline {
