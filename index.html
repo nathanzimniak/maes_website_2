@@ -436,6 +436,10 @@
   </section>
 
   <script>
+    const footerYear = document.getElementById('year');
+    if (footerYear) {
+      footerYear.textContent = new Date().getFullYear();
+    }
     const chartContainer = document.querySelector('.chart__plot-area');
     const chartControls = document.querySelector('.chart__controls');
     const chartFigure = document.querySelector('.chart__figure');
