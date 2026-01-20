@@ -1422,12 +1422,12 @@
     function renderProfiles(solution, options = {}) {
       const { profiles } = solution;
       const series = [
-        { label: '<span class="chart__profile-title-text">Pression</span><span class="chart__profile-title-math"><span class="math-label" data-latex="P(x)"></span></span>', key: 'pressure', color: '#000000' },
-        { label: '<span class="chart__profile-title-text">Densité</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho(x)"></span></span>', key: 'density', color: '#000000' },
-        { label: '<span class="chart__profile-title-text">Température</span><span class="chart__profile-title-math"><span class="math-label" data-latex="T(x)"></span></span>', key: 'temperature', color: '#000000' },
-        { label: '<span class="chart__profile-title-text">Vitesse radiale</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_r(x)"></span></span>', key: 'radialVelocity', color: '#000000' },
-        { label: '<span class="chart__profile-title-text">Vitesse toroïdale</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_\\phi(x)"></span></span>', key: 'toroidalVelocity', color: '#000000' },
-        { label: '<span class="chart__profile-title-text">Vitesse verticale</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_z(x)"></span></span>', key: 'verticalVelocity', color: '#000000' },
+        { label: '<span class="chart__profile-title-text">Pression</span><span class="chart__profile-title-math"><span class="math-label" data-latex="P(x)"></span></span>', key: 'pressure', color: 'var(--color-axis-label)' },
+        { label: '<span class="chart__profile-title-text">Densité</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho(x)"></span></span>', key: 'density', color: 'var(--color-axis-label)' },
+        { label: '<span class="chart__profile-title-text">Température</span><span class="chart__profile-title-math"><span class="math-label" data-latex="T(x)"></span></span>', key: 'temperature', color: 'var(--color-axis-label)' },
+        { label: '<span class="chart__profile-title-text">Vitesse radiale</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_r(x)"></span></span>', key: 'radialVelocity', color: 'var(--color-axis-label)' },
+        { label: '<span class="chart__profile-title-text">Vitesse toroïdale</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_\\phi(x)"></span></span>', key: 'toroidalVelocity', color: 'var(--color-axis-label)' },
+        { label: '<span class="chart__profile-title-text">Vitesse verticale</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_z(x)"></span></span>', key: 'verticalVelocity', color: 'var(--color-axis-label)' },
       ];
 
       profileContent.innerHTML = '';
@@ -1460,8 +1460,8 @@
           <svg class="chart__sparkline" viewBox="0 0 ${chart.width} ${chart.height}" role="img" aria-label="${serie.label}">
             <defs>
               <linearGradient id="${gradientId}" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="rgba(0, 0, 0, 0.1)"></stop>
-                <stop offset="100%" stop-color="rgba(0, 0, 0, 0)"></stop>
+                <stop offset="0%" stop-color="var(--color-axis-label)" stop-opacity="0.1"></stop>
+                <stop offset="100%" stop-color="var(--color-axis-label)" stop-opacity="0"></stop>
               </linearGradient>
             </defs>
             <g class="chart__sparkline-grid" aria-hidden="true">
