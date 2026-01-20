@@ -984,7 +984,7 @@
         const latex = element.dataset.latex;
         if (!latex) return;
 
-        window.katex.render(latex, element, { throwOnError: false });
+        window.katex.render(latex, element, { throwOnError: false, output: 'html' });
       });
     }
 
