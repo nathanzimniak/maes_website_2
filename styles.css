@@ -920,11 +920,12 @@ section {
 }
 
 .chart__body {
-  display: inline-flex;
+  display: flex;
   gap: var(--space-5);
   align-items: stretch;
   --chart-controls-height: auto;
   justify-self: start;
+  width: 100%;
 }
 
 .chart__presets {
