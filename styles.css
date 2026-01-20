@@ -788,8 +788,10 @@ section {
   max-height: var(--chart-controls-height, none);
   min-height: 0;
   align-self: flex-start;
-  flex: 0 0 auto;
-  width: clamp(280px, 32vw, 360px);
+  flex: 0 1 auto;
+  width: fit-content;
+  min-width: 280px;
+  max-width: 100%;
 }
 
 .chart__hovered-header {
@@ -968,8 +970,10 @@ section {
   max-height: none;
   overflow-y: auto;
   align-self: flex-start;
-  flex: 0 0 auto;
-  width: clamp(280px, 32vw, 360px);
+  flex: 0 1 auto;
+  width: fit-content;
+  min-width: 280px;
+  max-width: 100%;
 }
 
 .chart__control {
