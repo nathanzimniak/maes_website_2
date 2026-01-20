@@ -548,7 +548,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  border: 2px solid #eaeaea;
+  border: 1px solid #e7e8ec;
   border-radius: 0px 0px 0px 10px;
   padding: 5px;
   background: var(--color-surface-subtle);
