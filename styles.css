@@ -789,8 +789,7 @@ section {
   min-height: 0;
   align-self: flex-start;
   flex: 0 0 auto;
-  width: min(360px, 100%);
-  min-width: 280px;
+  width: clamp(280px, 32vw, 360px);
 }
 
 .chart__hovered-header {
@@ -969,8 +968,7 @@ section {
   overflow-y: auto;
   align-self: flex-start;
   flex: 0 0 auto;
-  width: min(360px, 100%);
-  min-width: 280px;
+  width: clamp(280px, 32vw, 360px);
 }
 
 .chart__control {
