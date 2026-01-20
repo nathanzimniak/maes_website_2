@@ -569,7 +569,7 @@ section {
   height: 24px;
   stroke: currentColor;
   transform-origin: 50% 50%;
-  transition: transform 200ms ease-out;
+  transition: transform 100ms ease-out;
 }
 
 .chart__settings-icon svg path {
@@ -579,7 +579,7 @@ section {
 
 .chart__settings-icon svg circle {
   fill: var(--color-surface-subtle);
-  stroke: var(--color-surface-muted);
+  stroke: #fff0;
 }
 
 .chart__settings-panel {
