@@ -922,6 +922,8 @@ section {
   gap: var(--space-5);
   align-items: stretch;
   --chart-controls-height: auto;
+  width: max-content;
+  justify-self: start;
 }
 
 .chart__presets {
@@ -1793,6 +1795,7 @@ section {
   .chart__body {
     flex-direction: column;
     gap: var(--space-5);
+    width: 100%;
   }
 
   .chart__controls {
