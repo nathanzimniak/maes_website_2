@@ -509,14 +509,14 @@ section {
   position: relative;
   --plot-area-pad-x: 10px;
   --plot-area-pad-y: 10px;
-  --scatter-plot-x: 32px;
-  --scatter-plot-y: -2px;
+  --scatter-plot-x: 34px;
+  --scatter-plot-y: -4px;
   --settings-gear-x: 498px;
   --settings-gear-y: 30px;
-  --axis-x-select-x: 282px;
+  --axis-x-select-x: 284px;
   --axis-x-select-y: 514px;
   --axis-y-select-x: 2px;
-  --axis-y-select-y: 248px;
+  --axis-y-select-y: 246px;
 }
 
 .chart__plot-area {
