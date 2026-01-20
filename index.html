@@ -1352,8 +1352,16 @@
       const updateHover = (event) => {
         const bounds = sparkline.getBoundingClientRect();
         const gridBounds = sparklineGrid?.getBoundingClientRect() || bounds;
+        const gridBox = sparklineGrid?.getBBox?.() || {
+          x: chart.padding.left,
+          y: chart.padding.top,
+          width: chart.plotWidth,
+          height: chart.plotHeight,
+        };
         const gridOffsetX = gridBounds.left - bounds.left;
         const gridOffsetY = gridBounds.top - bounds.top;
+        const gridScaleX = gridBox.width ? gridBounds.width / gridBox.width : bounds.width / chart.width;
+        const gridScaleY = gridBox.height ? gridBounds.height / gridBox.height : bounds.height / chart.height;
         const svgPoint = sparkline.createSVGPoint();
         svgPoint.x = event.clientX;
         svgPoint.y = event.clientY;
@@ -1392,10 +1400,8 @@
 
         const tooltipWidth = tooltip.offsetWidth || 140;
         const tooltipHeight = tooltip.offsetHeight || 42;
-        const tooltipScaleX = bounds.width / chart.width;
-        const tooltipScaleY = bounds.height / chart.height;
-        const markerLeft = markerX * tooltipScaleX;
-        const markerTop = markerY * tooltipScaleY;
+        const markerLeft = gridOffsetX + (markerX - gridBox.x) * gridScaleX;
+        const markerTop = gridOffsetY + (markerY - gridBox.y) * gridScaleY;
         const desiredLeft = markerLeft - tooltipWidth / 2;
         const desiredTop = markerTop - tooltipHeight - 12;
         const minLeft = gridOffsetX;
