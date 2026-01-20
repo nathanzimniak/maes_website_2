@@ -1622,7 +1622,7 @@ section {
 .chart__profiles-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-5);
   width: 100%;
   max-width: none;
   margin: var(--space-3) 0 0;
