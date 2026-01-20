@@ -1422,12 +1422,12 @@
     function renderProfiles(solution, options = {}) {
       const { profiles } = solution;
       const series = [
-        { label: 'Pression <span class="math-label" data-latex="P(x)"></span>', key: 'pressure', color: '#000000' },
-        { label: 'Densité <span class="math-label" data-latex="\\rho(x)"></span>', key: 'density', color: '#000000' },
-        { label: 'Température <span class="math-label" data-latex="T(x)"></span>', key: 'temperature', color: '#000000' },
-        { label: 'Vitesse radiale <span class="math-label" data-latex="u_r(x)"></span>', key: 'radialVelocity', color: '#000000' },
-        { label: 'Vitesse toroïdale <span class="math-label" data-latex="u_\\phi(x)"></span>', key: 'toroidalVelocity', color: '#000000' },
-        { label: 'Vitesse verticale <span class="math-label" data-latex="u_z(x)"></span>', key: 'verticalVelocity', color: '#000000' },
+        { label: '<span class="chart__profile-title-text">Pression</span><span class="chart__profile-title-math"><span class="math-label" data-latex="P(x)"></span></span>', key: 'pressure', color: '#000000' },
+        { label: '<span class="chart__profile-title-text">Densité</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho(x)"></span></span>', key: 'density', color: '#000000' },
+        { label: '<span class="chart__profile-title-text">Température</span><span class="chart__profile-title-math"><span class="math-label" data-latex="T(x)"></span></span>', key: 'temperature', color: '#000000' },
+        { label: '<span class="chart__profile-title-text">Vitesse radiale</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_r(x)"></span></span>', key: 'radialVelocity', color: '#000000' },
+        { label: '<span class="chart__profile-title-text">Vitesse toroïdale</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_\\phi(x)"></span></span>', key: 'toroidalVelocity', color: '#000000' },
+        { label: '<span class="chart__profile-title-text">Vitesse verticale</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_z(x)"></span></span>', key: 'verticalVelocity', color: '#000000' },
       ];
 
       profileContent.innerHTML = '';
