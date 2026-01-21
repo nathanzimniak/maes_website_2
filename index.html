@@ -1363,15 +1363,20 @@
         tooltip.innerHTML = `
           <div class="chart__sparkline-tooltip-row">
             <span class="chart__sparkline-tooltip-pair">
-              <span class="chart__sparkline-tooltip-key">x</span>
+              <span class="chart__sparkline-tooltip-key">
+                <span class="math-label" data-latex="x"></span>
+              </span>
               <span class="chart__sparkline-tooltip-value">${xValue.toFixed(2)}</span>
             </span>
             <span class="chart__sparkline-tooltip-pair">
-              <span class="chart__sparkline-tooltip-key">y</span>
+              <span class="chart__sparkline-tooltip-key">
+                <span class="math-label" data-latex="y"></span>
+              </span>
               <span class="chart__sparkline-tooltip-value">${chart.format(interpolatedY)}</span>
             </span>
           </div>
         `;
+        renderMathLabels(tooltip);
 
         const tooltipWidth = tooltip.offsetWidth || 140;
         const tooltipHeight = tooltip.offsetHeight || 42;
