@@ -1039,7 +1039,7 @@ section {
 }
 
 .chart__control-row--aspect input[type="range"] {
-  margin-top: -5px;
+  margin-top: -4px;
 }
 
 .chart__control-row--toggles {
