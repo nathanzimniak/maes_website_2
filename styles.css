@@ -43,6 +43,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);
@@ -1629,6 +1633,15 @@ section {
   display: block;
   width: 100%;
   text-align: center;
+}
+
+.chart__profiles-toggle {
+  cursor: pointer;
+}
+
+.chart__profiles-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
 }
 
 .chart__profiles-title {
