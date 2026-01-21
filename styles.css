@@ -976,8 +976,8 @@ section {
 .chart__controls {
   padding: var(--space-6);
   border-radius: var(--radius);
-  background: var(--color-surface-subtle);
-  box-shadow: none;
+  background: #fff;
+  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
   gap: var(--space-7);
@@ -1866,6 +1866,17 @@ section {
 
   .chart__hovered {
     width: 100%;
+    padding: var(--space-6);
+    border-radius: var(--radius);
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-height: 0;
+    align-self: flex-start;
+    flex: 0 0 auto;
+    width: clamp(280px, 32vw, 310px);
   }
 
   .chart__figure {
