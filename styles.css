@@ -1650,10 +1650,10 @@ section {
 .chart__profiles-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: Opx;
+  gap: 0px;
   width: 100%;
   max-width: none;
-  margin: var(--space-3) 0 0;
+  margin: 0px;
 }
 
 .chart__profiles-placeholder {
@@ -1663,7 +1663,7 @@ section {
 }
 
 .chart__profile-card {
-  padding: var(--space-5);
+  padding: var(--space-2);
   border-radius: var(--radius-1);
   background: var(--color-surface);
   box-shadow: none;
