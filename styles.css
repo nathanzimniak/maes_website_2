@@ -1620,44 +1620,6 @@ section {
   flex-wrap: wrap;
 }
 
-.chart__profiles-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid #e7e8ec;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
-}
-
-.chart__profiles-toggle:focus-visible {
-  outline: 2px solid rgba(74, 143, 255, 0.6);
-  outline-offset: 2px;
-}
-
-.chart__profiles-toggle-icon {
-  display: inline-flex;
-  align-items: center;
-}
-
-.chart__profiles-toggle-icon svg {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  fill: none;
-  transition: transform 150ms ease;
-}
-
-.chart__profiles-toggle[aria-expanded="true"] .chart__profiles-toggle-icon svg {
-  transform: rotate(180deg);
-}
-
 .chart__eyebrow--sub {
   background: var(--color-surface);
   color: var(--color-muted);
