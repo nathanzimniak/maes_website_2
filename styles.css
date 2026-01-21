@@ -1611,8 +1611,8 @@ section {
 .chart__profiles {
   padding: var(--space-6);
   border-radius: var(--radius);
-  background: var(--color-surface-subtle);
-  box-shadow: none;
+  background: #fff;
+  box-shadow: var(--shadow-card);
   display: grid;
   gap: var(--space-2);
 }
