@@ -1039,7 +1039,7 @@ section {
 }
 
 .chart__control-row--aspect input[type="range"] {
-  margin-top: -4px;
+  margin-top: -6px;
 }
 
 .chart__control-row--toggles {
@@ -1086,7 +1086,7 @@ section {
   grid-area: label;
   font-weight: 400;
   letter-spacing: -0.01em;
-  font-size: 0.80rem;
+  font-size: 0.76rem;
   margin: 0;
   line-height: 1.2;
 }
