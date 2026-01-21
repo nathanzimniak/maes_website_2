@@ -1320,7 +1320,7 @@
       return Math.min(Math.max(value, 0), max);
     }
 
-    function attachSparklineHover({ sparkline, sparklineGrid, tooltip, marker, chart, xValues, yValues }) {
+    function attachSparklineHover({ sparkline, sparklineGrid, tooltip, marker, chart, xValues, yValues, yLabelLatex = 'y' }) {
       if (!sparkline || !tooltip || !marker || !chart) return;
 
       const updateHover = (event) => {
@@ -1370,7 +1370,7 @@
             </span>
             <span class="chart__sparkline-tooltip-pair">
               <span class="chart__sparkline-tooltip-key">
-                <span class="math-label" data-latex="y"></span>
+                <span class="math-label" data-latex="${yLabelLatex}"></span>
               </span>
               <span class="chart__sparkline-tooltip-value">${chart.format(interpolatedY)}</span>
             </span>
@@ -1409,12 +1409,12 @@
     function renderProfiles(solution, options = {}) {
       const { profiles } = solution;
       const series = [
-        { label: '<span class="chart__profile-title-text">Thermal pressure</span><span class="chart__profile-title-math"><span class="math-label" data-latex="P(x)"></span></span>', key: 'pressure', color: 'var(--color-axis-label)' },
-        { label: '<span class="chart__profile-title-text">Density</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho(x)"></span></span>', key: 'density', color: 'var(--color-axis-label)' },
-        { label: '<span class="chart__profile-title-text">Temperature</span><span class="chart__profile-title-math"><span class="math-label" data-latex="T(x)"></span></span>', key: 'temperature', color: 'var(--color-axis-label)' },
-        { label: '<span class="chart__profile-title-text">Radial velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_r(x)"></span></span>', key: 'radialVelocity', color: 'var(--color-axis-label)' },
-        { label: '<span class="chart__profile-title-text">Toroidal velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_\\phi(x)"></span></span>', key: 'toroidalVelocity', color: 'var(--color-axis-label)' },
-        { label: '<span class="chart__profile-title-text">Vertical velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_z(x)"></span></span>', key: 'verticalVelocity', color: 'var(--color-axis-label)' },
+        { label: '<span class="chart__profile-title-text">Thermal pressure</span><span class="chart__profile-title-math"><span class="math-label" data-latex="P(x)"></span></span>', key: 'pressure', color: 'var(--color-axis-label)', tooltipSymbol: 'P' },
+        { label: '<span class="chart__profile-title-text">Density</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho(x)"></span></span>', key: 'density', color: 'var(--color-axis-label)', tooltipSymbol: '\\rho' },
+        { label: '<span class="chart__profile-title-text">Temperature</span><span class="chart__profile-title-math"><span class="math-label" data-latex="T(x)"></span></span>', key: 'temperature', color: 'var(--color-axis-label)', tooltipSymbol: 'T' },
+        { label: '<span class="chart__profile-title-text">Radial velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_r(x)"></span></span>', key: 'radialVelocity', color: 'var(--color-axis-label)', tooltipSymbol: 'u_r' },
+        { label: '<span class="chart__profile-title-text">Toroidal velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_\\phi(x)"></span></span>', key: 'toroidalVelocity', color: 'var(--color-axis-label)', tooltipSymbol: 'u_\\phi' },
+        { label: '<span class="chart__profile-title-text">Vertical velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_z(x)"></span></span>', key: 'verticalVelocity', color: 'var(--color-axis-label)', tooltipSymbol: 'u_z' },
       ];
 
       profileContent.innerHTML = '';
@@ -1512,6 +1512,7 @@
           chart,
           xValues: profiles.x,
           yValues: values,
+          yLabelLatex: serie.tooltipSymbol,
         });
       });
 
