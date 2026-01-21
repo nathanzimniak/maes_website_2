@@ -421,19 +421,10 @@
       <div class="chart__profiles" aria-live="polite">
         <div class="chart__profiles-header">
           <div>
-            <p
-              id="profiles-toggle"
-              class="chart__eyebrow chart__eyebrow--sub chart__profiles-toggle"
-              role="button"
-              tabindex="0"
-              aria-expanded="false"
-              aria-controls="profile-content"
-            >
-              1D Profiles
-            </p>
+            <p class="chart__eyebrow chart__eyebrow--sub">1D Profiles</p>
           </div>
         </div>
-        <div id="profile-content" class="chart__profiles-grid" hidden>
+        <div id="profile-content" class="chart__profiles-grid">
           <p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>
         </div>
       </div>
@@ -461,7 +452,6 @@
     const chartSettingsButton = document.getElementById('chart-settings-button');
     const chartSettingsPanel = document.getElementById('chart-settings-panel');
     const profileContent = document.getElementById('profile-content');
-    const profilesToggle = document.getElementById('profiles-toggle');
     const hoveredValues = document.getElementById('hovered-values');
     const axisLabelElements = {
       x: document.getElementById('x-axis-label'),
@@ -475,26 +465,6 @@
     const resizeObserver = 'ResizeObserver' in window
       ? new ResizeObserver(() => updateChart())
       : null;
-
-    if (profilesToggle && profileContent) {
-      const toggleProfileContent = () => {
-        const isHidden = profileContent.hasAttribute('hidden');
-        if (isHidden) {
-          profileContent.removeAttribute('hidden');
-        } else {
-          profileContent.setAttribute('hidden', '');
-        }
-        profilesToggle.setAttribute('aria-expanded', String(!isHidden));
-      };
-
-      profilesToggle.addEventListener('click', toggleProfileContent);
-      profilesToggle.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          toggleProfileContent();
-        }
-      });
-    }
 
     const sliders = [
       {
