@@ -64,7 +64,7 @@
             </div>
             <div class="hero__panel-card">
               <span class="hero__panel-label">Profils disponibles</span>
-              <span class="hero__panel-value">6 courbes</span>
+              <span class="hero__panel-value">9 courbes</span>
             </div>
             <div class="hero__panel-card hero__panel-card--accent">
               <span class="hero__panel-label">Mise à jour</span>
@@ -731,6 +731,7 @@
       const sampleCount = 24;
       const xValues = Array.from({ length: sampleCount }, (_, i) => Number(((i / (sampleCount - 1)) * 10).toFixed(2)));
       const scenarioShift = base.scenario === 'A' ? 6 : base.scenario === 'FM' ? -4 : 0;
+      const magneticShift = base.scenario === 'A' ? 0.4 : base.scenario === 'FM' ? -0.3 : 0;
 
       const pressure = xValues.map((x) => {
         return clamp(85 + scenarioShift + 0.5 * base.p1 - 0.3 * base.p3 + Math.sin(x / 1.8 + base.p2 / 60) * 9 + (Math.random() - 0.5) * 2, 40, 180);
@@ -756,7 +757,30 @@
         return clamp(10 + 0.4 * base.p2 + 0.2 * base.p3 + scenarioShift * 0.9 + Math.sin((x + base.p1 / 10) / 2.6) * 8 + (Math.random() - 0.5) * 2, 0, 80);
       });
 
-      return { x: xValues, pressure, density, temperature, radialVelocity, toroidalVelocity, verticalVelocity };
+      const radialMagneticField = xValues.map((x) => {
+        return clamp(1.2 + 0.02 * base.p2 + magneticShift + Math.cos((x + base.p3 / 10) / 2.2) * 0.4 + (Math.random() - 0.5) * 0.08, 0.2, 3.2);
+      });
+
+      const toroidalMagneticField = xValues.map((x) => {
+        return clamp(2.8 + 0.03 * base.p4 + magneticShift * 1.2 + Math.sin((x + base.p1 / 12) / 2.6) * 0.7 + (Math.random() - 0.5) * 0.12, 0.6, 5.2);
+      });
+
+      const verticalMagneticField = xValues.map((x) => {
+        return clamp(0.8 + 0.018 * base.p5 + magneticShift * 0.6 + Math.cos((x + base.p2 / 14) / 2.4) * 0.3 + (Math.random() - 0.5) * 0.07, 0.1, 2.4);
+      });
+
+      return {
+        x: xValues,
+        pressure,
+        density,
+        temperature,
+        radialVelocity,
+        toroidalVelocity,
+        verticalVelocity,
+        radialMagneticField,
+        toroidalMagneticField,
+        verticalMagneticField,
+      };
     }
 
     function buildSolutions(baseParams, scenario) {
@@ -1415,6 +1439,9 @@
         { label: '<span class="chart__profile-title-text">Radial velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_r(x)"></span></span>', key: 'radialVelocity', color: 'var(--color-axis-label)', tooltipSymbol: 'u_r' },
         { label: '<span class="chart__profile-title-text">Toroidal velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_\\phi(x)"></span></span>', key: 'toroidalVelocity', color: 'var(--color-axis-label)', tooltipSymbol: 'u_\\phi' },
         { label: '<span class="chart__profile-title-text">Vertical velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_z(x)"></span></span>', key: 'verticalVelocity', color: 'var(--color-axis-label)', tooltipSymbol: 'u_z' },
+        { label: '<span class="chart__profile-title-text">Radial magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_r(x)"></span></span>', key: 'radialMagneticField', color: 'var(--color-axis-label)', tooltipSymbol: 'B_r' },
+        { label: '<span class="chart__profile-title-text">Toroidal magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_{\\phi}(x)"></span></span>', key: 'toroidalMagneticField', color: 'var(--color-axis-label)', tooltipSymbol: 'B_{\\phi}' },
+        { label: '<span class="chart__profile-title-text">Vertical magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_z(x)"></span></span>', key: 'verticalMagneticField', color: 'var(--color-axis-label)', tooltipSymbol: 'B_z' },
       ];
 
       profileContent.innerHTML = '';
@@ -1534,6 +1561,9 @@
           radialVelocity: flatValues,
           toroidalVelocity: flatValues,
           verticalVelocity: flatValues,
+          radialMagneticField: flatValues,
+          toroidalMagneticField: flatValues,
+          verticalMagneticField: flatValues,
         },
       }, {
         yDomainOverride: { min: 0, max: 1 },
