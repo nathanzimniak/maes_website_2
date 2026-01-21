@@ -12,7 +12,7 @@
   --color-axis: rgba(15, 23, 42, 0.55);
   --color-axis-label: #374151;
   --point-color: #ffb543;
-  --shadow-card: 0 20px 40px rgba(15, 23, 42, 0.08);
+  --shadow-card: 0px 4px 0px 0px rgba(15, 20, 40, 0.1);
   --shadow-float: 0 16px 30px rgba(15, 23, 42, 0.12);
   --radius: 16px;
   --radius-1: 10px;
@@ -419,10 +419,10 @@ section {
 .chart__card {
   width: fit-content;
   max-width: 100%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
+  background: none;
+  border: none;
   border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
   padding: var(--card-padding);
   display: grid;
   gap: var(--space-6);
@@ -495,7 +495,7 @@ section {
   min-height: 0;
   padding: var(--space-4);
   border-radius: var(--radius);
-  background: var(--color-surface-muted);
+  background: #fff;
   overflow: hidden;
   position: relative;
   margin: 0;
@@ -503,6 +503,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--shadow-card);
 }
 
 .chart__plot {
