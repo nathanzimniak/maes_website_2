@@ -423,24 +423,8 @@
           <div>
             <p class="chart__eyebrow chart__eyebrow--sub">1D Profiles</p>
           </div>
-          <button
-            class="chart__profiles-toggle"
-            type="button"
-            id="profiles-toggle-button"
-            aria-expanded="false"
-            aria-controls="profile-content"
-            data-label-show="Afficher les profils"
-            data-label-hide="Masquer les profils"
-          >
-            <span class="chart__profiles-toggle-text">Afficher les profils</span>
-            <span class="chart__profiles-toggle-icon" aria-hidden="true">
-              <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true">
-                <path d="M5 7.5 10 12.5 15 7.5"></path>
-              </svg>
-            </span>
-          </button>
         </div>
-        <div id="profile-content" class="chart__profiles-grid" hidden>
+        <div id="profile-content" class="chart__profiles-grid">
           <p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>
         </div>
       </div>
@@ -468,7 +452,6 @@
     const chartSettingsButton = document.getElementById('chart-settings-button');
     const chartSettingsPanel = document.getElementById('chart-settings-panel');
     const profileContent = document.getElementById('profile-content');
-    const profilesToggleButton = document.getElementById('profiles-toggle-button');
     const hoveredValues = document.getElementById('hovered-values');
     const axisLabelElements = {
       x: document.getElementById('x-axis-label'),
@@ -482,23 +465,6 @@
     const resizeObserver = 'ResizeObserver' in window
       ? new ResizeObserver(() => updateChart())
       : null;
-
-    const updateProfilesVisibility = (isExpanded) => {
-      if (!profilesToggleButton || !profileContent) {
-        return;
-      }
-
-      profilesToggleButton.setAttribute('aria-expanded', String(isExpanded));
-      profileContent.hidden = !isExpanded;
-
-      const label = isExpanded
-        ? profilesToggleButton.dataset.labelHide
-        : profilesToggleButton.dataset.labelShow;
-      const textElement = profilesToggleButton.querySelector('.chart__profiles-toggle-text');
-      if (textElement && label) {
-        textElement.textContent = label;
-      }
-    };
 
     const sliders = [
       {
@@ -1823,14 +1789,6 @@
           closeSettingsPanel();
           closeCustomMenus();
         }
-      });
-    }
-
-    if (profilesToggleButton && profileContent) {
-      updateProfilesVisibility(false);
-      profilesToggleButton.addEventListener('click', () => {
-        const isExpanded = profilesToggleButton.getAttribute('aria-expanded') === 'true';
-        updateProfilesVisibility(!isExpanded);
       });
     }
 
