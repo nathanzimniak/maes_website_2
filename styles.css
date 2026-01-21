@@ -75,7 +75,7 @@ section {
 .site-header__bar {
   max-width: 1120px;
   margin: 0 auto;
-  padding: var(--space-2) var(--section-padding-x);
+  padding: var(--space-0) var(--section-padding-x);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -108,7 +108,7 @@ section {
 }
 
 .site-header__pill {
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-1) var(--space-4);
   border-radius: var(--radius);
   background: var(--color-text);
   color: #ffffff;
@@ -116,6 +116,7 @@ section {
   text-decoration: none;
   box-shadow: none;
   transition: transform 120ms ease, background 120ms ease;
+  font-size: 0.8rem;
 }
 
 .site-header__pill:hover {
