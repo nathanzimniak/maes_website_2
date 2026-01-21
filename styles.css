@@ -1735,11 +1735,11 @@ section {
 }
 
 .chart__sparkline-marker {
-  fill: var(--point-color);
+  fill: var(--color-axis-label);
   stroke: #ffffff;
   stroke-width: 2;
   opacity: 0;
-  transition: opacity 120ms ease;
+  transition: opacity 400ms ease;
 }
 
 .chart__sparkline-marker--visible {
@@ -1749,14 +1749,14 @@ section {
 .chart__sparkline-tooltip {
   position: absolute;
   padding: calc(var(--space-1) * 0.6) var(--space-1);
-  border-radius: var(--radius-1);
+  border-radius: 4px;
   background: rgba(255, 255, 255, 0.9);
   color: var(--color-text);
   font-size: var(--font-size-xs);
   pointer-events: none;
   opacity: 0;
   transform: translateY(4px);
-  transition: opacity 120ms ease, transform 120ms ease;
+  transition: opacity 400ms ease, transform 400ms ease;
   z-index: 1;
 }
 
