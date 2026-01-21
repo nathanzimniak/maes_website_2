@@ -1110,7 +1110,7 @@ section {
 
 .chart__control-label--aspect .chart__label-text {
   font-weight: 500;
-  font-size: 0.80rem;
+  font-size: 0.76rem;
   color: #000000;
 }
 
@@ -1129,7 +1129,7 @@ section {
 .chart__control-label--aspect .chart__label-equals,
 .chart__control-label--aspect .chart__label-value {
   font-weight: 500;
-  font-size: 0.80rem;
+  font-size: 0.76rem;
   font-style: italic;
   color: #000000;
 }
