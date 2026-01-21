@@ -1752,7 +1752,7 @@ section {
 }
 
 .chart__sparkline-marker {
-  fill: var(--color-axis-label);
+  fill: #60708f;
   stroke: #ffffff;
   stroke-width: 2;
   opacity: 0;
