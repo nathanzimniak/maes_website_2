@@ -1785,6 +1785,7 @@ section {
   transform-origin: center;
   transform-box: fill-box;
   transition: transform 150ms ease;
+  cursor: pointer;
 }
 
 .chart__point:hover,
