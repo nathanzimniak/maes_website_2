@@ -271,6 +271,7 @@
                   <span class="chart__label-value">―</span>
                 </span>
               </li>
+              <li class="chart__hovered-divider" role="separator" aria-hidden="true"></li>
               <li class="chart__hovered-title">Disk properties</li>
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Ejection index</span>
@@ -328,6 +329,7 @@
                   <span class="chart__label-value">―</span>
                 </span>
               </li>
+              <li class="chart__hovered-divider" role="separator" aria-hidden="true"></li>
               <li class="chart__hovered-title">Jet properties</li>
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Mass load</span>
@@ -385,6 +387,7 @@
                   <span class="chart__label-value">―</span>
                 </span>
               </li>
+              <li class="chart__hovered-divider" role="separator" aria-hidden="true"></li>
               <li class="chart__hovered-title">Miscellaneous</li>
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Grandeur 20</span>
@@ -1173,6 +1176,9 @@
           };
           const entryIndex = index + 1;
           if (sectionTitles[entryIndex]) {
+            if (acc.length) {
+              acc.push('<li class="chart__hovered-divider" role="separator" aria-hidden="true"></li>');
+            }
             acc.push(`<li class="chart__hovered-title">${sectionTitles[entryIndex]}</li>`);
           }
           const { label, latex } = getHoveredMetricLabel(key);

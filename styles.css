@@ -848,6 +848,14 @@ section {
   margin-top: 0;
 }
 
+.chart__hovered-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  margin: var(--space-3) 0;
+  background: var(--color-line);
+  opacity: 0.8;
+}
+
 .chart__hovered-list::-webkit-scrollbar {
   width: 6px;
 }
