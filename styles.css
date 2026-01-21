@@ -75,7 +75,7 @@ section {
 .site-header__bar {
   max-width: 1120px;
   margin: 0 auto;
-  padding: var(--space-3) var(--section-padding-x);
+  padding: var(--space-2) var(--section-padding-x);
   display: flex;
   align-items: center;
   justify-content: space-between;
