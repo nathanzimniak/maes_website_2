@@ -856,6 +856,10 @@ section {
   opacity: 0.8;
 }
 
+.chart__hovered-divider + .chart__hovered-title {
+  margin-top: 0;
+}
+
 .chart__hovered-list::-webkit-scrollbar {
   width: 6px;
 }
