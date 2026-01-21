@@ -1214,7 +1214,7 @@ section {
 .chart__control input[type="range"]::-webkit-slider-runnable-track {
   height: 4px;
   border-radius: var(--radius);
-  background: #2b2b2b;
+  background: #60708f;
   box-shadow: none;
 }
 
@@ -1239,7 +1239,7 @@ section {
 .chart__control input[type="range"]::-moz-range-track {
   height: 4px;
   border-radius: var(--radius);
-  background: #2b2b2b;
+  background: #60708f;
   box-shadow: none;
 }
 
