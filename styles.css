@@ -1180,7 +1180,7 @@ section {
 }
 
 .chart__toggle-button:hover {
-  background: rgba(96, 112, 143, 0.05);
+  background: rgba(96, 112, 143, 0.1);
 }
 
 .chart__toggle-button--active {
