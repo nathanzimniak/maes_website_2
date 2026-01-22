@@ -493,7 +493,7 @@ section {
   height: var(--chart-controls-height, auto);
   max-height: var(--chart-controls-height, none);
   min-height: 0;
-  padding: var(--space-4);
+  padding: var(--space-5) var(--space-6);
   border-radius: var(--radius);
   background: #fff;
   overflow: hidden;
@@ -782,7 +782,7 @@ section {
 }
 
 .chart__hovered {
-  padding: var(--space-6);
+  padding: var(--space-5) var(--space-6);
   border-radius: var(--radius);
   background: #fff;
   box-shadow: var(--shadow-card);
@@ -973,7 +973,7 @@ section {
 }
 
 .chart__controls {
-  padding: var(--space-6);
+  padding: var(--space-5) var(--space-6);
   border-radius: var(--radius);
   background: #fff;
   box-shadow: var(--shadow-card);
@@ -1506,8 +1506,8 @@ section {
 }
 
 .chart__latex-button[aria-expanded="true"] {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px var(--color-accent-soft);
+  border-color: rgba(96, 112, 143, 1.0);
+  box-shadow: 0 0 0 2px rgba(96, 112, 143, 0.2);
 }
 
 #chart-settings-button[aria-expanded="true"] {
@@ -1609,7 +1609,7 @@ section {
 }
 
 .chart__profiles {
-  padding: var(--space-6);
+  padding: var(--space-5) var(--space-6);
   border-radius: var(--radius);
   background: #fff;
   box-shadow: var(--shadow-card);
