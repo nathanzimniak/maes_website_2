@@ -1518,15 +1518,15 @@
       const { profiles } = solution;
       const profileCurveColor = '#60708f';
       const series = [
-        { label: '<span class="chart__profile-title-text">Thermal pressure</span><span class="chart__profile-title-math"><span class="math-label" data-latex="P"></span></span>', key: 'pressure', color: profileCurveColor, tooltipSymbol: 'P' },
-        { label: '<span class="chart__profile-title-text">Density</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho"></span></span>', key: 'density', color: profileCurveColor, tooltipSymbol: '\\rho' },
-        { label: '<span class="chart__profile-title-text">Temperature</span><span class="chart__profile-title-math"><span class="math-label" data-latex="T"></span></span>', key: 'temperature', color: profileCurveColor, tooltipSymbol: 'T' },
-        { label: '<span class="chart__profile-title-text">Radial velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_r"></span></span>', key: 'radialVelocity', color: profileCurveColor, tooltipSymbol: 'u_r' },
-        { label: '<span class="chart__profile-title-text">Toroidal velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_\\phi"></span></span>', key: 'toroidalVelocity', color: profileCurveColor, tooltipSymbol: 'u_\\phi' },
-        { label: '<span class="chart__profile-title-text">Vertical velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_z"></span></span>', key: 'verticalVelocity', color: profileCurveColor, tooltipSymbol: 'u_z' },
-        { label: '<span class="chart__profile-title-text">Radial magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_r"></span></span>', key: 'radialMagneticField', color: profileCurveColor, tooltipSymbol: 'B_r' },
-        { label: '<span class="chart__profile-title-text">Toroidal magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_{\\phi}"></span></span>', key: 'toroidalMagneticField', color: profileCurveColor, tooltipSymbol: 'B_{\\phi}' },
-        { label: '<span class="chart__profile-title-text">Vertical magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_z"></span></span>', key: 'verticalMagneticField', color: profileCurveColor, tooltipSymbol: 'B_z' },
+        { label: '<span class="chart__profile-title-text">Thermal pressure</span><span class="chart__profile-title-math"><span class="math-label" data-latex="P"></span></span>', ariaLabel: 'Thermal pressure (P)', key: 'pressure', color: profileCurveColor, tooltipSymbol: 'P' },
+        { label: '<span class="chart__profile-title-text">Density</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho"></span></span>', ariaLabel: 'Density (rho)', key: 'density', color: profileCurveColor, tooltipSymbol: '\\rho' },
+        { label: '<span class="chart__profile-title-text">Temperature</span><span class="chart__profile-title-math"><span class="math-label" data-latex="T"></span></span>', ariaLabel: 'Temperature (T)', key: 'temperature', color: profileCurveColor, tooltipSymbol: 'T' },
+        { label: '<span class="chart__profile-title-text">Radial velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_r"></span></span>', ariaLabel: 'Radial velocity (u_r)', key: 'radialVelocity', color: profileCurveColor, tooltipSymbol: 'u_r' },
+        { label: '<span class="chart__profile-title-text">Toroidal velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_\\phi"></span></span>', ariaLabel: 'Toroidal velocity (u_phi)', key: 'toroidalVelocity', color: profileCurveColor, tooltipSymbol: 'u_\\phi' },
+        { label: '<span class="chart__profile-title-text">Vertical velocity</span><span class="chart__profile-title-math"><span class="math-label" data-latex="u_z"></span></span>', ariaLabel: 'Vertical velocity (u_z)', key: 'verticalVelocity', color: profileCurveColor, tooltipSymbol: 'u_z' },
+        { label: '<span class="chart__profile-title-text">Radial magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_r"></span></span>', ariaLabel: 'Radial magnetic field (B_r)', key: 'radialMagneticField', color: profileCurveColor, tooltipSymbol: 'B_r' },
+        { label: '<span class="chart__profile-title-text">Toroidal magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_{\\phi}"></span></span>', ariaLabel: 'Toroidal magnetic field (B_phi)', key: 'toroidalMagneticField', color: profileCurveColor, tooltipSymbol: 'B_{\\phi}' },
+        { label: '<span class="chart__profile-title-text">Vertical magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_z"></span></span>', ariaLabel: 'Vertical magnetic field (B_z)', key: 'verticalMagneticField', color: profileCurveColor, tooltipSymbol: 'B_z' },
       ];
 
       profileContent.innerHTML = '';
@@ -1556,7 +1556,7 @@
         const gradientId = `sparkline-gradient-${serie.key}`;
 
         sparklineWrapper.innerHTML = `
-          <svg class="chart__sparkline" viewBox="0 0 ${chart.width} ${chart.height}" role="img" aria-label="${serie.label}">
+          <svg class="chart__sparkline" viewBox="0 0 ${chart.width} ${chart.height}" role="img" aria-label="${serie.ariaLabel}">
             <defs>
               <linearGradient id="${gradientId}" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="${profileCurveColor}" stop-opacity="0.1"></stop>
