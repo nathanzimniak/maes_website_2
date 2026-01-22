@@ -596,7 +596,7 @@ section {
   stroke-linejoin: round;
 }
 
-.chart__settings-icon--download svg path:last-of-type {
+.chart__settings-icon--download svg rect {
   fill: rgba(96, 112, 143, 0.4);
   stroke: none;
 }
@@ -625,8 +625,8 @@ section {
   fill: rgba(96, 112, 143, 0.6);
 }
 
-.chart__settings-button:hover .chart__settings-icon--download svg path:last-of-type,
-.chart__settings-button:focus-visible .chart__settings-icon--download svg path:last-of-type {
+.chart__settings-button:hover .chart__settings-icon--download svg rect,
+.chart__settings-button:focus-visible .chart__settings-icon--download svg rect {
   fill: rgba(96, 112, 143, 0.6);
   stroke: none;
 }
