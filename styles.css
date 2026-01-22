@@ -1490,7 +1490,7 @@ section {
 }
 
 .chart__latex-button:hover {
-  border-color: #d1daec;
+  border-color: #f1f3f7;
 }
 
 .chart__latex-button:focus-visible {
