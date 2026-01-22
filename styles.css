@@ -826,7 +826,7 @@ section {
   flex: 0 0 auto;
   width: clamp(280px, 32vw, 310px);
   box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
-  transition: box-shadow 800ms ease;
+  transition: box-shadow 400ms ease;
 }
 
 .chart__hovered:hover {
