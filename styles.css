@@ -605,7 +605,7 @@ section {
 
 .chart__settings-button:hover .chart__settings-icon svg,
 .chart__settings-button:focus-visible .chart__settings-icon svg {
-  transform: scale(1.1);
+  fill: rgba(96, 112, 143, 0.6);
 }
 
 .chart__settings-panel[hidden] {
