@@ -503,7 +503,12 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  transition: box-shadow 800ms ease;
+}
+
+.chart__figure:hover {
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.30);
 }
 
 .chart__plot {
@@ -785,7 +790,6 @@ section {
   padding: var(--space-5) var(--space-6);
   border-radius: var(--radius);
   background: #fff;
-  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -793,6 +797,12 @@ section {
   align-self: flex-start;
   flex: 0 0 auto;
   width: clamp(280px, 32vw, 310px);
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  transition: box-shadow 800ms ease;
+}
+
+.chart__hovered:hover {
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.30);
 }
 
 .chart__hovered-header {
@@ -985,10 +995,12 @@ section {
   align-self: flex-start;
   flex: 0 0 auto;
   width: clamp(280px, 32vw, 310px);
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  transition: box-shadow 800ms ease;
 }
 
 .chart__controls:hover {
-  box-shadow: var(--shadow-card);
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.30);
 }
 
 .chart__control {
