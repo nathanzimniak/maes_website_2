@@ -586,7 +586,7 @@ section {
 }
 
 .chart__settings-icon svg circle {
-  fill: var(--color-surface-subtle);
+  fill: rgba(96, 112, 143, 0.4);
   stroke: #fff0;
 }
 
