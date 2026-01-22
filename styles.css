@@ -425,7 +425,7 @@ section {
   box-shadow: none;
   padding: var(--card-padding);
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-5);
   justify-items: start;
 }
 
