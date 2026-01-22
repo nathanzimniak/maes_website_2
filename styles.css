@@ -1661,6 +1661,10 @@ section {
   gap: var(--space-2);
   box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
   transition: box-shadow 800ms ease;
+  --profile-title-x: 0px;
+  --profile-title-y: 0px;
+  --profile-x-label-x: 0px;
+  --profile-x-label-y: 0px;
 }
 
 .chart__profiles:hover {
@@ -1739,6 +1743,7 @@ section {
   font-size: var(--font-size-xs);
   letter-spacing: -0.01em;
   color: var(--color-axis-label);
+  transform: translate(var(--profile-title-x), var(--profile-title-y));
 }
 
 .chart__sparkline {
@@ -1779,6 +1784,7 @@ section {
 
 .chart__sparkline-axis-label {
   overflow: visible;
+  transform: translate(var(--profile-x-label-x), var(--profile-x-label-y));
 }
 
 .chart__sparkline-axis-label-text {
