@@ -1101,7 +1101,7 @@ section {
   grid-area: label;
   font-weight: 400;
   letter-spacing: -0.01em;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   margin: 0;
   line-height: 1.2;
 }
@@ -1125,12 +1125,12 @@ section {
 
 .chart__control-label--aspect .chart__label-text {
   font-weight: 500;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   color: #000000;
 }
 
 .chart__hovered--solution .chart__control-label--aspect .chart__label-text {
-  font-size: 0.75rem;
+  font-size: 0.74rem;
 }
 
 .chart__control-label--aspect .chart__label-math {
@@ -1144,7 +1144,7 @@ section {
 .chart__control-label--aspect .chart__label-equals,
 .chart__control-label--aspect .chart__label-value {
   font-weight: 500;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-style: italic;
   color: #000000;
 }
@@ -1192,6 +1192,7 @@ section {
   cursor: pointer;
   transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
   text-align: center;
+  font-size: 0.74rem;
 }
 
 .chart__toggle-button:hover {
