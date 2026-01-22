@@ -976,7 +976,6 @@ section {
   padding: var(--space-5) var(--space-6);
   border-radius: var(--radius);
   background: #fff;
-  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
   gap: var(--space-7);
@@ -986,6 +985,10 @@ section {
   align-self: flex-start;
   flex: 0 0 auto;
   width: clamp(280px, 32vw, 310px);
+}
+
+.chart__controls:hover {
+  box-shadow: var(--shadow-card);
 }
 
 .chart__control {
