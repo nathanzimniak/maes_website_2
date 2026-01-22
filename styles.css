@@ -584,6 +584,23 @@ section {
   stroke: #0000;
 }
 
+.chart__download-button {
+  margin-top: var(--space-1);
+}
+
+.chart__settings-icon--download svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart__settings-icon--download svg path:last-of-type {
+  fill: rgba(96, 112, 143, 0.2);
+  stroke: none;
+}
+
 .chart__settings-icon svg circle {
   fill: rgba(96, 112, 143, 0.4);
   stroke: #fff0;
