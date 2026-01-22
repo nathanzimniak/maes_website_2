@@ -1662,7 +1662,7 @@ section {
   box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
   transition: box-shadow 800ms ease;
   --profile-title-x: 10px;
-  --profile-title-y: 4px;
+  --profile-title-y: 2px;
   --profile-x-label-x: 12px;
   --profile-x-label-y: 4px;
 }
