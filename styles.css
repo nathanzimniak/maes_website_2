@@ -1191,8 +1191,8 @@ section {
 }
 
 .chart__toggle-button--active:hover {
-  background: #2b2b2b;
-  border-color: #2b2b2b;
+  background: var(--color-text);
+  border-color: var(--color-text);
   color: #ffffff;
 }
 
