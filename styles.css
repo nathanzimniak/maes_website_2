@@ -1180,7 +1180,7 @@ section {
 }
 
 .chart__toggle-button:hover {
-  border-color: #d1daec;
+  background: #d1daec;
 }
 
 .chart__toggle-button--active {
