@@ -1161,9 +1161,13 @@
 
       button.addEventListener('click', (event) => {
         event.stopPropagation();
+        const wasOpen = menu.classList.contains('chart__latex-menu--open');
         closeCustomMenus();
-        const isOpen = menu.classList.toggle('chart__latex-menu--open');
-        button.setAttribute('aria-expanded', String(isOpen));
+        if (wasOpen) {
+          return;
+        }
+        menu.classList.add('chart__latex-menu--open');
+        button.setAttribute('aria-expanded', 'true');
       });
 
       wrapper.appendChild(button);
@@ -1854,6 +1858,7 @@
 
       chartSettingsPanel.addEventListener('click', (event) => {
         event.stopPropagation();
+        closeCustomMenus();
       });
 
       document.addEventListener('keydown', (event) => {
