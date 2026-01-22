@@ -630,6 +630,11 @@ section {
   fill: rgba(96, 112, 143, 0.6);
 }
 
+.chart__settings-button:hover .chart__settings-icon--download svg path,
+.chart__settings-button:focus-visible .chart__settings-icon--download svg path {
+  stroke: rgba(96, 112, 143, 0.8);
+}
+
 .chart__settings-panel[hidden] {
   display: none;
 }
