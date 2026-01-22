@@ -1881,11 +1881,23 @@ section {
   transform-box: fill-box;
   transition: transform 150ms ease;
   cursor: pointer;
+  outline: none;
 }
 
 .chart__point:hover,
 .chart__point:focus-visible {
   transform: scale(1.35);
+}
+
+.chart__point:focus {
+  outline: none;
+}
+
+.chart__point:focus-visible {
+  stroke: var(--color-accent);
+  fill: var(--color-accent-soft);
+  stroke-width: 3;
+  filter: drop-shadow(0 0 6px rgba(10, 132, 255, 0.35));
 }
 
 .chart__point--selected {
