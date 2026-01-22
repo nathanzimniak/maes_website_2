@@ -603,8 +603,8 @@ section {
   gap: var(--space-2);
 }
 
-.chart__settings-button:hover .chart__settings-icon svg,
-.chart__settings-button:focus-visible .chart__settings-icon svg {
+.chart__settings-button:hover .chart__settings-icon svg circle,
+.chart__settings-button:focus-visible .chart__settings-icon svg circle {
   fill: rgba(96, 112, 143, 0.6);
 }
 
