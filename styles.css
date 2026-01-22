@@ -518,12 +518,12 @@ section {
   --plot-area-pad-x: 10px;
   --plot-area-pad-y: 10px;
   --scatter-plot-x: 30px;
-  --scatter-plot-y: -6px;
+  --scatter-plot-y: -4px;
   --settings-gear-x: 518px;
-  --settings-gear-y: 18px;
+  --settings-gear-y: 20px;
   --axis-x-select-x: 276px;
-  --axis-x-select-y: 480px;
-  --axis-y-select-x: 4px;
+  --axis-x-select-y: 478px;
+  --axis-y-select-x: 6px;
   --axis-y-select-y: 228px;
 }
 
