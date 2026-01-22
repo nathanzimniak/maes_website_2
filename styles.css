@@ -625,6 +625,11 @@ section {
   fill: rgba(96, 112, 143, 0.6);
 }
 
+.chart__settings-button:hover .chart__settings-icon--download svg path:last-of-type,
+.chart__settings-button:focus-visible .chart__settings-icon--download svg path:last-of-type {
+  fill: rgba(96, 112, 143, 0.6);
+}
+
 .chart__settings-panel[hidden] {
   display: none;
 }
