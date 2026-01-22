@@ -224,6 +224,7 @@
               </div>
             </div>
             <div class="chart__plot-area"></div>
+            <div id="scatter-tooltip" class="chart__sparkline-tooltip chart__scatter-tooltip" role="status" aria-live="polite"></div>
             <div class="chart__axis-label chart__axis-label--y" aria-label="Grandeur de l'axe Y">
               <span id="y-axis-label" class="chart__axis-label-text"></span>
             </div>
@@ -458,6 +459,7 @@
     const chartFigure = document.querySelector('.chart__figure');
     const chartHovered = document.querySelector('.chart__hovered');
     const chartPlot = document.querySelector('.chart__plot');
+    const scatterTooltip = document.getElementById('scatter-tooltip');
     const chartProfiles = document.querySelector('.chart__profiles');
     const chartSettingsButton = document.getElementById('chart-settings-button');
     const chartSettingsPanel = document.getElementById('chart-settings-panel');
@@ -1238,6 +1240,53 @@
       renderEmptyHoveredValues();
     }
 
+    function hideScatterTooltip() {
+      if (!scatterTooltip) return;
+      scatterTooltip.classList.remove('chart__sparkline-tooltip--visible');
+    }
+
+    function showScatterTooltip(point, circle, xKey, yKey) {
+      if (!scatterTooltip || !chartPlot || !circle || !point) return;
+
+      const xLatex = getMetricLatex(xKey);
+      const yLatex = getMetricLatex(yKey);
+      scatterTooltip.innerHTML = `
+        <div class="chart__sparkline-tooltip-row">
+          <span class="chart__sparkline-tooltip-pair">
+            <span class="chart__sparkline-tooltip-key">
+              <span class="math-label" data-latex="${yLatex}"></span>
+            </span>
+            <span class="chart__sparkline-tooltip-value">${formatTick(point[yKey])}</span>
+          </span>
+          <span class="chart__sparkline-tooltip-pair">
+            <span class="chart__sparkline-tooltip-key">
+              <span class="math-label" data-latex="${xLatex}"></span>
+            </span>
+            <span class="chart__sparkline-tooltip-value">${formatTick(point[xKey])}</span>
+          </span>
+        </div>
+      `;
+      renderMathLabels(scatterTooltip);
+
+      const plotBounds = chartPlot.getBoundingClientRect();
+      const circleBounds = circle.getBoundingClientRect();
+      const centerX = circleBounds.left - plotBounds.left + circleBounds.width / 2;
+      const centerY = circleBounds.top - plotBounds.top + circleBounds.height / 2;
+      const tooltipWidth = scatterTooltip.offsetWidth || 140;
+      const tooltipHeight = scatterTooltip.offsetHeight || 42;
+      const tooltipPadding = 6;
+      const desiredLeft = centerX - tooltipWidth / 2;
+      const desiredTop = centerY - tooltipHeight - 12;
+      const minLeft = tooltipPadding;
+      const maxLeft = Math.max(minLeft, plotBounds.width - tooltipWidth - tooltipPadding);
+      const minTop = tooltipPadding;
+      const maxTop = Math.max(minTop, plotBounds.height - tooltipHeight - tooltipPadding);
+
+      scatterTooltip.style.left = `${clamp(desiredLeft, minLeft, maxLeft)}px`;
+      scatterTooltip.style.top = `${clamp(desiredTop, minTop, maxTop)}px`;
+      scatterTooltip.classList.add('chart__sparkline-tooltip--visible');
+    }
+
     function restorePinnedValues() {
       if (pinnedSolutionIndex === null) {
         resetHoveredValues();
@@ -1267,19 +1316,30 @@
           circle.classList.add('chart__point--selected');
         }
 
-        circle.addEventListener('pointerenter', (event) => {
+        circle.addEventListener('pointerenter', () => {
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
-          const xValue = hovered[xKey];
-          const yValue = hovered[yKey];
           renderHoveredValues(hovered);
+          showScatterTooltip(hovered, circle, xKey, yKey);
+        });
+
+        circle.addEventListener('pointermove', () => {
+          const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
+          showScatterTooltip(hovered, circle, xKey, yKey);
         });
 
         circle.addEventListener('pointerleave', () => {
           restorePinnedValues();
+          hideScatterTooltip();
+        });
+
+        circle.addEventListener('focus', () => {
+          const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
+          showScatterTooltip(hovered, circle, xKey, yKey);
         });
 
         circle.addEventListener('blur', () => {
           restorePinnedValues();
+          hideScatterTooltip();
         });
 
         circle.addEventListener('click', () => {
@@ -1656,6 +1716,7 @@
       currentSolutions = solutions;
       resetProfiles();
       restorePinnedValues();
+      hideScatterTooltip();
 
       const xDomain = getDomain(solutions.map(solution => solution[xKey]), xScaleType);
       const yDomain = getDomain(solutions.map(solution => solution[yKey]), yScaleType);
