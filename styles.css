@@ -1180,7 +1180,7 @@ section {
 }
 
 .chart__toggle-button:hover {
-  background: #f1f3f7;
+  background: #e8ebf2;
 }
 
 .chart__toggle-button--active {
@@ -1490,7 +1490,7 @@ section {
 }
 
 .chart__latex-button:hover {
-  border-color: #f1f3f7;
+  border-color: #e8ebf2;
 }
 
 .chart__latex-button:focus-visible {
