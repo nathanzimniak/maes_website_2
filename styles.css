@@ -508,7 +508,7 @@ section {
 }
 
 .chart__figure:hover {
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.30);
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
 }
 
 .chart__plot {
@@ -802,7 +802,7 @@ section {
 }
 
 .chart__hovered:hover {
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.30);
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
 }
 
 .chart__hovered-header {
@@ -1000,7 +1000,7 @@ section {
 }
 
 .chart__controls:hover {
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.30);
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
 }
 
 .chart__control {
@@ -1630,6 +1630,12 @@ section {
   box-shadow: var(--shadow-card);
   display: grid;
   gap: var(--space-2);
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  transition: box-shadow 800ms ease;
+}
+
+.chart__profiles:hover {
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
 }
 
 .chart__profiles-header {
