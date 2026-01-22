@@ -1684,6 +1684,7 @@ section {
   display: block;
   width: 100%;
   text-align: center;
+  box-shadow: 0px 2px 3px 0px rgba(15, 20, 40, 0.1);
 }
 
 .chart__profiles-title {
