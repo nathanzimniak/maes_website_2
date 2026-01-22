@@ -1464,7 +1464,7 @@ section {
   min-width: 60px;
   padding: 8px 12px;
   border-radius: 10px;
-  border: none;
+  border: 1px solid transparent;
   background: #f8f9fb;
   color: #000;
   font-size: 0.78rem;
