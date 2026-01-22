@@ -487,7 +487,7 @@ section {
 
 .chart__figure {
   --chart-plot-size: 520px;
-  width: 580px;
+  width: 560px;
   max-width: 100%;
   flex: 0 0 auto;
   height: var(--chart-controls-height, auto);
