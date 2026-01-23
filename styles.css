@@ -132,12 +132,15 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--color-bg);
 }
 
 .hero__overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 20% 20%, rgba(15, 23, 42, 0.06), transparent 50%);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(10, 132, 255, 0.08), transparent 55%),
+    radial-gradient(circle at 80% 15%, rgba(15, 23, 42, 0.05), transparent 50%);
 }
 
 .hero__content {
@@ -150,13 +153,14 @@ section {
 .hero__eyebrow {
   display: inline-flex;
   padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
+  border-radius: var(--radius-1);
+  background: var(--color-surface-subtle);
+  border: none;
   color: var(--color-muted);
   font-size: var(--font-size-xs);
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
+  margin: 0;
 }
 
 .hero__title {
@@ -181,6 +185,11 @@ section {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  padding: var(--card-padding);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
 }
 
 .hero__actions {
@@ -229,7 +238,7 @@ section {
 }
 
 .hero__highlights {
-  margin-top: var(--space-6);
+  margin-top: var(--space-4);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--space-3);
@@ -239,7 +248,7 @@ section {
   padding: var(--space-4);
   border-radius: var(--radius);
   border: 1px solid var(--color-line);
-  background: var(--color-surface);
+  background: var(--color-surface-muted);
   box-shadow: none;
 }
 
@@ -257,18 +266,23 @@ section {
 
 .hero__panel {
   padding: var(--card-padding);
-  border-radius: calc(var(--radius) + 4px);
+  border-radius: var(--radius);
   border: 1px solid var(--color-line);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
+  background: #fff;
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
   display: grid;
   gap: var(--space-4);
+  transition: box-shadow 800ms ease;
+}
+
+.hero__panel:hover {
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.2);
 }
 
 .hero__panel-eyebrow {
   margin: 0;
   font-size: var(--font-size-xs);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-muted);
 }
@@ -287,9 +301,9 @@ section {
 
 .hero__panel-card {
   padding: var(--space-3) var(--space-4);
-  border-radius: calc(var(--radius) - 4px);
+  border-radius: var(--radius-1);
   border: 1px solid var(--color-line);
-  background: var(--color-surface-muted);
+  background: var(--color-surface);
   display: grid;
   gap: var(--space-1);
 }
