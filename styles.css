@@ -145,8 +145,8 @@ section {
 
 .hero__content {
   position: relative;
-  max-width: 1120px;
-  width: min(1120px, 100%);
+  width: fit-content;
+  max-width: 100%;
   z-index: 1;
 }
 
