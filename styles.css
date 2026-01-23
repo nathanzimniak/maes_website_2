@@ -145,8 +145,8 @@ section {
 
 .hero__content {
   position: relative;
-  max-width: 1120px;
-  width: min(1120px, 100%);
+  width: fit-content;
+  max-width: 100%;
   z-index: 1;
 }
 
@@ -165,14 +165,14 @@ section {
 
 .hero__title {
   margin: var(--space-3) 0 var(--space-2);
-  font-size: var(--font-size-xl);
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
   letter-spacing: -0.03em;
 }
 
 .hero__subtitle {
-  margin: 0 0 var(--space-6);
+  margin: 0 0 var(--space-4);
   color: var(--color-muted);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
 }
 
 .hero__layout {
