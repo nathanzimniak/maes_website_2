@@ -153,6 +153,10 @@ section {
   z-index: 1;
 }
 
+.hero__content .chart__card {
+  width: 100%;
+}
+
 .hero__eyebrow {
   display: inline-flex;
   padding: var(--space-2) var(--space-4);
