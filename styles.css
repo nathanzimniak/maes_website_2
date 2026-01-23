@@ -149,8 +149,12 @@ section {
 
 .hero__content {
   position: relative;
-  width: min(100%, var(--chart-body-width));
+  width: min(100%, calc(var(--chart-body-width) + (var(--card-padding) * 2)));
   z-index: 1;
+}
+
+.hero__content .chart__card {
+  width: 100%;
 }
 
 .hero__eyebrow {
