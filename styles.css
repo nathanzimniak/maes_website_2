@@ -152,6 +152,7 @@ section {
 
 .hero__content .chart__card {
   width: 100%;
+  text-align: center;
 }
 
 .hero__eyebrow {
@@ -215,6 +216,10 @@ section {
   text-decoration: none;
   box-shadow: none;
   transition: transform 160ms ease, background 160ms ease;
+}
+
+.hero__cta--hero {
+  margin: var(--space-3) auto var(--space-4);
 }
 
 .hero__cta:hover {
