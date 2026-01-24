@@ -181,6 +181,10 @@ section {
   font-size: var(--font-size-sm);
 }
 
+.hero__subtitle + .hero__subtitle {
+  margin-top: calc(var(--space-2) - var(--space-5));
+}
+
 .hero__layout {
   display: grid;
   gap: var(--space-7);
