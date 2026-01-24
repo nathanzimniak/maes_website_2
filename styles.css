@@ -153,6 +153,7 @@ section {
 .hero__content .chart__card {
   width: 100%;
   text-align: center;
+  justify-items: center;
 }
 
 .hero__eyebrow {
