@@ -179,6 +179,7 @@ section {
   margin: 0;
   color: var(--color-muted);
   font-size: var(--font-size-sm);
+  text-align: justify;
 }
 
 .hero__subtitle--lead {
