@@ -146,7 +146,7 @@ section {
 
 .hero__content {
   position: relative;
-  width: min(100%, calc(var(--chart-body-width) + (var(--card-padding) * 2)));
+  width: min(100%, 800px);
   z-index: 1;
 }
 
