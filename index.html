@@ -301,7 +301,7 @@
                 </span>
               </li>
               <li class="chart__hovered-divider" role="separator" aria-hidden="true"></li>
-              <li class="chart__hovered-title">Jet properties</li>
+              <li class="chart__hovered-title">Outflow properties</li>
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Mass load</span>
                 <span class="chart__label-math">
@@ -358,28 +358,26 @@
                   <span class="chart__label-value">―</span>
                 </span>
               </li>
-              <li class="chart__hovered-divider" role="separator" aria-hidden="true"></li>
-              <li class="chart__hovered-title">Miscellaneous</li>
               <li class="chart__hovered-item chart__control-label--aspect">
-                <span class="chart__label-text">Grandeur 20</span>
+                <span class="chart__label-text">Outflow power fraction</span>
                 <span class="chart__label-math">
-                  <span class="math-label" data-latex="\varepsilon"></span>
+                  <span class="math-label" data-latex="b"></span>
                   <span class="chart__label-equals">=</span>
                   <span class="chart__label-value">―</span>
                 </span>
               </li>
               <li class="chart__hovered-item chart__control-label--aspect">
-                <span class="chart__label-text">Grandeur 21</span>
+                <span class="chart__label-text">Maximum radius</span>
                 <span class="chart__label-math">
-                  <span class="math-label" data-latex="\varepsilon"></span>
+                  <span class="math-label" data-latex="r_t"></span>
                   <span class="chart__label-equals">=</span>
                   <span class="chart__label-value">―</span>
                 </span>
               </li>
               <li class="chart__hovered-item chart__control-label--aspect">
-                <span class="chart__label-text">Grandeur 22</span>
+                <span class="chart__label-text">Energy reservoir</span>
                 <span class="chart__label-math">
-                  <span class="math-label" data-latex="\varepsilon"></span>
+                  <span class="math-label" data-latex="g_A"></span>
                   <span class="chart__label-equals">=</span>
                   <span class="chart__label-value">―</span>
                 </span>
@@ -981,9 +979,9 @@
       g17: { label: 'SM point altitude', latex: 'z_{SM}', symbol: 'zSM' },
       g18: { label: 'A point altitude', latex: 'z_A', symbol: 'zA' },
       g19: { label: 'FM point altitude', latex: 'z_{FM}', symbol: 'zFM' },
-      g20: { label: 'Grandeur 20', latex: '\\varepsilon', symbol: 'ε' },
-      g21: { label: 'Grandeur 21', latex: '\\varepsilon', symbol: 'ε' },
-      g22: { label: 'Grandeur 22', latex: '\\varepsilon', symbol: 'ε' }
+      g20: { label: 'Outflow power fraction', latex: 'b', symbol: 'b' },
+      g21: { label: 'Maximum radius', latex: 'r_t', symbol: 'rₜ' },
+      g22: { label: 'Energy reservoir', latex: 'g_A', symbol: 'g_A' }
     };
 
     function populateAxisSelectOptions() {
@@ -1151,8 +1149,7 @@
           const sectionTitles = {
             1: "Input parameters",
             6: "Disk properties",
-            13: "Jet properties",
-            20: "Miscellaneous",
+            13: "Outflow properties",
           };
           const entryIndex = index + 1;
           if (sectionTitles[entryIndex]) {
