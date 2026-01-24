@@ -185,6 +185,10 @@ section {
   margin-top: calc(var(--space-2) - var(--space-5));
 }
 
+.hero__subtitle--references {
+  font-size: var(--font-size-xs);
+}
+
 .hero__layout {
   display: grid;
   gap: var(--space-7);
