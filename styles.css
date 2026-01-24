@@ -170,7 +170,7 @@ section {
 }
 
 .hero__title {
-  margin: var(--space-9) var(--space-2);
+  margin: var(--space-7) var(--space-2);
   font-size: clamp(1.6rem, 2.8vw, 2.2rem);
   letter-spacing: -0.03em;
 }
