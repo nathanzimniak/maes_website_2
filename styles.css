@@ -29,7 +29,7 @@
   --space-10: 72px;
   --section-padding-y: var(--space-0);
   --section-padding-x: var(--space-0);
-  --card-padding: var(--space-7);
+  --card-padding: var(--space-4);
   --chart-side-panel-width: clamp(280px, 32vw, 310px);
   --chart-figure-width: 560px;
   --chart-body-gap: var(--space-5);
