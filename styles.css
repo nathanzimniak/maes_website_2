@@ -232,7 +232,7 @@ section {
 }
 
 .hero__cta--hero {
-  margin: var(--space-3) auto var(--space-4);
+  margin: var(--space-7) auto var(--space-10);
 }
 
 .hero__cta:hover {
