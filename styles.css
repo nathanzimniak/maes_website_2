@@ -34,7 +34,7 @@
   --chart-figure-width: 560px;
   --chart-body-gap: var(--space-5);
   --chart-body-width: calc((var(--chart-side-panel-width) * 2) + var(--chart-figure-width) + (var(--chart-body-gap) * 2));
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size-xs: 0.78rem;
   --font-size-sm: 0.9rem;
   --font-size-md: 1rem;
