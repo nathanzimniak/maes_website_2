@@ -1741,9 +1741,7 @@ section {
 }
 
 .chart__profiles-grid {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, calc((100% - (2 * var(--space-2))) / 3));
+  display: flex;
   gap: var(--space-2);
   width: 100%;
   max-width: none;
@@ -1759,6 +1757,7 @@ section {
   color: var(--color-muted);
   padding: var(--space-3) var(--space-2);
   min-width: 100%;
+  flex: 0 0 100%;
 }
 
 .chart__profile-card {
@@ -1769,6 +1768,7 @@ section {
   display: grid;
   color: #000;
   scroll-snap-align: start;
+  flex: 0 0 calc((100% - (2 * var(--space-2))) / 3);
 }
 
 .chart__profile-header {
