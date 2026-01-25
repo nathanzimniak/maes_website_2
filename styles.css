@@ -175,6 +175,109 @@ section {
   letter-spacing: -0.03em;
 }
 
+.hero__title-animated {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hero__title-line {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hero__title-line--acro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.18em;
+  pointer-events: none;
+}
+
+.hero__letter,
+.hero__acro-letter {
+  display: inline-block;
+  animation-duration: 8s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  will-change: transform, opacity, filter;
+}
+
+.hero__letter {
+  animation-name: hero-full-cycle;
+  animation-delay: calc(var(--i) * 0.035s);
+}
+
+.hero__acro-letter {
+  animation-name: hero-acro-cycle;
+  animation-delay: calc(var(--i) * 0.12s);
+  letter-spacing: 0.08em;
+}
+
+.hero__title-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes hero-full-cycle {
+  0%,
+  42% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  55%,
+  68% {
+    opacity: 0;
+    transform: translateY(-0.45em) scale(0.97);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-acro-cycle {
+  0%,
+  42% {
+    opacity: 0;
+    transform: translateY(0.45em) scale(0.92);
+    filter: blur(2px);
+  }
+  55%,
+  72% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0.45em) scale(0.92);
+    filter: blur(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__letter,
+  .hero__acro-letter {
+    animation: none;
+  }
+
+  .hero__title-line--acro {
+    opacity: 0;
+  }
+}
+
 .hero__subtitle {
   margin: 0;
   color: #2b2b2b;
