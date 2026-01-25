@@ -916,9 +916,10 @@ section {
   gap: 0px var(--space-3);
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
+  scrollbar-color: var(--color-line) rgba(96, 112, 143, 0.12);
 }
 
 .chart__hovered-title {
@@ -952,7 +953,8 @@ section {
 }
 
 .chart__hovered-list::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(96, 112, 143, 0.12);
+  border-radius: 999px;
 }
 
 .chart__hovered-list::-webkit-scrollbar-thumb {
@@ -1754,12 +1756,13 @@ section {
   width: 100%;
   max-width: none;
   margin: 0px;
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-padding: var(--space-2);
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
+  scrollbar-color: var(--color-line) rgba(96, 112, 143, 0.12);
 }
 
 .chart__profiles-grid::-webkit-scrollbar {
@@ -1767,7 +1770,8 @@ section {
 }
 
 .chart__profiles-grid::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(96, 112, 143, 0.12);
+  border-radius: 999px;
 }
 
 .chart__profiles-grid::-webkit-scrollbar-thumb {
