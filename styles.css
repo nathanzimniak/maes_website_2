@@ -193,6 +193,16 @@ section {
   font-size: 0.72rem;
 }
 
+.hero__subtitle--references a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero__subtitle--references a:hover,
+.hero__subtitle--references a:focus {
+  text-decoration: underline;
+}
+
 .hero__layout {
   display: grid;
   gap: var(--space-7);
