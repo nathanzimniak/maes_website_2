@@ -177,7 +177,7 @@ section {
 
 .hero__subtitle {
   margin: 0;
-  color: var(--color-muted);
+  color: #2b2b2b;
   font-size: var(--font-size-sm);
 }
 
