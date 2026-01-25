@@ -916,9 +916,23 @@ section {
   gap: 0px var(--space-3);
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: scroll;
+  position: relative;
+  scrollbar-gutter: stable both-edges;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) transparent;
+}
+
+.chart__hovered-list::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  right: 1px;
+  width: 6px;
+  border-radius: 999px;
+  background: rgba(96, 112, 143, 0.25);
+  pointer-events: none;
 }
 
 .chart__hovered-title {
@@ -1754,12 +1768,26 @@ section {
   width: 100%;
   max-width: none;
   margin: 0px;
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;
+  position: relative;
+  scrollbar-gutter: stable both-edges;
   scroll-snap-type: x mandatory;
   scroll-padding: var(--space-2);
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) transparent;
+}
+
+.chart__profiles-grid::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: 1px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(96, 112, 143, 0.25);
+  pointer-events: none;
 }
 
 .chart__profiles-grid::-webkit-scrollbar {
