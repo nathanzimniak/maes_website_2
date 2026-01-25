@@ -195,6 +195,7 @@ section {
 .hero__subtitle--references {
   font-size: 0.72rem;
   font-weight: 300;
+  font-family: var(--font-heading);
 }
 
 .hero__subtitle--references a {
@@ -1738,6 +1739,7 @@ section {
   width: 100%;
   text-align: center;
   box-shadow: 0px 2px 1px 0px rgba(15, 20, 40, 0.1);
+  font-family: var(--font-heading);
 }
 
 .chart__profiles-title {
