@@ -175,55 +175,6 @@ section {
   letter-spacing: -0.03em;
 }
 
-.hero__title-rotator {
-  display: inline-grid;
-  grid-template-areas: "stack";
-  align-items: center;
-  min-height: 1.2em;
-}
-
-.hero__title-text {
-  grid-area: stack;
-  animation: hero-title-rotate 8s ease-in-out infinite;
-  will-change: opacity, transform;
-}
-
-.hero__title-text--acronym {
-  animation-delay: 4s;
-  letter-spacing: 0.08em;
-}
-
-@keyframes hero-title-rotate {
-  0%,
-  45% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 0;
-    transform: translateY(-0.4em);
-  }
-  55%,
-  95% {
-    opacity: 0;
-    transform: translateY(0.4em);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__title-text {
-    animation: none;
-  }
-
-  .hero__title-text--acronym {
-    display: none;
-  }
-}
-
 .hero__subtitle {
   margin: 0;
   color: #2b2b2b;
