@@ -12,6 +12,8 @@
   --color-axis: rgba(15, 23, 42, 0.55);
   --color-axis-label: #374151;
   --point-color: #ffb543;
+  --scrollbar-track-color: rgba(96, 112, 143, 0.12);
+  --scrollbar-track-line: rgba(96, 112, 143, 0.35);
   --shadow-card: 0px 4px 0px 0px rgba(15, 20, 40, 0.1);
   --shadow-float: 0 16px 30px rgba(15, 23, 42, 0.12);
   --radius: 16px;
@@ -917,8 +919,9 @@ section {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
+  scrollbar-color: var(--color-line) var(--scrollbar-track-color);
 }
 
 .chart__hovered-title {
@@ -952,7 +955,16 @@ section {
 }
 
 .chart__hovered-list::-webkit-scrollbar-track {
-  background: transparent;
+  background: linear-gradient(
+    to right,
+    var(--scrollbar-track-color) 0%,
+    var(--scrollbar-track-color) 42%,
+    var(--scrollbar-track-line) 42%,
+    var(--scrollbar-track-line) 58%,
+    var(--scrollbar-track-color) 58%,
+    var(--scrollbar-track-color) 100%
+  );
+  border-radius: 999px;
 }
 
 .chart__hovered-list::-webkit-scrollbar-thumb {
@@ -1615,8 +1627,9 @@ section {
   display: none;
   flex-direction: column;
   white-space: normal;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
+  scrollbar-color: var(--color-line) var(--scrollbar-track-color);
   background: var(--color-surface);
   border-radius: 10px;
   padding: 4px;
@@ -1633,7 +1646,16 @@ section {
 }
 
 .chart__latex-menu::-webkit-scrollbar-track {
-  background: transparent;
+  background: linear-gradient(
+    to right,
+    var(--scrollbar-track-color) 0%,
+    var(--scrollbar-track-color) 42%,
+    var(--scrollbar-track-line) 42%,
+    var(--scrollbar-track-line) 58%,
+    var(--scrollbar-track-color) 58%,
+    var(--scrollbar-track-color) 100%
+  );
+  border-radius: 999px;
 }
 
 .chart__latex-menu::-webkit-scrollbar-thumb {
@@ -1758,8 +1780,9 @@ section {
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-padding: var(--space-2);
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
+  scrollbar-color: var(--color-line) var(--scrollbar-track-color);
 }
 
 .chart__profiles-grid::-webkit-scrollbar {
@@ -1767,7 +1790,16 @@ section {
 }
 
 .chart__profiles-grid::-webkit-scrollbar-track {
-  background: transparent;
+  background: linear-gradient(
+    to bottom,
+    var(--scrollbar-track-color) 0%,
+    var(--scrollbar-track-color) 42%,
+    var(--scrollbar-track-line) 42%,
+    var(--scrollbar-track-line) 58%,
+    var(--scrollbar-track-color) 58%,
+    var(--scrollbar-track-color) 100%
+  );
+  border-radius: 999px;
 }
 
 .chart__profiles-grid::-webkit-scrollbar-thumb {
