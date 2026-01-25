@@ -146,7 +146,7 @@ section {
 
 .hero__content {
   position: relative;
-  width: min(100%, 825px);
+  width: min(100%, 750px);
   z-index: 1;
 }
 
