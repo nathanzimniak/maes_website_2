@@ -916,8 +916,7 @@ section {
   gap: 0px var(--space-3);
   flex: 1;
   min-height: 0;
-  overflow-y: scroll;
-  scrollbar-gutter: stable;
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) rgba(96, 112, 143, 0.12);
 }
@@ -1756,11 +1755,10 @@ section {
   width: 100%;
   max-width: none;
   margin: 0px;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-padding: var(--space-2);
-  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) rgba(96, 112, 143, 0.12);
 }
