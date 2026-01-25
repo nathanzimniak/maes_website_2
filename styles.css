@@ -919,7 +919,6 @@ section {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) var(--scrollbar-track-color);
 }
@@ -957,12 +956,12 @@ section {
 .chart__hovered-list::-webkit-scrollbar-track {
   background: linear-gradient(
     to right,
-    var(--scrollbar-track-color) 0%,
-    var(--scrollbar-track-color) 42%,
+    transparent 0%,
+    transparent 42%,
     var(--scrollbar-track-line) 42%,
     var(--scrollbar-track-line) 58%,
-    var(--scrollbar-track-color) 58%,
-    var(--scrollbar-track-color) 100%
+    transparent 58%,
+    transparent 100%
   );
   border-radius: 999px;
 }
@@ -1627,7 +1626,6 @@ section {
   display: none;
   flex-direction: column;
   white-space: normal;
-  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) var(--scrollbar-track-color);
   background: var(--color-surface);
@@ -1648,12 +1646,12 @@ section {
 .chart__latex-menu::-webkit-scrollbar-track {
   background: linear-gradient(
     to right,
-    var(--scrollbar-track-color) 0%,
-    var(--scrollbar-track-color) 42%,
+    transparent 0%,
+    transparent 42%,
     var(--scrollbar-track-line) 42%,
     var(--scrollbar-track-line) 58%,
-    var(--scrollbar-track-color) 58%,
-    var(--scrollbar-track-color) 100%
+    transparent 58%,
+    transparent 100%
   );
   border-radius: 999px;
 }
@@ -1780,7 +1778,6 @@ section {
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-padding: var(--space-2);
-  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) var(--scrollbar-track-color);
 }
@@ -1792,12 +1789,12 @@ section {
 .chart__profiles-grid::-webkit-scrollbar-track {
   background: linear-gradient(
     to bottom,
-    var(--scrollbar-track-color) 0%,
-    var(--scrollbar-track-color) 42%,
+    transparent 0%,
+    transparent 42%,
     var(--scrollbar-track-line) 42%,
     var(--scrollbar-track-line) 58%,
-    var(--scrollbar-track-color) 58%,
-    var(--scrollbar-track-color) 100%
+    transparent 58%,
+    transparent 100%
   );
   border-radius: 999px;
 }
