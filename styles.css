@@ -192,6 +192,7 @@ section {
 
 .hero__subtitle--references {
   font-size: 0.72rem;
+  font-weight: 300;
 }
 
 .hero__subtitle--references a {
@@ -804,7 +805,7 @@ section {
 
 .chart__axis-label-name {
   font-style: italic;
-  font-weight: 500;
+  font-weight: 400;
   font-size: var(--font-size-xs);
   letter-spacing: 0em;
 }
@@ -1198,7 +1199,7 @@ section {
 }
 
 .chart__control-label--aspect .chart__label-text {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 0.74rem;
   color: #000000;
 }
@@ -1217,7 +1218,7 @@ section {
 
 .chart__control-label--aspect .chart__label-equals,
 .chart__control-label--aspect .chart__label-value {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 0.74rem;
   font-style: italic;
   color: #000000;
