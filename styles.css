@@ -917,6 +917,7 @@ section {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) var(--color-surface-muted);
 }
@@ -949,6 +950,7 @@ section {
 
 .chart__hovered-list::-webkit-scrollbar {
   width: 6px;
+  background-color: var(--color-surface-muted);
 }
 
 .chart__hovered-list::-webkit-scrollbar-track {
@@ -1758,12 +1760,14 @@ section {
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-padding: var(--space-2);
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) var(--color-surface-muted);
 }
 
 .chart__profiles-grid::-webkit-scrollbar {
   height: 6px;
+  background-color: var(--color-surface-muted);
 }
 
 .chart__profiles-grid::-webkit-scrollbar-track {
