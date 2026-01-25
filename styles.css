@@ -925,7 +925,7 @@ section {
   grid-column: 1 / -1;
   margin: var(--space-3) 0 0;
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #60708f;
   font-weight: 700;
