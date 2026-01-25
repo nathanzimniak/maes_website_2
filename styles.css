@@ -188,7 +188,7 @@ section {
 }
 
 .hero__subtitle + .hero__subtitle {
-  margin-top: var(--space-6);
+  margin-top: 0px;
 }
 
 .hero__subtitle--references {
