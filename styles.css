@@ -192,7 +192,7 @@ section {
 }
 
 .hero__subtitle--references {
-  font-size: var(--font-size-xs);
+  font-size: 0.72rem;
 }
 
 .hero__layout {
