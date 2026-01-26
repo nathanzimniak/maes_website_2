@@ -943,11 +943,13 @@ section {
   align-self: stretch;
   margin-right: 1px;
   width: 6px;
+  height: 100%;
   border-radius: 999px;
   background: var(--color-line);
   opacity: 0.45;
   pointer-events: none;
-  z-index: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .chart__hovered-title {
