@@ -457,8 +457,8 @@ section {
 .footer {
   text-align: center;
   padding: var(--section-padding-y) var(--section-padding-x);
-  color: var(--color-muted);
-  font-size: 0.95rem;
+  color: #2b2b2b;
+  font-size: 0.75rem;
 }
 
 .chart {
