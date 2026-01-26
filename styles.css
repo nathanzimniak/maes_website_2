@@ -634,6 +634,10 @@ section {
   stroke: #0000;
 }
 
+.chart__settings-icon--gear svg path {
+  fill: rgba(96, 112, 143, 0.4);
+}
+
 .chart__download-button {
   margin-top: var(--space-1);
 }
@@ -672,6 +676,11 @@ section {
 
 .chart__settings-button:hover .chart__settings-icon svg circle,
 .chart__settings-button:focus-visible .chart__settings-icon svg circle {
+  fill: rgba(96, 112, 143, 0.6);
+}
+
+.chart__settings-button:hover .chart__settings-icon--gear svg path,
+.chart__settings-button:focus-visible .chart__settings-icon--gear svg path {
   fill: rgba(96, 112, 143, 0.6);
 }
 
