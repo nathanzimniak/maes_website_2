@@ -89,6 +89,7 @@ section {
 }
 
 .site-header__brand {
+  font-family: "Racing Sans One", "Montserrat", "Inter", sans-serif;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
