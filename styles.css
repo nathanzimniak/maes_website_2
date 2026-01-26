@@ -926,12 +926,30 @@ section {
   margin-right: calc(-1 * var(--space-4));
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: max-content;
   gap: 0px var(--space-3);
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  position: relative;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) transparent;
+}
+
+.chart__hovered-list::after {
+  content: "";
+  grid-column: 1 / -1;
+  grid-row: 1 / span 999;
+  justify-self: end;
+  align-self: stretch;
+  margin-right: 1px;
+  width: 6px;
+  border-radius: 999px;
+  background: var(--color-line);
+  opacity: 0.45;
+  pointer-events: none;
+  position: relative;
+  z-index: 2;
 }
 
 .chart__hovered-title {
