@@ -937,18 +937,16 @@ section {
 
 .chart__hovered-list::after {
   content: "";
-  grid-column: 1 / -1;
-  grid-row: 1 / -1;
-  justify-self: end;
-  align-self: stretch;
-  margin-right: 1px;
+  position: absolute;
+  top: 0;
+  right: 1px;
+  bottom: 0;
+  display: block;
   width: 6px;
-  height: 100%;
   border-radius: 999px;
   background: var(--color-line);
   opacity: 0.45;
   pointer-events: none;
-  position: relative;
   z-index: 2;
 }
 
