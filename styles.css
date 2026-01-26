@@ -935,6 +935,30 @@ section {
   position: relative;
 }
 
+.chart__hovered--solution .chart__hovered-list {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent) transparent;
+}
+
+.chart__hovered--solution .chart__hovered-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.chart__hovered--solution .chart__hovered-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chart__hovered--solution .chart__hovered-list::-webkit-scrollbar-thumb {
+  background-color: var(--color-accent);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.chart__hovered--solution .chart__hovered-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-accent-strong);
+}
+
 .chart__hovered-title {
   grid-column: 1 / -1;
   margin: var(--space-3) 0 0;
