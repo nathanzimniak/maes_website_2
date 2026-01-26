@@ -932,24 +932,6 @@ section {
   min-height: 0;
   overflow-y: auto;
   position: relative;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
-}
-
-.chart__hovered-list::after {
-  content: "";
-  grid-column: 1 / -1;
-  grid-row: 1 / span 999;
-  justify-self: end;
-  align-self: stretch;
-  margin-right: 1px;
-  width: 6px;
-  border-radius: 999px;
-  background: var(--color-line);
-  opacity: 0.45;
-  pointer-events: none;
-  position: relative;
-  z-index: 2;
 }
 
 .chart__hovered-title {
@@ -976,21 +958,6 @@ section {
 
 .chart__hovered-divider + .chart__hovered-title {
   margin-top: 0;
-}
-
-.chart__hovered-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chart__hovered-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.chart__hovered-list::-webkit-scrollbar-thumb {
-  background-color: var(--color-line);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
 }
 
 .chart__hovered-item {
@@ -1646,8 +1613,6 @@ section {
   display: none;
   flex-direction: column;
   white-space: normal;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
   background: var(--color-surface);
   border-radius: 10px;
   padding: 4px;
@@ -1657,21 +1622,6 @@ section {
 
 .chart__latex-menu--open {
   display: flex;
-}
-
-.chart__latex-menu::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chart__latex-menu::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.chart__latex-menu::-webkit-scrollbar-thumb {
-  background-color: var(--color-line);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
 }
 
 .chart__latex-option {
@@ -1790,23 +1740,6 @@ section {
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-padding: var(--space-2);
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
-}
-
-.chart__profiles-grid::-webkit-scrollbar {
-  height: 6px;
-}
-
-.chart__profiles-grid::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.chart__profiles-grid::-webkit-scrollbar-thumb {
-  background-color: var(--color-line);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
 }
 
 .chart__profiles-placeholder {
