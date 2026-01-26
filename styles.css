@@ -926,6 +926,7 @@ section {
   margin-right: calc(-1 * var(--space-4));
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: max-content;
   gap: 0px var(--space-3);
   flex: 1;
   min-height: 0;
@@ -937,16 +938,17 @@ section {
 
 .chart__hovered-list::after {
   content: "";
-  position: absolute;
-  top: 0;
-  right: 1px;
-  bottom: 0;
-  display: block;
+  grid-column: 1 / -1;
+  grid-row: 1 / span 999;
+  justify-self: end;
+  align-self: stretch;
+  margin-right: 1px;
   width: 6px;
   border-radius: 999px;
   background: var(--color-line);
   opacity: 0.45;
   pointer-events: none;
+  position: relative;
   z-index: 2;
 }
 
