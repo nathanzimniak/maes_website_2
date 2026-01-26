@@ -930,8 +930,24 @@ section {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  position: relative;
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) transparent;
+}
+
+.chart__hovered-list::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 1px;
+  bottom: 0;
+  display: block;
+  width: 6px;
+  border-radius: 999px;
+  background: var(--color-line);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .chart__hovered-title {
