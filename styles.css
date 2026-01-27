@@ -708,6 +708,7 @@ section {
 .chart__settings-icon svg path {
   fill: #acacac;
   stroke: #0000;
+  transition: fill 500ms ease, stroke 500ms ease;
 }
 
 .chart__settings-icon--gear svg path {
@@ -729,11 +730,13 @@ section {
 .chart__settings-icon--download svg rect {
   fill: rgba(96, 112, 143, 0.4);
   stroke: none;
+  transition: fill 500ms ease, stroke 500ms ease;
 }
 
 .chart__settings-icon svg circle {
   fill: rgba(96, 112, 143, 0.4);
   stroke: #fff0;
+  transition: fill 500ms ease, stroke 500ms ease;
 }
 
 .chart__settings-panel {
