@@ -74,6 +74,7 @@ section {
   z-index: 10;
   backdrop-filter: blur(8px);
   background: rgba(248, 249, 251, 0.9);
+  border-bottom: 1px solid #d9dde4;
 }
 
 .site-header__bar {
