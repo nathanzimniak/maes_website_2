@@ -123,12 +123,14 @@ section {
 }
 
 .site-header__pill {
+  border: none;
   padding: var(--space-1) var(--space-4);
   border-radius: var(--radius);
   background: var(--color-text);
   color: #ffffff;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
   box-shadow: none;
   transition: transform 120ms ease, background 120ms ease;
   font-size: 0.8rem;
