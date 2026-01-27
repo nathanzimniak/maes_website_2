@@ -474,11 +474,7 @@ section {
 }
 
 .faq__card {
-  width: min(100%, 980px);
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  border: 1px solid var(--color-line);
-  box-shadow: var(--shadow-float);
+  width: min(100%, 850px);
   padding: clamp(24px, 3vw, 40px);
   display: grid;
   gap: var(--space-6);
