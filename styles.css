@@ -467,7 +467,7 @@ section {
   text-align: center;
   padding: var(--section-padding-y) var(--section-padding-x);
   color: #2b2b2b;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
 .chart {
