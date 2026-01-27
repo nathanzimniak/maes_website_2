@@ -105,7 +105,8 @@ section {
 .site-header__nav {
   display: flex;
   margin-left: auto;
-  gap: var(--space-4);
+  gap: 50px;
+  padding: 10px 50px;
 }
 
 .site-header__nav a {
@@ -115,7 +116,7 @@ section {
   padding: var(--space-0) 22px;
   border-radius: var(--radius);
   transition: background 140ms ease, color 140ms ease;
-  font-size: 1.0rem;
+  font-size: 0.92rem;
   letter-spacing: 0.02em;
   font-family: var(--font-heading);
 }
