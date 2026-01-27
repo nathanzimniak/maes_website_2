@@ -475,7 +475,7 @@ section {
 
 .faq__card {
   width: min(100%, 850px);
-  padding: clamp(24px, 3vw, 40px);
+  padding: var(--card-padding);
   display: grid;
   gap: var(--space-6);
 }
@@ -488,7 +488,7 @@ section {
 .faq__title {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-size: 1.6rem;
 }
 
 .faq__intro {
