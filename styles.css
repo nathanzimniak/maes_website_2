@@ -83,7 +83,7 @@ section {
   padding: var(--space-2) var(--section-padding-x);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--space-3);
   flex-wrap: wrap;
 }
@@ -104,6 +104,7 @@ section {
 
 .site-header__nav {
   display: flex;
+  margin-left: auto;
   gap: var(--space-4);
 }
 
