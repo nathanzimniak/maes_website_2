@@ -78,7 +78,7 @@ section {
 }
 
 .site-header__bar {
-  max-width: 1120px;
+  max-width: 1225px;
   margin: 0 auto;
   padding: var(--space-2) var(--section-padding-x);
   display: flex;
