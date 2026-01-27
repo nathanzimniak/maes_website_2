@@ -91,15 +91,15 @@ section {
 .site-header__brand {
   font-family: var(--font-heading);
   font-weight: 700;
-  letter-spacing: 0.2em;
   font-size: 1.0rem;
   background: #2b2b2b;
   color: white;
   padding: 2px 10px;
   border-radius: 10px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.2em;
   text-align: center;
 }
 
