@@ -124,8 +124,8 @@ section {
 
 .site-header__pill {
   border: none;
-  padding: var(--space-1) var(--space-4);
-  border-radius: var(--radius);
+  padding: 8px 10px;
+  border-radius: 10px;
   background: var(--color-text);
   color: #ffffff;
   font-weight: 600;
