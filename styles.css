@@ -92,6 +92,7 @@ section {
   font-family: var(--font-heading);
   font-weight: 700;
   letter-spacing: -0.02em;
+  font-size: 1.2rem;
 }
 
 .site-header__nav {
