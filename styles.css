@@ -34,7 +34,6 @@
   --chart-figure-width: 560px;
   --chart-body-gap: var(--space-5);
   --chart-body-width: calc((var(--chart-side-panel-width) * 2) + var(--chart-figure-width) + (var(--chart-body-gap) * 2));
-  --content-width: min(100%, var(--chart-body-width));
   --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-heading: "Montserrat", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size-xs: 0.78rem;
@@ -79,8 +78,7 @@ section {
 }
 
 .site-header__bar {
-  width: var(--content-width);
-  max-width: 100%;
+  max-width: 1120px;
   margin: 0 auto;
   padding: var(--space-2) var(--section-padding-x);
   display: flex;
@@ -555,7 +553,7 @@ section {
 }
 
 .chart__card {
-  width: var(--content-width);
+  width: fit-content;
   max-width: 100%;
   background: none;
   border: none;
