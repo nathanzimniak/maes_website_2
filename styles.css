@@ -105,7 +105,7 @@ section {
 .site-header__nav {
   display: flex;
   margin-left: auto;
-  gap: 50px;
+  gap: 10px;
   padding: 10px 50px;
 }
 
