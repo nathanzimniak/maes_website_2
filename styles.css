@@ -87,9 +87,9 @@ section {
   flex-wrap: wrap;
 }
 
-.site-header__brand {
+.site-header__brand-text {
   font-family: var(--font-heading);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.0rem;
   color: #2b2b2b;
   padding: 6px 0px;
