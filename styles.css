@@ -557,6 +557,7 @@ section {
 .chart__card {
   width: var(--content-width);
   max-width: 100%;
+  margin: 0 auto;
   background: none;
   border: none;
   border-radius: var(--radius);
