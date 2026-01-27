@@ -488,6 +488,12 @@ section {
   justify-content: center;
 }
 
+.contact {
+  padding: var(--section-padding-y) var(--section-padding-x);
+  display: flex;
+  justify-content: center;
+}
+
 .faq__card {
   width: min(100%, 850px);
   padding: var(--card-padding);
@@ -555,6 +561,40 @@ section {
   margin: var(--space-2) 0 0 0;
   color: var(--color-muted);
   font-size: var(--font-size-sm);
+}
+
+.contact__card {
+  width: min(100%, 850px);
+  padding: var(--card-padding);
+  display: grid;
+  gap: var(--space-4);
+}
+
+.contact__header {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.contact__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+}
+
+.contact__intro {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+}
+
+.contact__details {
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+}
+
+.contact__details a {
+  color: inherit;
+  font-weight: 600;
 }
 
 .chart__card {
