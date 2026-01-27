@@ -450,6 +450,24 @@
       <div class="contact__details">
         <p>Écrivez-nous à <a href="mailto:contact@maes.example">contact@maes.example</a> pour toute question, collaboration ou retour d'expérience.</p>
       </div>
+      <form class="contact__form">
+        <div class="contact__field">
+          <label class="contact__label" for="contact-first-name">Prénom</label>
+          <input class="contact__input" type="text" id="contact-first-name" name="first-name" placeholder="Votre prénom">
+        </div>
+        <div class="contact__field">
+          <label class="contact__label" for="contact-last-name">Nom</label>
+          <input class="contact__input" type="text" id="contact-last-name" name="last-name" placeholder="Votre nom">
+        </div>
+        <div class="contact__field">
+          <label class="contact__label" for="contact-email">Email</label>
+          <input class="contact__input" type="email" id="contact-email" name="email" placeholder="vous@email.com">
+        </div>
+        <div class="contact__field contact__field--full">
+          <label class="contact__label" for="contact-message">Message</label>
+          <textarea class="contact__input contact__textarea" id="contact-message" name="message" rows="4" placeholder="Votre message"></textarea>
+        </div>
+      </form>
     </div>
   </section>
 
