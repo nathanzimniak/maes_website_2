@@ -90,7 +90,7 @@ section {
 
 .site-header__brand {
   font-family: var(--font-heading);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.0rem;
   background: #2b2b2b;
   color: white;
@@ -183,9 +183,10 @@ section {
 
 .hero__title {
   margin: 0px 0px 10px 0px;
-  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  font-size: 2.0rem;
   letter-spacing: -0.03em;
   font-family: var(--font-heading);
+  color: #2b2b2b;
 }
 
 .hero__subtitle {
