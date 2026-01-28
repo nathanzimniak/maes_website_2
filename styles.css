@@ -1147,7 +1147,7 @@ section {
 .chart__hovered--solution .chart__hovered-list,
 .chart__profiles .chart__profiles-grid {
   scrollbar-width: thin;
-  scrollbar-color: #f8f9fb transparent;
+  scrollbar-color: rgba(96, 112, 143, 0.4) transparent;
 }
 
 .chart__hovered--solution .chart__hovered-list::-webkit-scrollbar,
@@ -1163,7 +1163,7 @@ section {
 
 .chart__hovered--solution .chart__hovered-list::-webkit-scrollbar-thumb,
 .chart__profiles .chart__profiles-grid::-webkit-scrollbar-thumb {
-  background-color: #f8f9fb;
+  background-color: rgba(96, 112, 143, 0.4);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
