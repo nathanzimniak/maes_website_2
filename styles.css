@@ -518,6 +518,7 @@ section {
 
 .contact {
   padding: var(--section-padding-y) var(--section-padding-x);
+  margin-top: var(--space-8);
   display: flex;
   justify-content: center;
 }
