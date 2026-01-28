@@ -161,7 +161,6 @@ section {
 }
 
 .site-header__pill:hover {
-  transform: translateY(-1px);
   background: #1f2937;
 }
 
