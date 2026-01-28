@@ -148,6 +148,18 @@ section {
   font-size: 0.8rem;
 }
 
+.site-header__pill span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-header__pill svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
 .site-header__pill:hover {
   transform: translateY(-1px);
   background: #1f2937;
