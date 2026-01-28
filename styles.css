@@ -75,6 +75,11 @@ section {
   backdrop-filter: blur(8px);
   background: rgba(248, 249, 251, 0.9);
   box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.04);
+  transition: box-shadow 800ms;
+}
+
+.site-header:hover {
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.08);
 }
 
 .site-header__bar {
