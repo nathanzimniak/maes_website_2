@@ -158,10 +158,16 @@ section {
   width: 16px;
   height: 16px;
   fill: currentColor;
+  transition: transform 120ms ease;
+  transform-origin: center;
 }
 
 .site-header__pill:hover {
   background: #1f2937;
+}
+
+.site-header__pill:hover svg {
+  transform: scale(1.15);
 }
 
 .hero {
