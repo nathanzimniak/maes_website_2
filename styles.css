@@ -158,12 +158,11 @@ section {
   width: 16px;
   height: 16px;
   fill: currentColor;
-  transition: transform 400ms ease;
+  transition: filter 400ms ease;
   transform-origin: center;
 }
 
 .site-header__pill:hover svg {
-  transform: scale(1.15);
   filter: drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.9));
 }
 
