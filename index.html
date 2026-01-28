@@ -1269,6 +1269,8 @@
     function renderHoveredValues(solution) {
       if (!hoveredValues || !solution) return;
 
+      const previousList = hoveredValues.querySelector('.chart__hovered-list');
+      const previousScrollTop = previousList ? previousList.scrollTop : 0;
       const entries = Object.entries(solution)
         .filter(([key]) => key.startsWith('g'))
         .sort(([a], [b]) => Number(a.slice(1)) - Number(b.slice(1)))
@@ -1276,14 +1278,24 @@
 
       hoveredValues.innerHTML = buildHoveredList(entries, (key) => solution[key].toFixed(1));
       renderMathLabels(hoveredValues);
+      const nextList = hoveredValues.querySelector('.chart__hovered-list');
+      if (nextList) {
+        nextList.scrollTop = previousScrollTop;
+      }
     }
 
     function renderEmptyHoveredValues() {
       if (!hoveredValues) return;
 
+      const previousList = hoveredValues.querySelector('.chart__hovered-list');
+      const previousScrollTop = previousList ? previousList.scrollTop : 0;
       const entries = Array.from({ length: 22 }, (_, index) => `g${index + 1}`);
       hoveredValues.innerHTML = buildHoveredList(entries, () => '―');
       renderMathLabels(hoveredValues);
+      const nextList = hoveredValues.querySelector('.chart__hovered-list');
+      if (nextList) {
+        nextList.scrollTop = previousScrollTop;
+      }
     }
 
     function resetHoveredValues() {
@@ -1571,6 +1583,7 @@
         { label: '<span class="chart__profile-title-text">Vertical magnetic field</span><span class="chart__profile-title-math"><span class="math-label" data-latex="B_z"></span></span>', ariaLabel: 'Vertical magnetic field (B_z)', key: 'verticalMagneticField', color: profileCurveColor, tooltipSymbol: 'B_z' },
       ];
 
+      const previousScrollLeft = profileContent?.scrollLeft ?? 0;
       profileContent.innerHTML = '';
       const sparklineHeight = 200;
 
@@ -1671,6 +1684,9 @@
       });
 
       renderMathLabels(profileContent);
+      if (profileContent) {
+        profileContent.scrollLeft = previousScrollLeft;
+      }
     }
 
     function renderFlatProfiles() {
