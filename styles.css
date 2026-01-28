@@ -1144,6 +1144,31 @@ section {
   position: relative;
 }
 
+.chart__hovered--solution .chart__hovered-list,
+.chart__profiles .chart__profiles-grid {
+  scrollbar-width: thin;
+  scrollbar-color: #f8f9fb transparent;
+}
+
+.chart__hovered--solution .chart__hovered-list::-webkit-scrollbar,
+.chart__profiles .chart__profiles-grid::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.chart__hovered--solution .chart__hovered-list::-webkit-scrollbar-track,
+.chart__profiles .chart__profiles-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chart__hovered--solution .chart__hovered-list::-webkit-scrollbar-thumb,
+.chart__profiles .chart__profiles-grid::-webkit-scrollbar-thumb {
+  background-color: #f8f9fb;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
 .chart__hovered-title {
   grid-column: 1 / -1;
   margin: var(--space-3) 0 0;
