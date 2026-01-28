@@ -81,14 +81,14 @@ section {
   max-width: 1225px;
   margin: 0 auto;
   padding: var(--space-2) var(--section-padding-x);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: flex-start;
   gap: var(--space-3);
-  flex-wrap: wrap;
 }
 
 .site-header__brand-text {
+  justify-self: start;
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 1.2rem;
@@ -111,10 +111,11 @@ section {
 
 .site-header__nav {
   display: flex;
-  margin: 0 auto;
+  margin: 0;
   gap: 10px;
   padding: 5px 50px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .site-header__nav a {
@@ -135,6 +136,7 @@ section {
 }
 
 .site-header__pill {
+  justify-self: end;
   border: none;
   padding: 8px 10px;
   border-radius: 10px;
