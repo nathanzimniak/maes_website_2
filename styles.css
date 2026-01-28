@@ -100,6 +100,13 @@ section {
   gap: 0.2em;
   text-align: center;
   letter-spacing: -0.06em;
+  text-decoration: none;
+}
+
+.site-header__brand-text:hover,
+.site-header__brand-text:focus-visible {
+  text-decoration: none;
+  color: #2b2b2b;
 }
 
 .site-header__nav {
