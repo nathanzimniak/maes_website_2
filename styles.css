@@ -152,6 +152,8 @@ section {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 16px;
+  height: 16px;
 }
 
 .site-header__pill svg {
@@ -160,6 +162,8 @@ section {
   fill: currentColor;
   transition: transform 400ms ease;
   transform-origin: center;
+  transform-box: fill-box;
+  display: block;
 }
 
 .site-header__pill:hover svg {
