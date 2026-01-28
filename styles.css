@@ -163,7 +163,7 @@ section {
 }
 
 .site-header__pill:hover svg {
-  filter: drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.9));
+  filter: drop-shadow(0px 0px 3px rgb(255, 255, 255));
 }
 
 .hero {
