@@ -2124,7 +2124,7 @@ section {
   stroke-width: 2.0;
   transform-origin: center;
   transform-box: fill-box;
-  transition: transform 400ms ease;
+  transition: transform 200ms ease;
   cursor: pointer;
   outline: none;
 }
