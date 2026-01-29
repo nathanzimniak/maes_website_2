@@ -1924,45 +1924,46 @@
     const faqItems = Array.from(document.querySelectorAll('.faq__item'));
     const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+    const setFaqContentHeight = (content, height) => {
+      content.style.height = height;
+    };
+
     const openFaqItem = (item, content) => {
       item.setAttribute('open', '');
-
       if (reduceMotionQuery.matches) {
-        content.style.height = 'auto';
+        setFaqContentHeight(content, 'auto');
         return;
       }
-
-      content.style.height = '0px';
+      setFaqContentHeight(content, '0px');
       requestAnimationFrame(() => {
-        content.style.height = `${content.scrollHeight}px`;
+        setFaqContentHeight(content, `${content.scrollHeight}px`);
       });
 
       const handleTransitionEnd = (event) => {
         if (event.propertyName !== 'height') return;
-        content.style.height = 'auto';
+        setFaqContentHeight(content, 'auto');
+        content.removeEventListener('transitionend', handleTransitionEnd);
       };
-
-      content.addEventListener('transitionend', handleTransitionEnd, { once: true });
+      content.addEventListener('transitionend', handleTransitionEnd);
     };
 
     const closeFaqItem = (item, content) => {
       if (reduceMotionQuery.matches) {
-        content.style.height = '0px';
+        setFaqContentHeight(content, '0px');
         item.removeAttribute('open');
         return;
       }
-
-      content.style.height = `${content.scrollHeight}px`;
+      setFaqContentHeight(content, `${content.scrollHeight}px`);
       requestAnimationFrame(() => {
-        content.style.height = '0px';
+        setFaqContentHeight(content, '0px');
       });
 
       const handleTransitionEnd = (event) => {
         if (event.propertyName !== 'height') return;
         item.removeAttribute('open');
+        content.removeEventListener('transitionend', handleTransitionEnd);
       };
-
-      content.addEventListener('transitionend', handleTransitionEnd, { once: true });
+      content.addEventListener('transitionend', handleTransitionEnd);
     };
 
     faqItems.forEach((item) => {
@@ -1972,7 +1973,6 @@
 
       summary.addEventListener('click', (event) => {
         event.preventDefault();
-
         if (item.hasAttribute('open')) {
           closeFaqItem(item, content);
         } else {
