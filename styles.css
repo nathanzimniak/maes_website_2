@@ -557,14 +557,16 @@ section {
 }
 
 .faq__item {
+  border: 1px solid transparent;
   border-radius: var(--radius-1);
   background: #fff;
   padding: var(--space-3) var(--space-4);
+  transition: border-color 500ms;
 }
 
 .faq__item[open] {
-  border-color: var(--color-accent);
-  background: var(--color-surface);
+  border-color: rgba(96, 112, 143, 1.0);
+  box-shadow: 0 0 0 2px rgba(96, 112, 143, 0.2);
 }
 
 .faq__item summary {
