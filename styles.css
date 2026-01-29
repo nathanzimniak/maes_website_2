@@ -651,6 +651,11 @@ section {
   font-size: var(--font-size-sm);
 }
 
+.contact__link {
+  color: #2b2b2b;
+  font-weight: 700;
+}
+
 .contact__details {
   color: var(--color-muted);
   font-size: var(--font-size-sm);
