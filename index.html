@@ -1921,6 +1921,66 @@
       });
     }
 
+    const faqItems = Array.from(document.querySelectorAll('.faq__item'));
+    const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const setFaqContentHeight = (content, height) => {
+      content.style.height = height;
+    };
+
+    const openFaqItem = (item, content) => {
+      item.setAttribute('open', '');
+      if (reduceMotionQuery.matches) {
+        setFaqContentHeight(content, 'auto');
+        return;
+      }
+      setFaqContentHeight(content, '0px');
+      requestAnimationFrame(() => {
+        setFaqContentHeight(content, `${content.scrollHeight}px`);
+      });
+
+      const handleTransitionEnd = (event) => {
+        if (event.propertyName !== 'height') return;
+        setFaqContentHeight(content, 'auto');
+        content.removeEventListener('transitionend', handleTransitionEnd);
+      };
+      content.addEventListener('transitionend', handleTransitionEnd);
+    };
+
+    const closeFaqItem = (item, content) => {
+      if (reduceMotionQuery.matches) {
+        setFaqContentHeight(content, '0px');
+        item.removeAttribute('open');
+        return;
+      }
+      setFaqContentHeight(content, `${content.scrollHeight}px`);
+      requestAnimationFrame(() => {
+        setFaqContentHeight(content, '0px');
+      });
+
+      const handleTransitionEnd = (event) => {
+        if (event.propertyName !== 'height') return;
+        item.removeAttribute('open');
+        content.removeEventListener('transitionend', handleTransitionEnd);
+      };
+      content.addEventListener('transitionend', handleTransitionEnd);
+    };
+
+    faqItems.forEach((item) => {
+      const summary = item.querySelector('summary');
+      const content = item.querySelector('.faq__content');
+      if (!summary || !content) return;
+
+      summary.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (item.hasAttribute('open')) {
+          closeFaqItem(item, content);
+        } else {
+          openFaqItem(item, content);
+        }
+      });
+    });
+
     updateChart();
 
     if (resizeObserver && chartControls) {
