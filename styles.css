@@ -502,7 +502,7 @@ section {
   padding: var(--section-padding-y) var(--section-padding-x);
   color: #2b2b2b;
   font-size: 0.8rem;
-  margin-top: 80px;
+  margin-top: 50px;
 }
 
 .chart {
@@ -515,7 +515,7 @@ section {
   padding: var(--section-padding-y) var(--section-padding-x);
   display: flex;
   justify-content: center;
-  margin-top: 80px;
+  margin-top: 50px;
 }
 
 .contact {
@@ -523,7 +523,7 @@ section {
   margin-top: var(--space-8);
   display: flex;
   justify-content: center;
-  margin-top: 80px;
+  margin-top: 50px;
 }
 
 .faq__card {
