@@ -561,7 +561,11 @@ section {
   border-radius: var(--radius-1);
   background: #fff;
   padding: var(--space-3) var(--space-4);
-  transition: border-color 500ms;
+  transition: border-color 500ms ease;
+}
+
+.faq__item:hover {
+  border-color: rgba(96, 112, 143, 0.15);
 }
 
 .faq__item[open] {
