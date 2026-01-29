@@ -429,27 +429,39 @@
       <div class="faq__list">
         <details class="faq__item">
           <summary>Question 1</summary>
-          <p>Réponse 1</p>
+          <div class="faq__content">
+            <p>Réponse 1</p>
+          </div>
         </details>
         <details class="faq__item">
           <summary>Question 2</summary>
-          <p>Réponse 2</p>
+          <div class="faq__content">
+            <p>Réponse 2</p>
+          </div>
         </details>
         <details class="faq__item">
           <summary>Question 3</summary>
-          <p>Réponse 3</p>
+          <div class="faq__content">
+            <p>Réponse 3</p>
+          </div>
         </details>
         <details class="faq__item">
           <summary>Question 4</summary>
-          <p>Réponse 4</p>
+          <div class="faq__content">
+            <p>Réponse 4</p>
+          </div>
         </details>
         <details class="faq__item">
           <summary>Question 5</summary>
-          <p>Réponse 5</p>
+          <div class="faq__content">
+            <p>Réponse 5</p>
+          </div>
         </details>
         <details class="faq__item">
           <summary>Question 6</summary>
-          <p>Réponse 6</p>
+          <div class="faq__content">
+            <p>Réponse 6</p>
+          </div>
         </details>
       </div>
     </div>
@@ -1908,6 +1920,66 @@
         }
       });
     }
+
+    const faqItems = Array.from(document.querySelectorAll('.faq__item'));
+    const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const openFaqItem = (item, content) => {
+      item.setAttribute('open', '');
+
+      if (reduceMotionQuery.matches) {
+        content.style.height = 'auto';
+        return;
+      }
+
+      content.style.height = '0px';
+      requestAnimationFrame(() => {
+        content.style.height = `${content.scrollHeight}px`;
+      });
+
+      const handleTransitionEnd = (event) => {
+        if (event.propertyName !== 'height') return;
+        content.style.height = 'auto';
+      };
+
+      content.addEventListener('transitionend', handleTransitionEnd, { once: true });
+    };
+
+    const closeFaqItem = (item, content) => {
+      if (reduceMotionQuery.matches) {
+        content.style.height = '0px';
+        item.removeAttribute('open');
+        return;
+      }
+
+      content.style.height = `${content.scrollHeight}px`;
+      requestAnimationFrame(() => {
+        content.style.height = '0px';
+      });
+
+      const handleTransitionEnd = (event) => {
+        if (event.propertyName !== 'height') return;
+        item.removeAttribute('open');
+      };
+
+      content.addEventListener('transitionend', handleTransitionEnd, { once: true });
+    };
+
+    faqItems.forEach((item) => {
+      const summary = item.querySelector('summary');
+      const content = item.querySelector('.faq__content');
+      if (!summary || !content) return;
+
+      summary.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        if (item.hasAttribute('open')) {
+          closeFaqItem(item, content);
+        } else {
+          openFaqItem(item, content);
+        }
+      });
+    });
 
     updateChart();
 
