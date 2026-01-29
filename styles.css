@@ -600,7 +600,7 @@ section {
   top: 50%;
   width: 2px;
   height: 12px;
-  background: var(--color-muted);
+  background: #2b2b2b;
   transform: translate(-50%, -50%) scaleY(1);
   transform-origin: center;
   transition: transform 200ms ease, opacity 200ms ease, background 150ms ease;
@@ -608,7 +608,7 @@ section {
 
 .faq__item[open] summary::after,
 .faq__item[open] summary::before {
-  background: var(--color-accent);
+  background: rgba(96, 112, 143, 1.0);
 }
 
 .faq__item[open] summary::before {
