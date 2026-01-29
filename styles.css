@@ -542,6 +542,7 @@ section {
   margin: 0;
   font-family: var(--font-heading);
   font-size: 1.6rem;
+  text-align: center;
 }
 
 .faq__intro {
