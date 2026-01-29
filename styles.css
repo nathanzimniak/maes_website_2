@@ -632,6 +632,7 @@ section {
 .contact__header {
   display: grid;
   gap: var(--space-3);
+  text-align: center;
 }
 
 .contact__title {
