@@ -506,10 +506,66 @@
 
     const realDataCache = new Map();
     const datasetDirectories = ['0.010_1.0_1.0_1.0_0.0_0_0', '0.100_1.0_1.0_1.0_0.0_0_0'];
+    const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
 
-    function sliderToEp(sliderValue) {
-      const normalized = Number(sliderValue) / 100;
-      return normalized < 0.055 ? '0.010' : '0.100';
+    const datasetConfigs = datasetDirectories
+      .map((folderName) => {
+        const values = folderName.split('_');
+        if (values.length !== folderParameterKeys.length) {
+          return null;
+        }
+        const config = { folderName };
+        folderParameterKeys.forEach((key, index) => {
+          config[key] = Number(values[index]);
+        });
+        return config;
+      })
+      .filter(Boolean);
+
+    const parameterValueLists = folderParameterKeys.reduce((accumulator, key) => {
+      const uniqueSortedValues = Array.from(new Set(datasetConfigs.map((config) => config[key]))).sort((a, b) => a - b);
+      accumulator[key] = uniqueSortedValues;
+      return accumulator;
+    }, {});
+
+    function pickDiscreteValueFromSlider(sliderValue, availableValues) {
+      if (!availableValues?.length) {
+        return null;
+      }
+      if (availableValues.length === 1) {
+        return availableValues[0];
+      }
+      const ratio = clamp(Number(sliderValue) / 100, 0, 1);
+      const index = Math.round(ratio * (availableValues.length - 1));
+      return availableValues[index];
+    }
+
+    function resolveFolderFromInputs(baseParams) {
+      const turbulenceProfileSelect = document.getElementById('turbulence-profile-select');
+      const heatProfileSelect = document.getElementById('heat-profile-select');
+      const requested = {
+        ep: pickDiscreteValueFromSlider(baseParams.p1, parameterValueLists.ep),
+        alpham: pickDiscreteValueFromSlider(baseParams.p2, parameterValueLists.alpham),
+        chim: pickDiscreteValueFromSlider(baseParams.p3, parameterValueLists.chim),
+        Pm: pickDiscreteValueFromSlider(baseParams.p4, parameterValueLists.Pm),
+        alphap: pickDiscreteValueFromSlider(baseParams.p5, parameterValueLists.alphap),
+        turbulence_profile: Number(turbulenceProfileSelect?.dataset.profileCode ?? 0),
+        heat_profile: Number(heatProfileSelect?.dataset.profileCode ?? 0),
+      };
+
+      const exactMatch = datasetConfigs.find((config) => folderParameterKeys.every((key) => config[key] === requested[key]));
+      if (exactMatch) {
+        return exactMatch.folderName;
+      }
+
+      const closestMatch = datasetConfigs
+        .map((config) => {
+          const distance = folderParameterKeys.reduce((sum, key) => sum + Math.abs(config[key] - requested[key]), 0);
+          return { config, distance };
+        })
+        .sort((a, b) => a.distance - b.distance)[0];
+
+      return closestMatch?.config?.folderName || datasetDirectories[0];
     }
 
     async function loadRealDataset(folderName) {
@@ -822,9 +878,8 @@
     }
 
     async function buildSolutions(baseParams, scenario) {
-      const ep = sliderToEp(baseParams.p1);
-      const folder = datasetDirectories.find((name) => name.startsWith(ep)) || datasetDirectories[0];
-      const solutions = await loadRealDataset(folder);
+      const folderName = resolveFolderFromInputs(baseParams);
+      const solutions = await loadRealDataset(folderName);
       return solutions.map((solution) => ({ ...solution, scenario }));
     }
 
@@ -1727,9 +1782,18 @@
       });
     });
 
+    const profileCodeMap = {
+      'exponential-decrease': 0,
+      isothermal: 0,
+    };
+
     profileSelects.forEach((select) => {
+      const code = profileCodeMap[select.value] ?? 0;
+      select.dataset.profileCode = String(code);
       select.addEventListener('change', () => {
+        select.dataset.profileCode = String(profileCodeMap[select.value] ?? 0);
         updateCustomSelectDisplay(select);
+        updateChart();
       });
     });
 
