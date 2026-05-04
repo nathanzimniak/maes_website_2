@@ -654,7 +654,7 @@
 
       const solutions = rows.map((row) => {
         const parsed = row.map((value) => Number(value));
-        const solution = { scenario: 'SM', profiles: null, rawMetrics: {} };
+        const solution = { scenario: 'SM', profiles: null, rawMetrics: {}, critState: null };
         Object.entries(metricToQuantity).forEach(([key, quantityName]) => {
           const sourceIndex = quantityIndexMap[quantityName];
           const numericValue = sourceIndex !== undefined ? parsed[sourceIndex] : NaN;
@@ -662,6 +662,9 @@
           solution[key] = numericValue;
           solution.rawMetrics[key] = rawValue;
         });
+
+        const critStateIndex = quantityIndexMap.crit_state;
+        solution.critState = critStateIndex !== undefined ? Number(parsed[critStateIndex]) : null;
         return solution;
       }).filter((item) => Number.isFinite(item.g1));
       realDataCache.set(folderName, solutions);
@@ -957,7 +960,14 @@
     async function buildSolutions(baseParams, scenario) {
       const folderName = resolveFolderFromInputs(baseParams);
       const solutions = await loadRealDataset(folderName);
-      return solutions.map((solution) => ({ ...solution, scenario }));
+      const scenarioToCritState = { SM: 1, A: 2, FM: 3 };
+      const selectedCritState = scenarioToCritState[scenario] ?? 1;
+
+      const filteredSolutions = solutions
+        .filter((solution) => solution.critState === selectedCritState)
+        .map((solution) => ({ ...solution, scenario }));
+
+      return filteredSolutions.length ? filteredSolutions : [];
     }
 
     function getDomain(values, scaleType = 'linear') {
@@ -1848,6 +1858,11 @@
       resetProfiles();
       restorePinnedValues();
       hideScatterTooltip();
+
+      if (!solutions.length) {
+        pointsGroup.innerHTML = '';
+        return;
+      }
 
       const xDomain = getDomain(solutions.map(solution => solution[xKey]), xScaleType);
       const yDomain = getDomain(solutions.map(solution => solution[yKey]), yScaleType);
