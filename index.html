@@ -833,9 +833,6 @@
         const g17 = 0.3 * p2 + 0.6 * p3 + 0.4 * p5 + 12 * Math.cos(p4 / 30) + scenarioOffset * 0.5 + noise(9);
         const g18 = 0.5 * p1 + 0.3 * p3 + 0.7 * p4 + scenarioOffset * 0.3 + noise(8);
         const g19 = 0.65 * p2 + 0.2 * p4 + 0.25 * p5 + 10 * Math.sin(p3 / 26) + scenarioOffset * 0.4 + noise(11);
-        const g20 = 0.4 * p1 + 0.4 * p2 + 0.4 * p3 + 10 + scenarioOffset * 0.2 + noise(10);
-        const g21 = 0.3 * p1 + 0.7 * p2 + 0.25 * p5 + 6 * Math.cos(p1 / 20) + scenarioOffset * 0.3 + noise(9);
-        const g22 = 0.5 * p3 + 0.2 * p4 + 0.6 * p5 + 14 + scenarioOffset * 0.4 + noise(10);
 
         const solution = { ...jittered, scenario };
 
@@ -860,10 +857,7 @@
           g16: clamp(g16, 0, 200),
           g17: clamp(g17, 0, 200),
           g18: clamp(g18, 0, 200),
-          g19: clamp(g19, 0, 200),
-          g20: clamp(g20, 0, 200),
-          g21: clamp(g21, 0, 200),
-          g22: clamp(g22, 0, 200)
+          g19: clamp(g19, 0, 200)
         });
       }
 
