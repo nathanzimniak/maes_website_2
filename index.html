@@ -860,29 +860,19 @@
 
       if (scaleType === 'log') {
         const positives = values.filter((value) => value > 0);
+        const smallestPositive = positives.length ? Math.min(...positives) : 0.1;
+        const largestPositive = positives.length ? Math.max(...positives) : 1;
+        const safeMin = Math.max(smallestPositive, 0.1);
+        const safeMax = Math.max(largestPositive, safeMin * 10);
 
-        if (!positives.length) {
-          return { min: 0.1, max: 10 };
+        let minExp = Math.floor(Math.log10(safeMin));
+        let maxExp = Math.ceil(Math.log10(safeMax));
+
+        if (minExp === maxExp) {
+          maxExp += 1;
         }
 
-        const safeMin = Math.max(Math.min(...positives), 1e-6);
-        const safeMax = Math.max(Math.max(...positives), safeMin * 1.01);
-        const ratio = safeMax / safeMin;
-
-        const lowerPadFactor = ratio <= 1.25 ? 1.35 : 1.2;
-        const upperPadFactor = ratio <= 1.25 ? 1.35 : 1.2;
-
-        let domainMin = safeMin / lowerPadFactor;
-        let domainMax = safeMax * upperPadFactor;
-
-        const minRatio = 1.8;
-        if (domainMax / domainMin < minRatio) {
-          const center = Math.sqrt(safeMin * safeMax);
-          domainMin = center / Math.sqrt(minRatio);
-          domainMax = center * Math.sqrt(minRatio);
-        }
-
-        return { min: domainMin, max: domainMax };
+        return { min: 10 ** minExp, max: 10 ** maxExp };
       }
 
       const span = max - min;
@@ -895,14 +885,11 @@
         const ticks = [];
         const startExp = Math.floor(Math.log10(domain.min));
         const endExp = Math.ceil(Math.log10(domain.max));
-        const mantissas = [1, 2, 5];
 
         for (let exp = startExp; exp <= endExp; exp++) {
-          for (const mantissa of mantissas) {
-            const value = mantissa * (10 ** exp);
-            if (value >= domain.min && value <= domain.max) {
-              ticks.push(value);
-            }
+          const value = 10 ** exp;
+          if (value >= domain.min && value <= domain.max) {
+            ticks.push(value);
           }
         }
 
