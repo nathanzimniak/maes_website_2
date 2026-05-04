@@ -1234,7 +1234,8 @@
 
       const previousList = hoveredValues.querySelector('.chart__hovered-list');
       const previousScrollTop = previousList ? previousList.scrollTop : 0;
-      const entries = Array.from({ length: 22 }, (_, index) => `g${index + 1}`);
+      const entries = Object.keys(hoveredMetricLabels)
+        .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
       hoveredValues.innerHTML = buildHoveredList(entries, () => '―');
       renderMathLabels(hoveredValues);
       const nextList = hoveredValues.querySelector('.chart__hovered-list');
