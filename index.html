@@ -976,11 +976,16 @@
 
       if (scaleType === 'log') {
         const positives = values.filter((value) => value > 0);
-        const smallestPositive = positives.length ? Math.min(...positives) : Math.max(min, 0.1);
-        const safeMin = Math.max(smallestPositive, 0.1);
-        const paddedMin = safeMin / 1.4;
-        const paddedMax = Math.max(max, safeMin * 10) * 1.05;
-        return { min: paddedMin, max: paddedMax };
+
+        if (!positives.length) {
+          return { min: 0.1, max: 1 };
+        }
+
+        const smallestPositive = Math.min(...positives);
+        const safeMin = min > 0 ? min : smallestPositive;
+        const safeMax = max > safeMin ? max : safeMin * 10;
+
+        return { min: safeMin, max: safeMax };
       }
 
       const span = max - min;
