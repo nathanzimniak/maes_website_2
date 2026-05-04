@@ -1398,6 +1398,7 @@
 
       const pinned = currentSolutions[pinnedSolutionIndex];
       if (pinned) {
+        ensureSolutionProfiles(pinned);
         renderHoveredValues(pinned);
       } else {
         resetHoveredValues();
@@ -1609,6 +1610,24 @@
       sparkline.addEventListener('blur', clearHover);
     }
 
+
+    function ensureSolutionProfiles(solution) {
+      if (!solution) return null;
+      if (solution.profiles) return solution;
+
+      const syntheticBase = {
+        p1: Number(solution.g1) * 100,
+        p2: Number(solution.g2) * 100,
+        p3: Number(solution.g3) * 100,
+        p4: Number(solution.g4) * 100,
+        p5: Number(solution.g5) * 100,
+        scenario: solution.scenario || selectedScenario,
+      };
+
+      solution.profiles = buildProfiles(syntheticBase);
+      return solution;
+    }
+
     function renderProfiles(solution, options = {}) {
       const { profiles } = solution;
       const profileCurveColor = '#60708f';
@@ -1757,8 +1776,11 @@
     function selectSolution(index) {
       selectedSolutionIndex = index;
       pinnedSolutionIndex = index;
-      renderProfiles(currentSolutions[index]);
-      renderHoveredValues(currentSolutions[index]);
+      const selectedSolution = ensureSolutionProfiles(currentSolutions[index]);
+      if (selectedSolution) {
+        renderProfiles(selectedSolution);
+        renderHoveredValues(selectedSolution);
+      }
 
       Array.from(pointsGroup.children).forEach((circle, idx) => {
         circle.classList.toggle('chart__point--selected', idx === index);
