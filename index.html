@@ -494,8 +494,8 @@
         labelValue: document.getElementById('p5-label-value')
       },
     ];
-    let xAxisKey = 'g1';
-    let yAxisKey = 'g2';
+    let xAxisKey = 'g6';
+    let yAxisKey = 'g7';
     let xScaleType = 'linear';
     let yScaleType = 'linear';
     let selectedScenario = 'SM';
@@ -503,6 +503,96 @@
     let selectedSolutionIndex = null;
     let pinnedSolutionIndex = null;
     const customSelects = new Map();
+
+    const realDataCache = new Map();
+    const datasetDirectories = ['0.010_1.0_1.0_1.0_0.0_0_0', '0.100_1.0_1.0_1.0_0.0_0_0'];
+    const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
+
+    const datasetConfigs = datasetDirectories
+      .map((folderName) => {
+        const values = folderName.split('_');
+        if (values.length !== folderParameterKeys.length) {
+          return null;
+        }
+        const config = { folderName };
+        folderParameterKeys.forEach((key, index) => {
+          config[key] = Number(values[index]);
+        });
+        return config;
+      })
+      .filter(Boolean);
+
+    const parameterValueLists = folderParameterKeys.reduce((accumulator, key) => {
+      const uniqueSortedValues = Array.from(new Set(datasetConfigs.map((config) => config[key]))).sort((a, b) => a - b);
+      accumulator[key] = uniqueSortedValues;
+      return accumulator;
+    }, {});
+
+    function pickDiscreteValueFromSlider(sliderValue, availableValues) {
+      if (!availableValues?.length) {
+        return null;
+      }
+      if (availableValues.length === 1) {
+        return availableValues[0];
+      }
+      const ratio = clamp(Number(sliderValue) / 100, 0, 1);
+      const index = Math.round(ratio * (availableValues.length - 1));
+      return availableValues[index];
+    }
+
+    function resolveFolderFromInputs(baseParams) {
+      const turbulenceProfileSelect = document.getElementById('turbulence-profile-select');
+      const heatProfileSelect = document.getElementById('heat-profile-select');
+      const requested = {
+        ep: pickDiscreteValueFromSlider(baseParams.p1, parameterValueLists.ep),
+        alpham: pickDiscreteValueFromSlider(baseParams.p2, parameterValueLists.alpham),
+        chim: pickDiscreteValueFromSlider(baseParams.p3, parameterValueLists.chim),
+        Pm: pickDiscreteValueFromSlider(baseParams.p4, parameterValueLists.Pm),
+        alphap: pickDiscreteValueFromSlider(baseParams.p5, parameterValueLists.alphap),
+        turbulence_profile: Number(turbulenceProfileSelect?.dataset.profileCode ?? 0),
+        heat_profile: Number(heatProfileSelect?.dataset.profileCode ?? 0),
+      };
+
+      const exactMatch = datasetConfigs.find((config) => folderParameterKeys.every((key) => config[key] === requested[key]));
+      if (exactMatch) {
+        return exactMatch.folderName;
+      }
+
+      const closestMatch = datasetConfigs
+        .map((config) => {
+          const distance = folderParameterKeys.reduce((sum, key) => sum + Math.abs(config[key] - requested[key]), 0);
+          return { config, distance };
+        })
+        .sort((a, b) => a.distance - b.distance)[0];
+
+      return closestMatch?.config?.folderName || datasetDirectories[0];
+    }
+
+    async function loadRealDataset(folderName) {
+      if (realDataCache.has(folderName)) return realDataCache.get(folderName);
+      const url = `data/${folderName}/${folderName}.json`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Impossible de charger les données réelles (${response.status}) depuis ${url}`);
+      }
+      const payload = await response.json();
+      const quantities = payload.quantities || [];
+      const rows = payload.data || [];
+      const metricKeys = ['g1','g2','g3','g4','g5','g6','g7','g8','g9','g10','g11','g12','g13','g14','g15','g16','g17','g18'];
+      const solutions = rows.map((row) => {
+        const parsed = row.map((value) => Number(value));
+        const solution = { scenario: 'SM', profiles: null };
+        metricKeys.forEach((key, index) => {
+          const quantityName = quantities[index];
+          const sourceIndex = quantityName ? quantities.indexOf(quantityName) : index;
+          solution[key] = parsed[sourceIndex];
+        });
+        return solution;
+      }).filter((item) => Number.isFinite(item.g1));
+      realDataCache.set(folderName, solutions);
+      return solutions;
+    }
+
 
     const updateScaleSelectWidths = () => {
       if (!scaleSelects.length) {
@@ -787,71 +877,10 @@
       };
     }
 
-    function buildSolutions(baseParams, scenario) {
-      const solutions = [];
-      const sampleCount = 26;
-      const numericParams = Object.fromEntries(
-        Object.entries(baseParams).filter(([key]) => key.startsWith('p'))
-      );
-      const scenarioOffset = scenario === 'A' ? 12 : scenario === 'FM' ? -8 : 0;
-
-      for (let i = 0; i < sampleCount; i++) {
-        const jittered = Object.fromEntries(
-          Object.entries(numericParams).map(([key, base]) => [
-            key,
-            clamp(base + (Math.random() - 0.5) * 14, 0, 100)
-          ])
-        );
-
-        const { p1, p2, p3, p4, p5 } = jittered;
-        const noise = (span) => (Math.random() - 0.5) * span;
-
-        const g1 = 0.6 * p1 + 0.4 * p2 + 5 * Math.sin(p3 / 18) + scenarioOffset + noise(8);
-        const g2 = 1.05 * p2 + 0.25 * p3 + scenarioOffset * 0.6 + noise(10);
-        const g3 = 0.5 * p3 + 0.8 * p4 + 12 * Math.cos(p1 / 30) + scenarioOffset * 0.8 + noise(9);
-        const g4 = 0.9 * p4 + 0.2 * p1 + scenarioOffset * 0.4 + noise(7);
-        const g5 = 0.7 * p5 + 0.35 * p2 + scenarioOffset * 0.2 + noise(7);
-        const g6 = 0.8 * p1 + 0.5 * p3 - 0.3 * p5 + 40 + scenarioOffset + noise(12);
-        const g7 = 0.6 * p2 + 0.6 * p5 + scenarioOffset * 0.5 + noise(10);
-        const g8 = 0.4 * p3 + 0.9 * p4 + scenarioOffset * 0.4 + noise(8);
-        const g9 = 0.5 * p1 + 0.5 * p4 + scenarioOffset * 0.3 + noise(6);
-        const g10 = 0.7 * p2 + 0.2 * p3 + 0.4 * p5 + scenarioOffset * 0.5 + noise(10);
-        const g11 = 0.35 * p1 + 0.65 * p2 + 0.15 * p4 + scenarioOffset * 0.4 + noise(9);
-        const g12 = 0.2 * p2 + 0.85 * p3 + 0.1 * p5 + 20 + scenarioOffset * 0.3 + noise(11);
-        const g13 = 0.55 * p4 + 0.45 * p5 + 5 * Math.cos(p2 / 22) + scenarioOffset * 0.5 + noise(8);
-        const g14 = 0.4 * p1 + 0.25 * p3 + 0.35 * p5 + 15 + scenarioOffset * 0.2 + noise(10);
-        const g15 = 0.6 * p2 + 0.25 * p4 + 0.2 * p5 + 8 * Math.sin(p1 / 28) + scenarioOffset * 0.6 + noise(9);
-        const g16 = 0.45 * p1 + 0.55 * p4 + 0.2 * p5 + 18 + scenarioOffset * 0.4 + noise(10);
-        const g17 = 0.3 * p2 + 0.6 * p3 + 0.4 * p5 + 12 * Math.cos(p4 / 30) + scenarioOffset * 0.5 + noise(9);
-        const g18 = 0.5 * p1 + 0.3 * p3 + 0.7 * p4 + scenarioOffset * 0.3 + noise(8);
-
-        const solution = { ...jittered, scenario };
-
-        solutions.push({
-          ...solution,
-          profiles: buildProfiles(solution),
-          g1: clamp(g1, 0, 200),
-          g2: clamp(g2, 0, 200),
-          g3: clamp(g3, 0, 200),
-          g4: clamp(g4, 0, 200),
-          g5: clamp(g5, 0, 200),
-          g6: clamp(g6, 0, 200),
-          g7: clamp(g7, 0, 200),
-          g8: clamp(g8, 0, 200),
-          g9: clamp(g9, 0, 200),
-          g10: clamp(g10, 0, 200),
-          g11: clamp(g11, 0, 200),
-          g12: clamp(g12, 0, 200),
-          g13: clamp(g13, 0, 200),
-          g14: clamp(g14, 0, 200),
-          g15: clamp(g15, 0, 200),
-          g16: clamp(g16, 0, 200),
-          g17: clamp(g17, 0, 200),
-          g18: clamp(g18, 0, 200)
-        });
-      }
-
-      return solutions;
+    async function buildSolutions(baseParams, scenario) {
+      const folderName = resolveFolderFromInputs(baseParams);
+      const solutions = await loadRealDataset(folderName);
+      return solutions.map((solution) => ({ ...solution, scenario }));
     }
 
     function getDomain(values, scaleType = 'linear') {
@@ -1701,7 +1730,7 @@
       renderMathLabels(label);
     }
 
-    function updateChart() {
+    async function updateChart() {
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
         if (slider.labelValue) {
@@ -1713,7 +1742,7 @@
 
       const xKey = xAxisKey;
       const yKey = yAxisKey;
-      const solutions = buildSolutions(baseParams, selectedScenario);
+      const solutions = await buildSolutions(baseParams, selectedScenario);
       currentSolutions = solutions;
       resetProfiles();
       restorePinnedValues();
@@ -1753,9 +1782,18 @@
       });
     });
 
+    const profileCodeMap = {
+      'exponential-decrease': 0,
+      isothermal: 0,
+    };
+
     profileSelects.forEach((select) => {
+      const code = profileCodeMap[select.value] ?? 0;
+      select.dataset.profileCode = String(code);
       select.addEventListener('change', () => {
+        select.dataset.profileCode = String(profileCodeMap[select.value] ?? 0);
         updateCustomSelectDisplay(select);
+        updateChart();
       });
     });
 
