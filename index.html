@@ -528,15 +528,47 @@
       return accumulator;
     }, {});
 
+
+    const sliderParameterMap = {
+      p1: 'ep',
+      p2: 'alpham',
+      p3: 'chim',
+      p4: 'Pm',
+      p5: 'alphap',
+    };
+
+    function formatParameterValue(value) {
+      return Number.isFinite(value) ? value.toString() : '—';
+    }
+
+    function configureSlidersFromDatasets() {
+      sliders.forEach((slider) => {
+        const parameterKey = sliderParameterMap[slider.id];
+        const availableValues = parameterValueLists[parameterKey] || [];
+        slider.element.min = '0';
+        slider.element.max = String(Math.max(availableValues.length - 1, 0));
+        slider.element.step = '1';
+        slider.element.dataset.parameterKey = parameterKey;
+        slider.element.dataset.maxIndex = String(Math.max(availableValues.length - 1, 0));
+        slider.element.value = '0';
+        if (slider.labelValue) {
+          slider.labelValue.textContent = formatParameterValue(availableValues[0]);
+        }
+      });
+    }
+
+    function getSelectedParameterValue(sliderId, sliderIndexValue) {
+      const parameterKey = sliderParameterMap[sliderId];
+      const availableValues = parameterValueLists[parameterKey] || [];
+      const safeIndex = clamp(Math.round(Number(sliderIndexValue)), 0, Math.max(availableValues.length - 1, 0));
+      return availableValues[safeIndex];
+    }
+
     function pickDiscreteValueFromSlider(sliderValue, availableValues) {
       if (!availableValues?.length) {
         return null;
       }
-      if (availableValues.length === 1) {
-        return availableValues[0];
-      }
-      const ratio = clamp(Number(sliderValue) / 100, 0, 1);
-      const index = Math.round(ratio * (availableValues.length - 1));
+      const index = clamp(Math.round(Number(sliderValue)), 0, Math.max(availableValues.length - 1, 0));
       return availableValues[index];
     }
 
@@ -699,6 +731,8 @@
 
       document.body.removeChild(ruler);
     };
+
+    configureSlidersFromDatasets();
 
     let width = 0;
     let height = 0;
@@ -1733,8 +1767,9 @@
     async function updateChart() {
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
+        const selectedParameterValue = getSelectedParameterValue(slider.id, value);
         if (slider.labelValue) {
-          slider.labelValue.textContent = value.toFixed(0);
+          slider.labelValue.textContent = formatParameterValue(selectedParameterValue);
         }
         acc[slider.id] = value;
         return acc;
