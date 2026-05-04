@@ -517,6 +517,7 @@
         const config = { folderName };
         folderParameterKeys.forEach((key, index) => {
           config[key] = Number(values[index]);
+          config[`${key}Raw`] = values[index];
         });
         return config;
       })
@@ -528,6 +529,14 @@
       return accumulator;
     }, {});
 
+    const parameterValueLabels = folderParameterKeys.reduce((accumulator, key) => {
+      const list = parameterValueLists[key] || [];
+      accumulator[key] = list.map((value) => {
+        const match = datasetConfigs.find((config) => config[key] === value);
+        return match ? match[`${key}Raw`] : value.toString();
+      });
+      return accumulator;
+    }, {});
 
     const sliderParameterMap = {
       p1: 'ep',
@@ -537,8 +546,8 @@
       p5: 'alphap',
     };
 
-    function formatParameterValue(value) {
-      return Number.isFinite(value) ? value.toString() : '—';
+    function formatParameterValue(value, fallback = '—') {
+      return value ?? fallback;
     }
 
     function configureSlidersFromDatasets() {
@@ -552,7 +561,8 @@
         slider.element.dataset.maxIndex = String(Math.max(availableValues.length - 1, 0));
         slider.element.value = '0';
         if (slider.labelValue) {
-          slider.labelValue.textContent = formatParameterValue(availableValues[0]);
+          const labels = parameterValueLabels[parameterKey] || [];
+          slider.labelValue.textContent = formatParameterValue(labels[0]);
         }
       });
     }
@@ -562,6 +572,13 @@
       const availableValues = parameterValueLists[parameterKey] || [];
       const safeIndex = clamp(Math.round(Number(sliderIndexValue)), 0, Math.max(availableValues.length - 1, 0));
       return availableValues[safeIndex];
+    }
+
+    function getSelectedParameterLabel(sliderId, sliderIndexValue) {
+      const parameterKey = sliderParameterMap[sliderId];
+      const labels = parameterValueLabels[parameterKey] || [];
+      const safeIndex = clamp(Math.round(Number(sliderIndexValue)), 0, Math.max(labels.length - 1, 0));
+      return labels[safeIndex];
     }
 
     function pickDiscreteValueFromSlider(sliderValue, availableValues) {
@@ -613,11 +630,12 @@
       const metricKeys = ['g1','g2','g3','g4','g5','g6','g7','g8','g9','g10','g11','g12','g13','g14','g15','g16','g17','g18'];
       const solutions = rows.map((row) => {
         const parsed = row.map((value) => Number(value));
-        const solution = { scenario: 'SM', profiles: null };
+        const solution = { scenario: 'SM', profiles: null, rawMetrics: {} };
         metricKeys.forEach((key, index) => {
           const quantityName = quantities[index];
           const sourceIndex = quantityName ? quantities.indexOf(quantityName) : index;
           solution[key] = parsed[sourceIndex];
+          solution.rawMetrics[key] = row[sourceIndex];
         });
         return solution;
       }).filter((item) => Number.isFinite(item.g1));
@@ -1273,7 +1291,7 @@
         .sort(([a], [b]) => Number(a.slice(1)) - Number(b.slice(1)))
         .map(([key]) => key);
 
-      hoveredValues.innerHTML = buildHoveredList(entries, (key) => solution[key].toFixed(1));
+      hoveredValues.innerHTML = buildHoveredList(entries, (key) => solution.rawMetrics?.[key] ?? solution[key].toString());
       renderMathLabels(hoveredValues);
       const nextList = hoveredValues.querySelector('.chart__hovered-list');
       if (nextList) {
@@ -1316,13 +1334,13 @@
             <span class="chart__sparkline-tooltip-key">
               <span class="math-label" data-latex="${yLatex}"></span>
             </span>
-            <span class="chart__sparkline-tooltip-value">${formatTick(point[yKey])}</span>
+            <span class="chart__sparkline-tooltip-value">${point.rawMetrics?.[yKey] ?? formatTick(point[yKey])}</span>
           </span>
           <span class="chart__sparkline-tooltip-pair">
             <span class="chart__sparkline-tooltip-key">
               <span class="math-label" data-latex="${xLatex}"></span>
             </span>
-            <span class="chart__sparkline-tooltip-value">${formatTick(point[xKey])}</span>
+            <span class="chart__sparkline-tooltip-value">${point.rawMetrics?.[xKey] ?? formatTick(point[xKey])}</span>
           </span>
         </div>
       `;
@@ -1768,8 +1786,9 @@
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
         const selectedParameterValue = getSelectedParameterValue(slider.id, value);
+        const selectedParameterLabel = getSelectedParameterLabel(slider.id, value);
         if (slider.labelValue) {
-          slider.labelValue.textContent = formatParameterValue(selectedParameterValue);
+          slider.labelValue.textContent = formatParameterValue(selectedParameterLabel);
         }
         acc[slider.id] = value;
         return acc;
