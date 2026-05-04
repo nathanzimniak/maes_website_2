@@ -860,11 +860,19 @@
 
       if (scaleType === 'log') {
         const positives = values.filter((value) => value > 0);
-        const smallestPositive = positives.length ? Math.min(...positives) : Math.max(min, 0.1);
+        const smallestPositive = positives.length ? Math.min(...positives) : 0.1;
+        const largestPositive = positives.length ? Math.max(...positives) : 1;
         const safeMin = Math.max(smallestPositive, 0.1);
-        const paddedMin = safeMin / 1.4;
-        const paddedMax = Math.max(max, safeMin * 10) * 1.05;
-        return { min: paddedMin, max: paddedMax };
+        const safeMax = Math.max(largestPositive, safeMin * 10);
+
+        let minExp = Math.floor(Math.log10(safeMin));
+        let maxExp = Math.ceil(Math.log10(safeMax));
+
+        if (minExp === maxExp) {
+          maxExp += 1;
+        }
+
+        return { min: 10 ** minExp, max: 10 ** maxExp };
       }
 
       const span = max - min;
@@ -883,10 +891,6 @@
           if (value >= domain.min && value <= domain.max) {
             ticks.push(value);
           }
-        }
-
-        if (!ticks.includes(domain.max)) {
-          ticks.push(domain.max);
         }
 
         return ticks;
