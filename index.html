@@ -357,7 +357,7 @@
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">SM point altitude</span>
                 <span class="chart__label-math">
-                  <span class="math-label" data-latex="z_{SM}"></span>
+                  <span class="math-label" data-latex="x_{SM}"></span>
                   <span class="chart__label-equals">=</span>
                   <span class="chart__label-value">―</span>
                 </span>
@@ -365,39 +365,7 @@
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">A point altitude</span>
                 <span class="chart__label-math">
-                  <span class="math-label" data-latex="z_A"></span>
-                  <span class="chart__label-equals">=</span>
-                  <span class="chart__label-value">―</span>
-                </span>
-              </li>
-              <li class="chart__hovered-item chart__control-label--aspect">
-                <span class="chart__label-text">FM point altitude</span>
-                <span class="chart__label-math">
-                  <span class="math-label" data-latex="z_{FM}"></span>
-                  <span class="chart__label-equals">=</span>
-                  <span class="chart__label-value">―</span>
-                </span>
-              </li>
-              <li class="chart__hovered-item chart__control-label--aspect">
-                <span class="chart__label-text">Outflow power fraction</span>
-                <span class="chart__label-math">
-                  <span class="math-label" data-latex="b"></span>
-                  <span class="chart__label-equals">=</span>
-                  <span class="chart__label-value">―</span>
-                </span>
-              </li>
-              <li class="chart__hovered-item chart__control-label--aspect">
-                <span class="chart__label-text">Maximum radius</span>
-                <span class="chart__label-math">
-                  <span class="math-label" data-latex="r_t"></span>
-                  <span class="chart__label-equals">=</span>
-                  <span class="chart__label-value">―</span>
-                </span>
-              </li>
-              <li class="chart__hovered-item chart__control-label--aspect">
-                <span class="chart__label-text">Energy reservoir</span>
-                <span class="chart__label-math">
-                  <span class="math-label" data-latex="g_A"></span>
+                  <span class="math-label" data-latex="x_A"></span>
                   <span class="chart__label-equals">=</span>
                   <span class="chart__label-value">―</span>
                 </span>
@@ -856,10 +824,6 @@
         const g16 = 0.45 * p1 + 0.55 * p4 + 0.2 * p5 + 18 + scenarioOffset * 0.4 + noise(10);
         const g17 = 0.3 * p2 + 0.6 * p3 + 0.4 * p5 + 12 * Math.cos(p4 / 30) + scenarioOffset * 0.5 + noise(9);
         const g18 = 0.5 * p1 + 0.3 * p3 + 0.7 * p4 + scenarioOffset * 0.3 + noise(8);
-        const g19 = 0.65 * p2 + 0.2 * p4 + 0.25 * p5 + 10 * Math.sin(p3 / 26) + scenarioOffset * 0.4 + noise(11);
-        const g20 = 0.4 * p1 + 0.4 * p2 + 0.4 * p3 + 10 + scenarioOffset * 0.2 + noise(10);
-        const g21 = 0.3 * p1 + 0.7 * p2 + 0.25 * p5 + 6 * Math.cos(p1 / 20) + scenarioOffset * 0.3 + noise(9);
-        const g22 = 0.5 * p3 + 0.2 * p4 + 0.6 * p5 + 14 + scenarioOffset * 0.4 + noise(10);
 
         const solution = { ...jittered, scenario };
 
@@ -883,11 +847,7 @@
           g15: clamp(g15, 0, 200),
           g16: clamp(g16, 0, 200),
           g17: clamp(g17, 0, 200),
-          g18: clamp(g18, 0, 200),
-          g19: clamp(g19, 0, 200),
-          g20: clamp(g20, 0, 200),
-          g21: clamp(g21, 0, 200),
-          g22: clamp(g22, 0, 200)
+          g18: clamp(g18, 0, 200)
         });
       }
 
@@ -1039,12 +999,8 @@
       g14: { label: 'Magnetic lever arm', latex: '\\lambda', symbol: 'λ' },
       g15: { label: 'Magnetic surface rotation', latex: '\\omega_*', symbol: 'ω*' },
       g16: { label: 'Bernoulli invariant', latex: 'e', symbol: 'e' },
-      g17: { label: 'SM point altitude', latex: 'z_{SM}', symbol: 'zSM' },
-      g18: { label: 'A point altitude', latex: 'z_A', symbol: 'zA' },
-      g19: { label: 'FM point altitude', latex: 'z_{FM}', symbol: 'zFM' },
-      g20: { label: 'Outflow power fraction', latex: 'b', symbol: 'b' },
-      g21: { label: 'Maximum radius', latex: 'r_t', symbol: 'rₜ' },
-      g22: { label: 'Energy reservoir', latex: 'g_A', symbol: 'g_A' }
+      g17: { label: 'SM point altitude', latex: 'x_{SM}', symbol: 'xSM' },
+      g18: { label: 'A point altitude', latex: 'x_A', symbol: 'xA' }
     };
 
     function populateAxisSelectOptions() {
@@ -1267,7 +1223,8 @@
 
       const previousList = hoveredValues.querySelector('.chart__hovered-list');
       const previousScrollTop = previousList ? previousList.scrollTop : 0;
-      const entries = Array.from({ length: 22 }, (_, index) => `g${index + 1}`);
+      const entries = Object.keys(hoveredMetricLabels)
+        .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
       hoveredValues.innerHTML = buildHoveredList(entries, () => '―');
       renderMathLabels(hoveredValues);
       const nextList = hoveredValues.querySelector('.chart__hovered-list');
