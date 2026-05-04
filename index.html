@@ -627,15 +627,40 @@
       const payload = await response.json();
       const quantities = payload.quantities || [];
       const rows = payload.data || [];
-      const metricKeys = ['g1','g2','g3','g4','g5','g6','g7','g8','g9','g10','g11','g12','g13','g14','g15','g16','g17','g18'];
+      const metricToQuantity = {
+        g1: 'ep',
+        g2: 'alpham',
+        g3: 'chim',
+        g4: 'Pm',
+        g5: 'alphap',
+        g6: 'xi',
+        g7: 'mu',
+        g8: 'p',
+        g9: 'q',
+        g10: 'delta',
+        g11: 'ms',
+        g12: 'alphav',
+        g13: 'kappaBP',
+        g14: 'lambdaBP',
+        g15: 'omega_star',
+        g16: 'e',
+        g17: 'x_sm',
+        g18: 'x_a',
+      };
+      const quantityIndexMap = quantities.reduce((accumulator, name, index) => {
+        accumulator[name] = index;
+        return accumulator;
+      }, {});
+
       const solutions = rows.map((row) => {
         const parsed = row.map((value) => Number(value));
         const solution = { scenario: 'SM', profiles: null, rawMetrics: {} };
-        metricKeys.forEach((key, index) => {
-          const quantityName = quantities[index];
-          const sourceIndex = quantityName ? quantities.indexOf(quantityName) : index;
-          solution[key] = parsed[sourceIndex];
-          solution.rawMetrics[key] = row[sourceIndex];
+        Object.entries(metricToQuantity).forEach(([key, quantityName]) => {
+          const sourceIndex = quantityIndexMap[quantityName];
+          const numericValue = sourceIndex !== undefined ? parsed[sourceIndex] : NaN;
+          const rawValue = sourceIndex !== undefined ? row[sourceIndex] : 'NaN';
+          solution[key] = numericValue;
+          solution.rawMetrics[key] = rawValue;
         });
         return solution;
       }).filter((item) => Number.isFinite(item.g1));
