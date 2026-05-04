@@ -984,7 +984,14 @@
       }
 
       const span = max - min;
-      const padding = Math.max(span * 0.08, 4);
+      const magnitude = Math.max(Math.abs(min), Math.abs(max), 1);
+
+      if (span === 0) {
+        const padding = Math.max(magnitude * 0.08, 1e-6);
+        return { min: min - padding, max: max + padding };
+      }
+
+      const padding = Math.max(span * 0.08, magnitude * 0.02, 1e-6);
       return { min: min - padding, max: max + padding };
     }
 
