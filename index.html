@@ -984,11 +984,12 @@
         const smallestPositive = Math.min(...positives);
         const safeMin = min > 0 ? min : smallestPositive;
         const safeMax = max > safeMin ? max : safeMin * 10;
-        const logPaddingRatio = 0.12;
+        const logSpan = Math.log10(safeMax) - Math.log10(safeMin);
+        const logPadding = Math.max(logSpan * 0.08, 0.08);
 
         return {
-          min: safeMin * (1 - logPaddingRatio),
-          max: safeMax * (1 + logPaddingRatio),
+          min: 10 ** (Math.log10(safeMin) - logPadding),
+          max: 10 ** (Math.log10(safeMax) + logPadding),
         };
       }
 
