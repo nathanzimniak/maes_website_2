@@ -619,7 +619,7 @@
 
     async function loadRealDataset(folderName) {
       if (realDataCache.has(folderName)) return realDataCache.get(folderName);
-      const url = `data/${folderName}/${folderName}.json`;
+      const url = `data/${folderName}/${folderName}.json.gz`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Impossible de charger les données réelles (${response.status}) depuis ${url}`);
