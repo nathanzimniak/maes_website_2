@@ -619,12 +619,29 @@
 
     async function loadRealDataset(folderName) {
       if (realDataCache.has(folderName)) return realDataCache.get(folderName);
-      const url = `data/${folderName}/${folderName}.json.gz`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Impossible de charger les données réelles (${response.status}) depuis ${url}`);
+
+      const candidateUrls = [
+        `data/${folderName}/${folderName}.json.gz`,
+        `data/${folderName}/${folderName}.json`,
+      ];
+
+      let payload = null;
+      let lastErrorStatus = null;
+      let lastTriedUrl = candidateUrls[0];
+
+      for (const url of candidateUrls) {
+        const response = await fetch(url);
+        if (response.ok) {
+          payload = await response.json();
+          break;
+        }
+        lastErrorStatus = response.status;
+        lastTriedUrl = url;
       }
-      const payload = await response.json();
+
+      if (!payload) {
+        throw new Error(`Impossible de charger les données réelles (${lastErrorStatus ?? 'erreur inconnue'}) depuis ${lastTriedUrl}`);
+      }
       const quantities = payload.quantities || [];
       const rows = payload.data || [];
       const metricToQuantity = {
