@@ -624,7 +624,30 @@
       if (!response.ok) {
         throw new Error(`Impossible de charger les données réelles (${response.status}) depuis ${url}`);
       }
-      const payload = await response.json();
+      const buffer = await response.arrayBuffer();
+      const parseJsonText = (text) => {
+        try {
+          return JSON.parse(text);
+        } catch (error) {
+          return null;
+        }
+      };
+
+      let payload = parseJsonText(new TextDecoder().decode(buffer));
+      if (!payload) {
+        const isGzip = buffer.byteLength >= 2 && new Uint8Array(buffer)[0] === 0x1f && new Uint8Array(buffer)[1] === 0x8b;
+        if (isGzip && typeof DecompressionStream !== 'undefined') {
+          const decompressedStream = new Response(
+            new Blob([buffer]).stream().pipeThrough(new DecompressionStream('gzip'))
+          );
+          const decompressedText = await decompressedStream.text();
+          payload = parseJsonText(decompressedText);
+        }
+      }
+
+      if (!payload) {
+        throw new Error(`Le fichier de données ${url} n'est pas un JSON valide.`);
+      }
       const quantities = payload.quantities || [];
       const rows = payload.data || [];
       const metricToQuantity = {
