@@ -499,6 +499,7 @@
     let xScaleType = 'log';
     let yScaleType = 'log';
     let selectedScenario = 'SM';
+    let axisDomainOverrides = null;
     let currentSolutions = [];
     let selectedSolutionIndex = null;
     let pinnedSolutionIndex = null;
@@ -1905,7 +1906,8 @@
       renderMathLabels(label);
     }
 
-    async function updateChart() {
+    async function updateChart(options = {}) {
+      const { preserveAxisLimits = false } = options;
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
         const selectedParameterValue = getSelectedParameterValue(slider.id, value);
@@ -1930,8 +1932,18 @@
         return;
       }
 
-      const xDomain = getDomain(solutions.map(solution => solution[xKey]), xScaleType);
-      const yDomain = getDomain(solutions.map(solution => solution[yKey]), yScaleType);
+      const computedXDomain = getDomain(solutions.map(solution => solution[xKey]), xScaleType);
+      const computedYDomain = getDomain(solutions.map(solution => solution[yKey]), yScaleType);
+      const xDomain = preserveAxisLimits && axisDomainOverrides
+        ? axisDomainOverrides.x
+        : computedXDomain;
+      const yDomain = preserveAxisLimits && axisDomainOverrides
+        ? axisDomainOverrides.y
+        : computedYDomain;
+      axisDomainOverrides = {
+        x: { ...xDomain },
+        y: { ...yDomain },
+      };
       const xTicks = buildTicks(xDomain, xScaleType);
       const yTicks = buildTicks(yDomain, yScaleType);
 
@@ -2052,7 +2064,7 @@
         scenarioButtons.forEach((btn) => {
           btn.classList.toggle('chart__toggle-button--active', btn === button);
         });
-        updateChart();
+        updateChart({ preserveAxisLimits: true });
       });
     });
 
