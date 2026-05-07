@@ -1940,7 +1940,10 @@
       const yDomain = preserveAxisLimits && axisDomainOverrides
         ? axisDomainOverrides.y
         : computedYDomain;
-      axisDomainOverrides = { x: [...xDomain], y: [...yDomain] };
+      axisDomainOverrides = {
+        x: { ...xDomain },
+        y: { ...yDomain },
+      };
       const xTicks = buildTicks(xDomain, xScaleType);
       const yTicks = buildTicks(yDomain, yScaleType);
 
