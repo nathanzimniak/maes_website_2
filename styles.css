@@ -2192,6 +2192,7 @@ section {
 .chart__point:hover,
 .chart__point:focus-visible {
   transform: scale(1.35);
+  fill-opacity: 1;
 }
 
 .chart__point:focus {
@@ -2207,6 +2208,7 @@ section {
 
 .chart__point--selected {
   transform: scale(1.35);
+  fill-opacity: 1;
 }
 
 @media (max-width: 640px) {
