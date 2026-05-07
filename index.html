@@ -505,70 +505,38 @@
     const customSelects = new Map();
 
     const realDataCache = new Map();
-    let datasetDirectories = [];
+    const datasetDirectories = ['0.100_1.0_1.0_1.0_0.0_0_0'];
     const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
-    let datasetConfigs = [];
-    let parameterValueLists = {};
-    let parameterValueLabels = {};
 
-    function rebuildDatasetMappings() {
-      datasetConfigs = datasetDirectories
-        .map((folderName) => {
-          const values = folderName.split('_');
-          if (values.length !== folderParameterKeys.length) {
-            return null;
-          }
-          const config = { folderName };
-          folderParameterKeys.forEach((key, index) => {
-            config[key] = Number(values[index]);
-            config[`${key}Raw`] = values[index];
-          });
-          return config;
-        })
-        .filter(Boolean);
-
-      parameterValueLists = folderParameterKeys.reduce((accumulator, key) => {
-        const uniqueSortedValues = Array.from(new Set(datasetConfigs.map((config) => config[key]))).sort((a, b) => a - b);
-        accumulator[key] = uniqueSortedValues;
-        return accumulator;
-      }, {});
-
-      parameterValueLabels = folderParameterKeys.reduce((accumulator, key) => {
-        const list = parameterValueLists[key] || [];
-        accumulator[key] = list.map((value) => {
-          const match = datasetConfigs.find((config) => config[key] === value);
-          return match ? match[`${key}Raw`] : value.toString();
-        });
-        return accumulator;
-      }, {});
-    }
-
-    async function discoverDatasetDirectories() {
-      const directoryPattern = /^\d+(?:\.\d+)?(?:_\d+(?:\.\d+)?){6}$/;
-      try {
-        const response = await fetch('data/');
-        if (!response.ok) {
-          return [];
+    const datasetConfigs = datasetDirectories
+      .map((folderName) => {
+        const values = folderName.split('_');
+        if (values.length !== folderParameterKeys.length) {
+          return null;
         }
-        const html = await response.text();
-        const parser = new DOMParser();
-        const documentNode = parser.parseFromString(html, 'text/html');
-        return Array.from(documentNode.querySelectorAll('a'))
-          .map((link) => link.getAttribute('href') || '')
-          .map((href) => href.replace(/\/+$/, ''))
-          .map((href) => href.split('/').filter(Boolean).pop() || '')
-          .filter((name) => directoryPattern.test(name));
-      } catch (error) {
-        console.warn('Impossible de lister automatiquement les dossiers de datasets.', error);
-        return [];
-      }
-    }
+        const config = { folderName };
+        folderParameterKeys.forEach((key, index) => {
+          config[key] = Number(values[index]);
+          config[`${key}Raw`] = values[index];
+        });
+        return config;
+      })
+      .filter(Boolean);
 
-    async function bootstrapDatasetConfiguration() {
-      datasetDirectories = await discoverDatasetDirectories();
-      rebuildDatasetMappings();
-      configureSlidersFromDatasets();
-    }
+    const parameterValueLists = folderParameterKeys.reduce((accumulator, key) => {
+      const uniqueSortedValues = Array.from(new Set(datasetConfigs.map((config) => config[key]))).sort((a, b) => a - b);
+      accumulator[key] = uniqueSortedValues;
+      return accumulator;
+    }, {});
+
+    const parameterValueLabels = folderParameterKeys.reduce((accumulator, key) => {
+      const list = parameterValueLists[key] || [];
+      accumulator[key] = list.map((value) => {
+        const match = datasetConfigs.find((config) => config[key] === value);
+        return match ? match[`${key}Raw`] : value.toString();
+      });
+      return accumulator;
+    }, {});
 
     const sliderParameterMap = {
       p1: 'ep',
@@ -646,7 +614,7 @@
         })
         .sort((a, b) => a.distance - b.distance)[0];
 
-      return closestMatch?.config?.folderName || datasetDirectories[0] || null;
+      return closestMatch?.config?.folderName || datasetDirectories[0];
     }
 
     async function loadRealDataset(folderName) {
@@ -833,7 +801,7 @@
       document.body.removeChild(ruler);
     };
 
-    bootstrapDatasetConfiguration().then(() => updateChart());
+    configureSlidersFromDatasets();
 
     let width = 0;
     let height = 0;
@@ -1014,9 +982,6 @@
 
     async function buildSolutions(baseParams, scenario) {
       const folderName = resolveFolderFromInputs(baseParams);
-      if (!folderName) {
-        return [];
-      }
       const solutions = await loadRealDataset(folderName);
       const scenarioToCritState = { SM: 1, A: 2, FM: 3 };
       const selectedCritState = scenarioToCritState[scenario] ?? 1;
@@ -2116,6 +2081,8 @@
         }
       });
     }
+
+    updateChart();
 
     if (resizeObserver && chartControls) {
       resizeObserver.observe(chartControls);
