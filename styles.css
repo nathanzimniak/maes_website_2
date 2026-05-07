@@ -2181,9 +2181,7 @@ section {
 .chart__point {
   fill: #60708f;
   fill-opacity: 0.5;
-  stroke: #60708f;
-  stroke-opacity: 1;
-  stroke-width: 2.0;
+  stroke: none;
   transform-origin: center;
   transform-box: fill-box;
   transition: transform 200ms ease;
