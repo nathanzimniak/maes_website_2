@@ -983,11 +983,15 @@
     async function buildSolutions(baseParams, scenario) {
       const folderName = resolveFolderFromInputs(baseParams);
       const solutions = await loadRealDataset(folderName);
-      const scenarioToCritState = { SM: 1, A: 2, FM: 3 };
-      const selectedCritState = scenarioToCritState[scenario] ?? 1;
+      const scenarioToCritStates = {
+        SM: [1, 2, 3],
+        A: [2, 3],
+        FM: [3],
+      };
+      const allowedCritStates = scenarioToCritStates[scenario] ?? [1, 2, 3];
 
       const filteredSolutions = solutions
-        .filter((solution) => solution.critState === selectedCritState)
+        .filter((solution) => allowedCritStates.includes(solution.critState))
         .map((solution) => ({ ...solution, scenario }));
 
       return filteredSolutions.length ? filteredSolutions : [];
