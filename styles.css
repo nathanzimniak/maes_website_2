@@ -2111,10 +2111,10 @@ section {
   stroke-linejoin: round;
 }
 
-.chart__sparkline-xsm-point {
-  fill: #d15b6a;
-  stroke: #ffffff;
-  stroke-width: 1.5;
+.chart__sparkline-xsm-line {
+  stroke: #d15b6a;
+  stroke-width: 2.5;
+  stroke-linecap: round;
   opacity: 0.95;
 }
 
