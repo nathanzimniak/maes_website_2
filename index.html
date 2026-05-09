@@ -1765,7 +1765,8 @@
           const interpolationRatio = xRight !== xLeft ? (xSmValue - xLeft) / (xRight - xLeft) : 0;
           const yAtXSm = yLeft + (yRight - yLeft) * interpolationRatio;
           const centerY = chart.yScale(yAtXSm);
-          xSmY = Math.max(chart.padding.top, Math.min(chart.height - chart.padding.bottom, centerY));
+          const markerOffsetAboveCurve = 8;
+          xSmY = Math.max(chart.padding.top, Math.min(chart.height - chart.padding.bottom, centerY - markerOffsetAboveCurve));
         }
 
         const gradientId = `sparkline-gradient-${serie.key}`;
