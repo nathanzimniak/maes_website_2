@@ -1765,7 +1765,8 @@
           const interpolationRatio = xRight !== xLeft ? (xSmValue - xLeft) / (xRight - xLeft) : 0;
           const yAtXSm = yLeft + (yRight - yLeft) * interpolationRatio;
           const centerY = chart.yScale(yAtXSm);
-          xSmY = Math.max(chart.padding.top, Math.min(chart.height - chart.padding.bottom, centerY));
+          const markerOffsetAboveCurve = 8;
+          xSmY = Math.max(chart.padding.top, Math.min(chart.height - chart.padding.bottom, centerY - markerOffsetAboveCurve));
         }
 
         const gradientId = `sparkline-gradient-${serie.key}`;
@@ -1823,6 +1824,7 @@
             <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
             ${hasXSm ? `<circle class="chart__sparkline-xsm-point" cx="${xSmX}" cy="${xSmY}" r="4"></circle>` : ''}
             <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
+            ${hasXSm ? `<circle class="chart__sparkline-xsm-point" cx="${xSmX}" cy="${xSmY}" r="4"></circle>` : ''}
             <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
           </svg>
           <div class="chart__sparkline-tooltip" role="status" aria-live="polite"></div>
