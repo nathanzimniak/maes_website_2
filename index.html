@@ -1748,10 +1748,10 @@
         const wrapperWidth = sparklineWrapper?.getBoundingClientRect().width ?? 0;
         const chartWidth = Math.max(1, Math.floor(wrapperWidth || 320));
         const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null);
-        const hasXSm = Number.isFinite(xSmValue) && Number.isFinite(chart?.xDomain?.[0]) && Number.isFinite(chart?.xDomain?.[1]) &&
-          xSmValue >= chart.xDomain[0] && xSmValue <= chart.xDomain[1];
+        const hasXSm = Number.isFinite(xSmValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
+          xSmValue >= chart.xMin && xSmValue <= chart.xMax;
         const xSmX = hasXSm
-          ? chart.padding.left + ((xSmValue - chart.xDomain[0]) / (chart.xDomain[1] - chart.xDomain[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)
+          ? chart.padding.left + ((xSmValue - chart.xMin) / (chart.xMax - chart.xMin || 1)) * (chart.width - chart.padding.left - chart.padding.right)
           : null;
 
         const gradientId = `sparkline-gradient-${serie.key}`;
