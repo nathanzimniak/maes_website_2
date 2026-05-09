@@ -1822,6 +1822,7 @@
               </foreignObject>
             </g>
             <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
+            ${hasXSm ? `<circle class="chart__sparkline-xsm-point" cx="${xSmX}" cy="${xSmY}" r="4"></circle>` : ''}
             <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
             ${hasXSm ? `<circle class="chart__sparkline-xsm-point" cx="${xSmX}" cy="${xSmY}" r="4"></circle>` : ''}
             <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
