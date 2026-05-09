@@ -506,6 +506,7 @@
     const customSelects = new Map();
 
     const realDataCache = new Map();
+    const solutionProfileCache = new Map();
     const datasetDirectories = ['0.100_1.0_1.0_1.0_0.0_0_0'];
     const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
 
@@ -678,7 +679,7 @@
 
       const solutions = rows.map((row) => {
         const parsed = row.map((value) => Number(value));
-        const solution = { scenario: 'SM', profiles: null, rawMetrics: {}, critState: null };
+        const solution = { scenario: 'SM', profiles: null, rawMetrics: {}, critState: null, folderName, profileFileBase: null };
         Object.entries(metricToQuantity).forEach(([key, quantityName]) => {
           const sourceIndex = quantityIndexMap[quantityName];
           const numericValue = sourceIndex !== undefined ? parsed[sourceIndex] : NaN;
@@ -686,6 +687,13 @@
           solution[key] = numericValue;
           solution.rawMetrics[key] = rawValue;
         });
+
+        const xiValue = solution.rawMetrics.g6;
+        const muValue = solution.rawMetrics.g7;
+        const pValue = solution.rawMetrics.g8;
+        if (xiValue !== undefined && muValue !== undefined && pValue !== undefined) {
+          solution.profileFileBase = `${folderName}_${xiValue}_${muValue}_${pValue}`;
+        }
 
         const critStateIndex = quantityIndexMap.crit_state;
         solution.critState = critStateIndex !== undefined ? Number(parsed[critStateIndex]) : null;
@@ -923,62 +931,6 @@
 
     function clamp(value, min, max) {
       return Math.min(Math.max(value, min), max);
-    }
-
-    function buildProfiles(base) {
-      const sampleCount = 24;
-      const xValues = Array.from({ length: sampleCount }, (_, i) => Number(((i / (sampleCount - 1)) * 10).toFixed(2)));
-      const scenarioShift = base.scenario === 'A' ? 6 : base.scenario === 'FM' ? -4 : 0;
-      const magneticShift = base.scenario === 'A' ? 0.4 : base.scenario === 'FM' ? -0.3 : 0;
-
-      const pressure = xValues.map((x) => {
-        return clamp(85 + scenarioShift + 0.5 * base.p1 - 0.3 * base.p3 + Math.sin(x / 1.8 + base.p2 / 60) * 9 + (Math.random() - 0.5) * 2, 40, 180);
-      });
-
-      const density = xValues.map((x) => {
-        return clamp(0.9 + 0.012 * base.p2 + scenarioShift / 60 + Math.cos(x / 2.4 + base.p5 / 35) * 0.25 + (Math.random() - 0.5) * 0.04, 0.6, 2.4);
-      });
-
-      const temperature = xValues.map((x) => {
-        return clamp(260 + 0.75 * base.p4 + scenarioShift * 1.5 + Math.sin((x + base.p3 / 6) / 2.8) * 14 + (Math.random() - 0.5) * 4, 230, 420);
-      });
-
-      const radialVelocity = xValues.map((x) => {
-        return clamp(-12 + 0.25 * base.p1 - 0.18 * base.p2 + scenarioShift * 0.35 + Math.sin((x + base.p4 / 8) / 2.3) * 6 + (Math.random() - 0.5) * 1.5, -40, 40);
-      });
-
-      const toroidalVelocity = xValues.map((x) => {
-        return clamp(80 + 0.9 * base.p4 + 0.3 * base.p5 + scenarioShift * 1.6 + Math.cos((x + base.p3 / 5) / 2.1) * 18 + (Math.random() - 0.5) * 3, 40, 200);
-      });
-
-      const verticalVelocity = xValues.map((x) => {
-        return clamp(10 + 0.4 * base.p2 + 0.2 * base.p3 + scenarioShift * 0.9 + Math.sin((x + base.p1 / 10) / 2.6) * 8 + (Math.random() - 0.5) * 2, 0, 80);
-      });
-
-      const radialMagneticField = xValues.map((x) => {
-        return clamp(1.2 + 0.02 * base.p2 + magneticShift + Math.cos((x + base.p3 / 10) / 2.2) * 0.4 + (Math.random() - 0.5) * 0.08, 0.2, 3.2);
-      });
-
-      const toroidalMagneticField = xValues.map((x) => {
-        return clamp(2.8 + 0.03 * base.p4 + magneticShift * 1.2 + Math.sin((x + base.p1 / 12) / 2.6) * 0.7 + (Math.random() - 0.5) * 0.12, 0.6, 5.2);
-      });
-
-      const verticalMagneticField = xValues.map((x) => {
-        return clamp(0.8 + 0.018 * base.p5 + magneticShift * 0.6 + Math.cos((x + base.p2 / 14) / 2.4) * 0.3 + (Math.random() - 0.5) * 0.07, 0.1, 2.4);
-      });
-
-      return {
-        x: xValues,
-        pressure,
-        density,
-        temperature,
-        radialVelocity,
-        toroidalVelocity,
-        verticalVelocity,
-        radialMagneticField,
-        toroidalMagneticField,
-        verticalMagneticField,
-      };
     }
 
     async function buildSolutions(baseParams, scenario) {
@@ -1467,7 +1419,7 @@
       scatterTooltip.classList.add('chart__sparkline-tooltip--visible');
     }
 
-    function restorePinnedValues() {
+    async function restorePinnedValues() {
       if (pinnedSolutionIndex === null) {
         resetHoveredValues();
         return;
@@ -1475,7 +1427,7 @@
 
       const pinned = currentSolutions[pinnedSolutionIndex];
       if (pinned) {
-        ensureSolutionProfiles(pinned);
+        await ensureSolutionProfiles(pinned);
         renderHoveredValues(pinned);
       } else {
         resetHoveredValues();
@@ -1688,20 +1640,71 @@
     }
 
 
-    function ensureSolutionProfiles(solution) {
-      if (!solution) return null;
-      if (solution.profiles) return solution;
+    async function loadSolutionProfiles(solution) {
+      if (!solution || !solution.folderName || !solution.profileFileBase) return null;
+      const cacheKey = `${solution.folderName}/${solution.profileFileBase}`;
+      if (solutionProfileCache.has(cacheKey)) return solutionProfileCache.get(cacheKey);
 
-      const syntheticBase = {
-        p1: Number(solution.g1) * 100,
-        p2: Number(solution.g2) * 100,
-        p3: Number(solution.g3) * 100,
-        p4: Number(solution.g4) * 100,
-        p5: Number(solution.g5) * 100,
-        scenario: solution.scenario || selectedScenario,
+      const url = `data/${solution.folderName}/${solution.profileFileBase}.json.gz`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        return null;
+      }
+
+      const buffer = await response.arrayBuffer();
+      const parseJsonText = (text) => {
+        try {
+          return JSON.parse(text);
+        } catch (error) {
+          return null;
+        }
       };
 
-      solution.profiles = buildProfiles(syntheticBase);
+      let payload = parseJsonText(new TextDecoder().decode(buffer));
+      if (!payload) {
+        const bytes = new Uint8Array(buffer);
+        const isGzip = buffer.byteLength >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b;
+        if (isGzip && typeof DecompressionStream !== 'undefined') {
+          const decompressedStream = new Response(new Blob([buffer]).stream().pipeThrough(new DecompressionStream('gzip')));
+          payload = parseJsonText(await decompressedStream.text());
+        }
+      }
+
+      if (!payload?.quantities?.length || !Array.isArray(payload.data)) {
+        return null;
+      }
+
+      const quantityIndexMap = payload.quantities.reduce((accumulator, name, index) => {
+        accumulator[name] = index;
+        return accumulator;
+      }, {});
+
+      const getSeries = (name) => payload.data.map((row) => Number(row[quantityIndexMap[name]])).filter((value) => Number.isFinite(value));
+      const x = getSeries('x');
+      const profiles = {
+        x,
+        pressure: getSeries('P'),
+        density: getSeries('rho'),
+        temperature: getSeries('T'),
+        radialVelocity: getSeries('vr'),
+        toroidalVelocity: getSeries('vphi'),
+        verticalVelocity: getSeries('vz'),
+        radialMagneticField: getSeries('Br'),
+        toroidalMagneticField: getSeries('Bphi'),
+        verticalMagneticField: getSeries('Bz'),
+      };
+
+      const consistentLength = x.length && Object.values(profiles).every((values) => values.length === x.length);
+      if (!consistentLength) return null;
+
+      solutionProfileCache.set(cacheKey, profiles);
+      return profiles;
+    }
+
+    async function ensureSolutionProfiles(solution) {
+      if (!solution) return null;
+      if (solution.profiles) return solution;
+      solution.profiles = await loadSolutionProfiles(solution);
       return solution;
     }
 
@@ -1850,11 +1853,11 @@
       });
     }
 
-    function selectSolution(index) {
+    async function selectSolution(index) {
       selectedSolutionIndex = index;
       pinnedSolutionIndex = index;
-      const selectedSolution = ensureSolutionProfiles(currentSolutions[index]);
-      if (selectedSolution) {
+      const selectedSolution = await ensureSolutionProfiles(currentSolutions[index]);
+      if (selectedSolution?.profiles) {
         renderProfiles(selectedSolution);
         renderHoveredValues(selectedSolution);
       }
