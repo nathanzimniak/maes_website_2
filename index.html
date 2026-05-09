@@ -1753,6 +1753,7 @@
         const xSmX = hasXSm
           ? chart.padding.left + ((xSmValue - chart.xMin) / (chart.xMax - chart.xMin || 1)) * (chart.width - chart.padding.left - chart.padding.right)
           : null;
+        let xSmY = null;
         let xSmY1 = null;
         let xSmY2 = null;
         if (hasXSm) {
@@ -1768,6 +1769,7 @@
           const centerY = chart.yScale(yAtXSm);
           const pointRadius = 4;
           const markerHalfHeight = pointRadius / 2;
+          xSmY = centerY;
           xSmY1 = Math.max(chart.padding.top, centerY - markerHalfHeight);
           xSmY2 = Math.min(chart.height - chart.padding.bottom, centerY + markerHalfHeight);
         }
