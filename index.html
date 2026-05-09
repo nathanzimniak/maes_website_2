@@ -1710,6 +1710,7 @@
 
     function renderProfiles(solution, options = {}) {
       const { profiles } = solution;
+      const xSmValue = Number(solution?.g17);
       const profileCurveColor = '#60708f';
       const series = [
         { label: '<span class="chart__profile-title-text">Thermal pressure</span><span class="chart__profile-title-math"><span class="math-label" data-latex="P"></span></span>', ariaLabel: 'Thermal pressure (P)', key: 'pressure', color: profileCurveColor, tooltipSymbol: 'P' },
@@ -1747,6 +1748,28 @@
         const wrapperWidth = sparklineWrapper?.getBoundingClientRect().width ?? 0;
         const chartWidth = Math.max(1, Math.floor(wrapperWidth || 320));
         const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null);
+        const hasXSm = Number.isFinite(xSmValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
+          xSmValue >= chart.xMin && xSmValue <= chart.xMax;
+        const xSmX = hasXSm
+          ? chart.padding.left + ((xSmValue - chart.xMin) / (chart.xMax - chart.xMin || 1)) * (chart.width - chart.padding.left - chart.padding.right)
+          : null;
+        let xSmY1 = null;
+        let xSmY2 = null;
+        if (hasXSm) {
+          const insertionIndex = profiles.x.findIndex((x) => x >= xSmValue);
+          const rightIndex = insertionIndex === -1 ? profiles.x.length - 1 : insertionIndex;
+          const leftIndex = Math.max(0, rightIndex - 1);
+          const xLeft = profiles.x[leftIndex];
+          const xRight = profiles.x[rightIndex];
+          const yLeft = values[leftIndex];
+          const yRight = values[rightIndex];
+          const interpolationRatio = xRight !== xLeft ? (xSmValue - xLeft) / (xRight - xLeft) : 0;
+          const yAtXSm = yLeft + (yRight - yLeft) * interpolationRatio;
+          const centerY = chart.yScale(yAtXSm);
+          const markerHalfHeight = 10;
+          xSmY1 = Math.max(chart.padding.top, centerY - markerHalfHeight);
+          xSmY2 = Math.min(chart.height - chart.padding.bottom, centerY + markerHalfHeight);
+        }
 
         const gradientId = `sparkline-gradient-${serie.key}`;
 
@@ -1801,6 +1824,7 @@
               </foreignObject>
             </g>
             <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
+            ${hasXSm ? `<line class="chart__sparkline-xsm-line" x1="${xSmX}" y1="${xSmY1}" x2="${xSmX}" y2="${xSmY2}"></line>` : ''}
             <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
             <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
           </svg>
