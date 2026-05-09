@@ -1753,8 +1753,7 @@
         const xSmX = hasXSm
           ? chart.padding.left + ((xSmValue - chart.xMin) / (chart.xMax - chart.xMin || 1)) * (chart.width - chart.padding.left - chart.padding.right)
           : null;
-        let xSmY1 = null;
-        let xSmY2 = null;
+        let xSmY = null;
         if (hasXSm) {
           const insertionIndex = profiles.x.findIndex((x) => x >= xSmValue);
           const rightIndex = insertionIndex === -1 ? profiles.x.length - 1 : insertionIndex;
@@ -1766,9 +1765,7 @@
           const interpolationRatio = xRight !== xLeft ? (xSmValue - xLeft) / (xRight - xLeft) : 0;
           const yAtXSm = yLeft + (yRight - yLeft) * interpolationRatio;
           const centerY = chart.yScale(yAtXSm);
-          const markerHalfHeight = 10;
-          xSmY1 = Math.max(chart.padding.top, centerY - markerHalfHeight);
-          xSmY2 = Math.min(chart.height - chart.padding.bottom, centerY + markerHalfHeight);
+          xSmY = Math.max(chart.padding.top, Math.min(chart.height - chart.padding.bottom, centerY));
         }
 
         const gradientId = `sparkline-gradient-${serie.key}`;
@@ -1824,7 +1821,7 @@
               </foreignObject>
             </g>
             <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
-            ${hasXSm ? `<line class="chart__sparkline-xsm-line" x1="${xSmX}" y1="${xSmY1}" x2="${xSmX}" y2="${xSmY2}"></line>` : ''}
+            ${hasXSm ? `<circle class="chart__sparkline-xsm-point" cx="${xSmX}" cy="${xSmY}" r="4"></circle>` : ''}
             <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
             <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
           </svg>
