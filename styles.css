@@ -2111,6 +2111,13 @@ section {
   stroke-linejoin: round;
 }
 
+.chart__sparkline-xsm-line {
+  stroke: #d15b6a;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  opacity: 0.95;
+}
+
 .chart__sparkline-area {
   pointer-events: none;
 }
