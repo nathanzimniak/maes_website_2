@@ -1531,8 +1531,8 @@
       const xRange = xMax - xMin || 1;
       const rawYRange = rawYMax - rawYMin || 1;
       const yScaleReference = Math.max(Math.abs(rawYMin), Math.abs(rawYMax), 1e-6);
-      const minYPadding = Math.max(rawYRange * 0.02, yScaleReference * 0.01, 1e-6);
-      const yPadding = Math.max(rawYRange * 0.08, minYPadding);
+      const minYPadding = Math.max(rawYRange * 0.025, yScaleReference * 0.0125, 1e-6);
+      const yPadding = Math.max(rawYRange * 0.1, minYPadding);
       const yMin = rawYMin - yPadding;
       const yMax = rawYMax + yPadding;
       const yRange = yMax - yMin || 1;
