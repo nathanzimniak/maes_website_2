@@ -1532,7 +1532,7 @@
       const rawYRange = rawYMax - rawYMin || 1;
       const yScaleReference = Math.max(Math.abs(rawYMin), Math.abs(rawYMax), 1e-6);
       const minYPadding = Math.max(rawYRange * 0.03, yScaleReference * 0.015, 1e-6);
-      const yPadding = Math.max(rawYRange * 0.12, minYPadding);
+      const yPadding = Math.max(rawYRange * 0.2, minYPadding);
       const yMin = rawYMin - yPadding;
       const yMax = rawYMax + yPadding;
       const yRange = yMax - yMin || 1;
