@@ -1490,10 +1490,12 @@
       });
     }
 
-    function buildProfileChart(xValues, yValues, width = 320, height = 200, yDomainOverride = null) {
+    function buildProfileChart(xValues, yValues, width = 320, height = 200, yDomainOverride = null, xDomainOverride = null) {
       const padding = { top: 10, right: 16, bottom: 36, left: 40 };
-      const xMin = Math.min(...xValues);
-      const xMax = Math.max(...xValues);
+      const dataXMin = Math.min(...xValues);
+      const dataXMax = Math.max(...xValues);
+      const xMin = xDomainOverride?.min ?? dataXMin;
+      const xMax = xDomainOverride?.max ?? dataXMax;
       const computedYMin = Math.min(...yValues);
       const computedYMax = Math.max(...yValues);
       const rawYMin = yDomainOverride?.min ?? computedYMin;
@@ -1747,7 +1749,13 @@
         const sparklineWrapper = card.querySelector('.chart__sparkline-wrapper');
         const wrapperWidth = sparklineWrapper?.getBoundingClientRect().width ?? 0;
         const chartWidth = Math.max(1, Math.floor(wrapperWidth || 320));
-        const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null);
+        const profileXDomainOverride = Number.isFinite(xSmValue)
+          ? (() => {
+            const dataXMin = Math.min(...profiles.x);
+            return { min: dataXMin, max: Math.max(dataXMin, 2 * xSmValue) };
+          })()
+          : null;
+        const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null, profileXDomainOverride);
         const hasXSm = Number.isFinite(xSmValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
           xSmValue >= chart.xMin && xSmValue <= chart.xMax;
         const xSmX = hasXSm
