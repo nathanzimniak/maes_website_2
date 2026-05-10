@@ -2113,7 +2113,7 @@ section {
 
 .chart__sparkline-xsm-line {
   stroke: currentColor;
-  stroke-width: 2.5;
+  stroke-width: 0.5;
   stroke-linecap: round;
   opacity: 0.95;
 }
