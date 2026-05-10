@@ -1490,17 +1490,49 @@
       });
     }
 
-    function buildProfileChart(xValues, yValues, width = 320, height = 200, yDomainOverride = null) {
+    function buildProfileChart(xValues, yValues, width = 320, height = 200, yDomainOverride = null, xDomainOverride = null) {
       const padding = { top: 10, right: 16, bottom: 36, left: 40 };
-      const xMin = Math.min(...xValues);
-      const xMax = Math.max(...xValues);
-      const computedYMin = Math.min(...yValues);
-      const computedYMax = Math.max(...yValues);
+      const dataXMin = Math.min(...xValues);
+      const dataXMax = Math.max(...xValues);
+      const xMin = xDomainOverride?.min ?? dataXMin;
+      const xMax = xDomainOverride?.max ?? dataXMax;
+      const getInterpolatedYAtX = (targetX) => {
+        if (!xValues.length) return null;
+        if (targetX <= xValues[0]) return yValues[0];
+        if (targetX >= xValues[xValues.length - 1]) return yValues[yValues.length - 1];
+
+        const rightIndex = xValues.findIndex((x) => x >= targetX);
+        if (rightIndex <= 0) return yValues[0];
+        const leftIndex = rightIndex - 1;
+        const xLeft = xValues[leftIndex];
+        const xRight = xValues[rightIndex];
+        const yLeft = yValues[leftIndex];
+        const yRight = yValues[rightIndex];
+        if (xRight === xLeft) return yLeft;
+        const ratio = (targetX - xLeft) / (xRight - xLeft);
+        return yLeft + ratio * (yRight - yLeft);
+      };
+
+      const visibleYValues = [];
+      xValues.forEach((x, index) => {
+        if (x >= xMin && x <= xMax) {
+          visibleYValues.push(yValues[index]);
+        }
+      });
+      const yAtXMin = getInterpolatedYAtX(xMin);
+      const yAtXMax = getInterpolatedYAtX(xMax);
+      if (Number.isFinite(yAtXMin)) visibleYValues.push(yAtXMin);
+      if (Number.isFinite(yAtXMax)) visibleYValues.push(yAtXMax);
+
+      const computedYMin = visibleYValues.length ? Math.min(...visibleYValues) : Math.min(...yValues);
+      const computedYMax = visibleYValues.length ? Math.max(...visibleYValues) : Math.max(...yValues);
       const rawYMin = yDomainOverride?.min ?? computedYMin;
       const rawYMax = yDomainOverride?.max ?? computedYMax;
       const xRange = xMax - xMin || 1;
       const rawYRange = rawYMax - rawYMin || 1;
-      const yPadding = Math.max(rawYRange * 0.08, Math.abs(rawYMin) * 0.02, Math.abs(rawYMax) * 0.02, 1);
+      const yScaleReference = Math.max(Math.abs(rawYMin), Math.abs(rawYMax), 1e-6);
+      const minYPadding = Math.max(rawYRange * 0.03, yScaleReference * 0.015, 1e-6);
+      const yPadding = Math.max(rawYRange * 0.12, minYPadding);
       const yMin = rawYMin - yPadding;
       const yMax = rawYMax + yPadding;
       const yRange = yMax - yMin || 1;
@@ -1580,13 +1612,16 @@
         const gridXMax = gridBox.x + gridBox.width;
         const localX = clamp(transformed.x, gridXMin, gridXMax);
         const xValue = chart.xMin + ((localX - gridXMin) / (gridBox.width || 1)) * (chart.xMax - chart.xMin);
-        const rawIndex = (xValue - chart.xMin) / chart.step;
-        const lowerIndex = clampIndex(Math.floor(rawIndex), xValues.length - 1);
-        const upperIndex = clampIndex(Math.ceil(rawIndex), xValues.length - 1);
-        const span = xValues[upperIndex] - xValues[lowerIndex] || 1;
-        const t = (xValue - xValues[lowerIndex]) / span;
+        const clampedDataX = clamp(xValue, xValues[0], xValues[xValues.length - 1]);
+        let upperIndex = xValues.findIndex((value) => value >= clampedDataX);
+        if (upperIndex === -1) upperIndex = xValues.length - 1;
+        const lowerIndex = Math.max(0, upperIndex - 1);
+        const xLower = xValues[lowerIndex];
+        const xUpper = xValues[upperIndex];
+        const span = xUpper - xLower || 1;
+        const t = (clampedDataX - xLower) / span;
         const interpolatedY = yValues[lowerIndex] + t * (yValues[upperIndex] - yValues[lowerIndex]);
-        const markerX = chart.xScale(xValue);
+        const markerX = chart.xScale(clampedDataX);
         const markerY = chart.yScale(interpolatedY);
 
         marker.setAttribute('cx', markerX);
@@ -1605,7 +1640,7 @@
               <span class="chart__sparkline-tooltip-key">
                 <span class="math-label" data-latex="x"></span>
               </span>
-              <span class="chart__sparkline-tooltip-value">${xValue.toFixed(2)}</span>
+              <span class="chart__sparkline-tooltip-value">${clampedDataX.toFixed(2)}</span>
             </span>
           </div>
         `;
@@ -1747,7 +1782,13 @@
         const sparklineWrapper = card.querySelector('.chart__sparkline-wrapper');
         const wrapperWidth = sparklineWrapper?.getBoundingClientRect().width ?? 0;
         const chartWidth = Math.max(1, Math.floor(wrapperWidth || 320));
-        const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null);
+        const profileXDomainOverride = Number.isFinite(xSmValue)
+          ? (() => {
+            const dataXMin = Math.min(...profiles.x);
+            return { min: dataXMin, max: Math.max(dataXMin, 2 * xSmValue) };
+          })()
+          : null;
+        const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null, profileXDomainOverride);
         const hasXSm = Number.isFinite(xSmValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
           xSmValue >= chart.xMin && xSmValue <= chart.xMax;
         const xSmX = hasXSm
@@ -1775,6 +1816,7 @@
         }
 
         const gradientId = `sparkline-gradient-${serie.key}`;
+        const clipPathId = `sparkline-clip-${serie.key}`;
 
         sparklineWrapper.innerHTML = `
           <svg class="chart__sparkline" viewBox="0 0 ${chart.width} ${chart.height}" role="img" aria-label="${serie.ariaLabel}">
@@ -1783,6 +1825,9 @@
                 <stop offset="0%" stop-color="${profileCurveColor}" stop-opacity="0.1"></stop>
                 <stop offset="100%" stop-color="${profileCurveColor}" stop-opacity="0"></stop>
               </linearGradient>
+              <clipPath id="${clipPathId}">
+                <rect x="${chart.padding.left}" y="${chart.padding.top}" width="${chart.width - chart.padding.left - chart.padding.right}" height="${chart.height - chart.padding.top - chart.padding.bottom}"></rect>
+              </clipPath>
             </defs>
             <g class="chart__sparkline-grid" aria-hidden="true">
               ${chart.yGridTicks.map((tick) => `
@@ -1826,10 +1871,12 @@
                 </div>
               </foreignObject>
             </g>
-            <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
-            <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
-            ${hasXSm ? `<line class="chart__sparkline-xsm-line" x1="${xSmX}" y1="${xSmY1}" x2="${xSmX}" y2="${xSmY2}" style="color:${serie.color};"></line>` : ''}
-            <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
+            <g clip-path="url(#${clipPathId})">
+              <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
+              <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
+              ${hasXSm ? `<line class="chart__sparkline-xsm-line" x1="${xSmX}" y1="${xSmY1}" x2="${xSmX}" y2="${xSmY2}" style="color:${serie.color};"></line>` : ''}
+              <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
+            </g>
           </svg>
           <div class="chart__sparkline-tooltip" role="status" aria-live="polite"></div>
         `;
