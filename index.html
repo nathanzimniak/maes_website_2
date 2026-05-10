@@ -1768,7 +1768,7 @@
           const yAtXSm = yLeft + (yRight - yLeft) * interpolationRatio;
           const centerY = chart.yScale(yAtXSm);
           const pointRadius = 4;
-          const markerHalfHeight = pointRadius / 2;
+          const markerHalfHeight = pointRadius;
           xSmY = centerY;
           xSmY1 = Math.max(chart.padding.top, centerY - markerHalfHeight);
           xSmY2 = Math.min(chart.height - chart.padding.bottom, centerY + markerHalfHeight);
