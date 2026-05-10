@@ -1496,8 +1496,36 @@
       const dataXMax = Math.max(...xValues);
       const xMin = xDomainOverride?.min ?? dataXMin;
       const xMax = xDomainOverride?.max ?? dataXMax;
-      const computedYMin = Math.min(...yValues);
-      const computedYMax = Math.max(...yValues);
+      const getInterpolatedYAtX = (targetX) => {
+        if (!xValues.length) return null;
+        if (targetX <= xValues[0]) return yValues[0];
+        if (targetX >= xValues[xValues.length - 1]) return yValues[yValues.length - 1];
+
+        const rightIndex = xValues.findIndex((x) => x >= targetX);
+        if (rightIndex <= 0) return yValues[0];
+        const leftIndex = rightIndex - 1;
+        const xLeft = xValues[leftIndex];
+        const xRight = xValues[rightIndex];
+        const yLeft = yValues[leftIndex];
+        const yRight = yValues[rightIndex];
+        if (xRight === xLeft) return yLeft;
+        const ratio = (targetX - xLeft) / (xRight - xLeft);
+        return yLeft + ratio * (yRight - yLeft);
+      };
+
+      const visibleYValues = [];
+      xValues.forEach((x, index) => {
+        if (x >= xMin && x <= xMax) {
+          visibleYValues.push(yValues[index]);
+        }
+      });
+      const yAtXMin = getInterpolatedYAtX(xMin);
+      const yAtXMax = getInterpolatedYAtX(xMax);
+      if (Number.isFinite(yAtXMin)) visibleYValues.push(yAtXMin);
+      if (Number.isFinite(yAtXMax)) visibleYValues.push(yAtXMax);
+
+      const computedYMin = visibleYValues.length ? Math.min(...visibleYValues) : Math.min(...yValues);
+      const computedYMax = visibleYValues.length ? Math.max(...visibleYValues) : Math.max(...yValues);
       const rawYMin = yDomainOverride?.min ?? computedYMin;
       const rawYMax = yDomainOverride?.max ?? computedYMax;
       const xRange = xMax - xMin || 1;
