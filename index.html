@@ -1558,13 +1558,17 @@
         visibleAreaSamples.push({ x, y });
       };
 
-      pushVisibleSample(xMin, getInterpolatedYAtX(xMin));
-      xValues.forEach((x, index) => {
-        if (x > xMin && x < xMax) {
-          pushVisibleSample(x, yValues[index]);
-        }
-      });
-      pushVisibleSample(xMax, getInterpolatedYAtX(xMax));
+      const visibleProfileXMin = Math.max(xMin, dataXMin);
+      const visibleProfileXMax = Math.min(xMax, dataXMax);
+      if (visibleProfileXMin <= visibleProfileXMax) {
+        pushVisibleSample(visibleProfileXMin, getInterpolatedYAtX(visibleProfileXMin));
+        xValues.forEach((x, index) => {
+          if (x > visibleProfileXMin && x < visibleProfileXMax) {
+            pushVisibleSample(x, yValues[index]);
+          }
+        });
+        pushVisibleSample(visibleProfileXMax, getInterpolatedYAtX(visibleProfileXMax));
+      }
 
       const visiblePointPairs = visibleAreaSamples.map((sample) => ({
         x: xScale(sample.x),
