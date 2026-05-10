@@ -2123,9 +2123,9 @@ section {
 }
 
 .chart__sparkline-marker {
-  fill: #60708f;
-  stroke: #ffffff;
-  stroke-width: 2;
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 0;
   opacity: 0;
   transition: opacity 800ms ease;
 }
