@@ -2112,8 +2112,8 @@ section {
 }
 
 .chart__sparkline-xsm-line {
-  stroke: #d15b6a;
-  stroke-width: 2.5;
+  stroke: currentColor;
+  stroke-width: 0.5;
   stroke-linecap: round;
   opacity: 0.95;
 }
