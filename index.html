@@ -1755,7 +1755,8 @@
         const profileXDomainOverride = Number.isFinite(xSmValue)
           ? (() => {
             const dataXMin = Math.min(...profiles.x);
-            return { min: dataXMin, max: Math.max(dataXMin, 2 * xSmValue) };
+            const dataXMax = Math.max(...profiles.x);
+            return { min: dataXMin, max: Math.max(dataXMax, 2 * xSmValue) };
           })()
           : null;
         const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null, profileXDomainOverride);
