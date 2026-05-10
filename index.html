@@ -1755,8 +1755,7 @@
         const profileXDomainOverride = Number.isFinite(xSmValue)
           ? (() => {
             const dataXMin = Math.min(...profiles.x);
-            const dataXMax = Math.max(...profiles.x);
-            return { min: dataXMin, max: Math.max(dataXMax, 2 * xSmValue) };
+            return { min: dataXMin, max: Math.max(dataXMin, 2 * xSmValue) };
           })()
           : null;
         const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null, profileXDomainOverride);
@@ -1787,6 +1786,7 @@
         }
 
         const gradientId = `sparkline-gradient-${serie.key}`;
+        const clipPathId = `sparkline-clip-${serie.key}`;
 
         sparklineWrapper.innerHTML = `
           <svg class="chart__sparkline" viewBox="0 0 ${chart.width} ${chart.height}" role="img" aria-label="${serie.ariaLabel}">
@@ -1795,6 +1795,9 @@
                 <stop offset="0%" stop-color="${profileCurveColor}" stop-opacity="0.1"></stop>
                 <stop offset="100%" stop-color="${profileCurveColor}" stop-opacity="0"></stop>
               </linearGradient>
+              <clipPath id="${clipPathId}">
+                <rect x="${chart.padding.left}" y="${chart.padding.top}" width="${chart.width - chart.padding.left - chart.padding.right}" height="${chart.height - chart.padding.top - chart.padding.bottom}"></rect>
+              </clipPath>
             </defs>
             <g class="chart__sparkline-grid" aria-hidden="true">
               ${chart.yGridTicks.map((tick) => `
@@ -1838,10 +1841,12 @@
                 </div>
               </foreignObject>
             </g>
-            <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
-            <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
-            ${hasXSm ? `<line class="chart__sparkline-xsm-line" x1="${xSmX}" y1="${xSmY1}" x2="${xSmX}" y2="${xSmY2}" style="color:${serie.color};"></line>` : ''}
-            <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
+            <g clip-path="url(#${clipPathId})">
+              <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
+              <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
+              ${hasXSm ? `<line class="chart__sparkline-xsm-line" x1="${xSmX}" y1="${xSmY1}" x2="${xSmX}" y2="${xSmY2}" style="color:${serie.color};"></line>` : ''}
+              <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
+            </g>
           </svg>
           <div class="chart__sparkline-tooltip" role="status" aria-live="polite"></div>
         `;
