@@ -1549,10 +1549,34 @@
       }));
       const points = pointPairs.map((point) => `${point.x},${point.y}`).join(' ');
       const baselineY = height - padding.bottom;
-      const areaPath = pointPairs.length
-        ? `${pointPairs
+      const visibleAreaSamples = [];
+      const pushVisibleSample = (x, y) => {
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+        const lastSample = visibleAreaSamples[visibleAreaSamples.length - 1];
+        if (lastSample && Math.abs(lastSample.x - x) < 1e-9) {
+          lastSample.y = y;
+          return;
+        }
+        visibleAreaSamples.push({ x, y });
+      };
+
+      pushVisibleSample(xMin, getInterpolatedYAtX(xMin));
+      xValues.forEach((x, index) => {
+        if (x > xMin && x < xMax) {
+          pushVisibleSample(x, yValues[index]);
+        }
+      });
+      pushVisibleSample(xMax, getInterpolatedYAtX(xMax));
+
+      const visiblePointPairs = visibleAreaSamples.map((sample) => ({
+        x: xScale(sample.x),
+        y: yScale(sample.y),
+      }));
+
+      const areaPath = visiblePointPairs.length
+        ? `${visiblePointPairs
           .map((point, index) => `${index === 0 ? 'M' : 'L'}${point.x},${point.y}`)
-          .join(' ')} L ${pointPairs[pointPairs.length - 1].x},${baselineY} L ${pointPairs[0].x},${baselineY} Z`
+          .join(' ')} L ${visiblePointPairs[visiblePointPairs.length - 1].x},${baselineY} L ${visiblePointPairs[0].x},${baselineY} Z`
         : '';
 
       const yMid = (yMin + yMax) / 2;
