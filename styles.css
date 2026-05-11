@@ -882,8 +882,8 @@ section {
 }
 
 .chart__settings-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   stroke: currentColor;
   transform-origin: 50% 50%;
   transition: transform 200ms ease-out;
@@ -1271,8 +1271,8 @@ section {
 }
 
 .chart__settings-button .chart__settings-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
 }
 
 .chart__plot-area svg {
