@@ -31,7 +31,7 @@
   --section-padding-x: var(--space-0);
   --card-padding: var(--space-4);
   --chart-side-panel-width: clamp(280px, 32vw, 310px);
-  --chart-figure-width: 560px;
+  --chart-figure-width: 520px;
   --chart-body-gap: var(--space-5);
   --chart-body-width: calc((var(--chart-side-panel-width) * 2) + var(--chart-figure-width) + (var(--chart-body-gap) * 2));
   --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -825,7 +825,7 @@ section {
   margin: auto;
   height: min(100%, var(--chart-plot-size));
   position: relative;
-  --plot-area-pad-x: 10px;
+  --plot-area-pad-x: -10px;
   --plot-area-pad-y: 10px;
   --scatter-plot-x: 10px;
   --scatter-plot-y: -6px;
