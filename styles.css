@@ -1995,6 +1995,25 @@ section {
 }
 
 
+.chart__figure .chart__eyebrow--sub {
+  position: relative;
+  display: block;
+}
+
+.chart__figure .chart__eyebrow--sub .chart__eyebrow-text {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.chart__figure-settings-button {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  margin-left: 0;
+}
+
 .chart__profiles .chart__eyebrow--sub {
   display: flex;
   align-items: center;
