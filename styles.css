@@ -1978,6 +1978,12 @@ section {
   flex-wrap: wrap;
 }
 
+
+.chart__profiles-settings-button {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
 .chart__eyebrow--sub {
   background: #f8f9fb;
   color: #60708f;
