@@ -1978,6 +1978,20 @@ section {
   flex-wrap: wrap;
 }
 
+
+.chart__profiles-settings-button {
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.chart__eyebrow-text {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
 .chart__eyebrow--sub {
   background: #f8f9fb;
   color: #60708f;
@@ -1987,6 +2001,7 @@ section {
   display: block;
   width: 100%;
   text-align: center;
+  position: relative;
   box-shadow: 0px 2px 1px 0px rgba(15, 20, 40, 0.1);
   font-family: var(--font-heading);
 }

@@ -378,7 +378,16 @@
       <div class="chart__profiles" aria-live="polite">
         <div class="chart__profiles-header">
           <div>
-            <p class="chart__eyebrow chart__eyebrow--sub">1D Profiles</p>
+            <p class="chart__eyebrow chart__eyebrow--sub">
+              <span class="chart__eyebrow-text">1D Profiles</span>
+              <button class="chart__settings-button chart__profiles-settings-button" type="button" id="profile-settings-button" aria-label="Réglages des profils 1D">
+                <span class="chart__settings-icon chart__settings-icon--gear" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                    <path d="M 18.426 12.846c 0.036 -0.279 0.054 -0.567 0.054 -0.846s -0.018 -0.567 -0.063 -0.846l 1.827 -1.422a 0.45 0.45 0 0 0 0.108 -0.576l -1.728 -2.988a 0.45 0.45 0 0 0 -0.54 -0.198l -2.151 0.864a 6.318 6.318 0 0 0 -1.467 -0.846l -0.324 -2.286a 0.45 0.45 0 0 0 -0.45 -0.378h -3.456a 0.45 0.45 0 0 0 -0.45 0.378l -0.324 2.286a 6.39 6.39 0 0 0 -1.467 0.846l -2.151 -0.864a 0.45 0.45 0 0 0 -0.54 0.198L 3.666 9.156a 0.45 0.45 0 0 0 0.108 0.576l 1.827 1.422c -0.045 0.279 -0.063 0.567 -0.063 0.846s 0.018 0.567 0.063 0.846l -1.827 1.422a 0.45 0.45 0 0 0 -0.108 0.576l 1.728 2.988a 0.45 0.45 0 0 0 0.54 0.198l 2.151 -0.864c 0.45 0.351 0.945 0.639 1.467 0.846l 0.324 2.286a 0.45 0.45 0 0 0 0.45 0.378h 3.456a 0.45 0.45 0 0 0 0.45 -0.378l 0.324 -2.286c 0.522 -0.207 1.017 -0.495 1.467 -0.846l 2.151 0.864a 0.45 0.45 0 0 0 0.54 -0.198l 1.728 -2.988a 0.45 0.45 0 0 0 -0.108 -0.576l -1.827 -1.422ZM 12 15.15A 3.15 3.15 0 1 1 12 8.85a 3.15 3.15 0 0 1 0 6.3Z"></path>
+                  </svg>
+                </span>
+              </button>
+            </p>
           </div>
         </div>
         <div id="profile-content" class="chart__profiles-grid">
@@ -452,6 +461,7 @@
     const chartProfiles = document.querySelector('.chart__profiles');
     const chartSettingsButton = document.getElementById('chart-settings-button');
     const chartSettingsPanel = document.getElementById('chart-settings-panel');
+    const profileSettingsButton = document.getElementById('profile-settings-button');
     const profileContent = document.getElementById('profile-content');
     const hoveredValues = document.getElementById('hovered-values');
     const axisLabelElements = {
@@ -2183,6 +2193,13 @@
     });
 
     if (chartSettingsButton && chartSettingsPanel) {
+      if (profileSettingsButton) {
+        profileSettingsButton.addEventListener('click', (event) => {
+          event.stopPropagation();
+          toggleSettingsPanel();
+        });
+      }
+
       chartSettingsButton.addEventListener('click', (event) => {
         event.stopPropagation();
         toggleSettingsPanel();
