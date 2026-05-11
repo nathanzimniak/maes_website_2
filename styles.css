@@ -1995,6 +1995,22 @@ section {
   margin-left: auto;
   position: static;
   transform: none;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 0px;
+  background: transparent;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.chart__profiles-settings-button:hover .chart__settings-icon--gear svg path,
+.chart__profiles-settings-button:focus-visible .chart__settings-icon--gear svg path {
+  fill: rgba(96, 112, 143, 0.6);
 }
 
 .chart__eyebrow--sub {
