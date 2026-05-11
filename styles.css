@@ -2052,6 +2052,24 @@ section {
   fill: rgba(96, 112, 143, 0.6);
 }
 
+.chart__profile-settings {
+  position: relative;
+}
+
+.chart__settings-panel--profiles {
+  right: 0;
+  top: calc(100% + var(--space-1));
+  border-radius: var(--radius-1) 0px var(--radius-1) var(--radius-1);
+  min-width: 260px;
+}
+
+.chart__settings-description {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+
 .chart__eyebrow--sub {
   background: #f8f9fb;
   color: #60708f;
