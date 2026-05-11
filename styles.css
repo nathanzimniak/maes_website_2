@@ -2006,6 +2006,7 @@ section {
   display: block;
   width: 100%;
   text-align: center;
+  position: relative;
   box-shadow: 0px 2px 1px 0px rgba(15, 20, 40, 0.1);
   font-family: var(--font-heading);
 }
