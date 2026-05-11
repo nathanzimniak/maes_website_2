@@ -1992,6 +1992,8 @@ section {
   gap: var(--space-3);
   align-items: center;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
 }
 
 
@@ -2054,6 +2056,7 @@ section {
 
 .chart__profile-settings {
   position: relative;
+  z-index: 8;
 }
 
 .chart__settings-panel--profiles {
@@ -2061,6 +2064,7 @@ section {
   top: calc(100% + var(--space-1));
   border-radius: var(--radius-1) 0px var(--radius-1) var(--radius-1);
   min-width: 260px;
+  z-index: 12;
 }
 
 .chart__settings-description {
