@@ -1992,6 +1992,8 @@ section {
   gap: var(--space-3);
   align-items: center;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
 }
 
 
@@ -2050,6 +2052,26 @@ section {
 .chart__profiles-settings-button:hover .chart__settings-icon--gear svg path,
 .chart__profiles-settings-button:focus-visible .chart__settings-icon--gear svg path {
   fill: rgba(96, 112, 143, 0.6);
+}
+
+.chart__profile-settings {
+  position: relative;
+  z-index: 8;
+}
+
+.chart__settings-panel--profiles {
+  right: 0;
+  top: calc(100% + var(--space-1));
+  border-radius: var(--radius-1) 0px var(--radius-1) var(--radius-1);
+  min-width: 260px;
+  z-index: 12;
+}
+
+.chart__settings-description {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--color-muted);
 }
 
 .chart__eyebrow--sub {
