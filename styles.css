@@ -827,14 +827,14 @@ section {
   position: relative;
   --plot-area-pad-x: 10px;
   --plot-area-pad-y: 10px;
-  --scatter-plot-x: 30px;
-  --scatter-plot-y: -4px;
-  --settings-gear-x: 518px;
-  --settings-gear-y: 20px;
-  --axis-x-select-x: 276px;
-  --axis-x-select-y: 478px;
+  --scatter-plot-x: 10px;
+  --scatter-plot-y: -6px;
+  --settings-gear-x: 514px;
+  --settings-gear-y: -10px;
+  --axis-x-select-x: 262px;
+  --axis-x-select-y: 428px;
   --axis-y-select-x: 6px;
-  --axis-y-select-y: 228px;
+  --axis-y-select-y: 202px;
 }
 
 .chart__plot-area {
