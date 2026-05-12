@@ -1184,10 +1184,13 @@
       g20: { label: 'Maximum point altitude', latex: 'x_{end}', symbol: 'xend' }
     };
 
+    const axisExcludedMetricKeys = new Set(['g1', 'g2', 'g3', 'g4', 'g5']);
+
     function populateAxisSelectOptions() {
       axisSelects.forEach((select) => {
         select.innerHTML = '';
         const entries = Object.keys(hoveredMetricLabels)
+          .filter((key) => !axisExcludedMetricKeys.has(key))
           .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
 
         entries.forEach((key) => {
