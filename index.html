@@ -2174,7 +2174,7 @@
       select.addEventListener('change', () => {
         select.dataset.profileCode = String(profileCodeMap[select.value] ?? 0);
         updateCustomSelectDisplay(select);
-        const isProfileFocusSelect = select.id === 'profile-title-select-1' || select.id === 'profile-title-select-2';
+        const isProfileFocusSelect = select.id === 'profile-title-select-1' || select.id === 'profile-title-select-2' || select.id === 'profile-axis-select';
         if (isProfileFocusSelect) {
           const selectedSolution = selectedSolutionIndex !== null ? currentSolutions[selectedSolutionIndex] : null;
           if (selectedSolution?.profiles) {
