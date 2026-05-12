@@ -2247,12 +2247,24 @@
     profileSelects.forEach((select) => {
       const code = profileCodeMap[select.value] ?? 0;
       select.dataset.profileCode = String(code);
+      select.dataset.previousValue = select.value;
       select.addEventListener('change', () => {
+        const previousValue = select.dataset.previousValue ?? select.value;
+        const selectedSolution = selectedSolutionIndex !== null ? currentSolutions[selectedSolutionIndex] : null;
+        const xAValue = Number(selectedSolution?.g19);
+        const hasNullAAltitude = Number.isFinite(xAValue) && xAValue === 0;
+
+        if (select.id === 'profile-title-select-1' && select.value === 'disk-outflow' && hasNullAAltitude) {
+          select.value = previousValue;
+          updateCustomSelectDisplay(select);
+          return;
+        }
+
         select.dataset.profileCode = String(profileCodeMap[select.value] ?? 0);
+        select.dataset.previousValue = select.value;
         updateCustomSelectDisplay(select);
         const isProfileFocusSelect = select.id === 'profile-title-select-1' || select.id === 'profile-title-select-2' || select.id === 'profile-axis-select';
         if (isProfileFocusSelect) {
-          const selectedSolution = selectedSolutionIndex !== null ? currentSolutions[selectedSolutionIndex] : null;
           if (selectedSolution?.profiles) {
             renderProfiles(selectedSolution);
           } else if (selectedSolution) {
