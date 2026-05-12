@@ -501,6 +501,7 @@
     const profileSettingsPanel = document.getElementById('profile-settings-panel');
     const profileContent = document.getElementById('profile-content');
     const profileFocusSelect = document.getElementById('profile-title-select-1');
+    const profileScaleSelect = document.getElementById('profile-title-select-2');
     const hoveredValues = document.getElementById('hovered-values');
     const axisLabelElements = {
       x: document.getElementById('x-axis-label'),
@@ -1624,7 +1625,8 @@
       height = 200,
       yDomainOverride = null,
       xDomainOverride = null,
-      disableYPadding = false
+      disableYPadding = false,
+      xScaleType = 'linear'
     ) {
       const padding = { top: 10, right: 16, bottom: 36, left: 40 };
       const dataXMin = Math.min(...xValues);
@@ -1675,7 +1677,16 @@
       const plotHeight = height - padding.top - padding.bottom;
       const step = xRange / (xValues.length - 1 || 1);
 
-      const xScale = (x) => padding.left + ((x - xMin) / xRange) * plotWidth;
+      const useLogXScale = xScaleType === 'log' && xMin > 0 && xMax > 0;
+      const safeXMin = useLogXScale ? xMin : 0;
+      const safeXRange = useLogXScale ? Math.log10(xMax) - Math.log10(safeXMin) || 1 : xRange;
+      const xScale = (x) => {
+        if (useLogXScale) {
+          const clampedX = Math.max(x, safeXMin);
+          return padding.left + ((Math.log10(clampedX) - Math.log10(safeXMin)) / safeXRange) * plotWidth;
+        }
+        return padding.left + ((x - xMin) / xRange) * plotWidth;
+      };
       const yScale = (y) => padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
 
       const pointPairs = xValues.map((x, idx) => ({
@@ -1720,7 +1731,9 @@
 
       const yMid = (yMin + yMax) / 2;
       const yTicks = [yMin, yMid, yMax];
-      const xTicks = Array.from({ length: 4 }, (_, index) => xMin + xRange * (index / 3));
+      const xTicks = useLogXScale
+        ? buildTicks({ min: safeXMin, max: xMax }, 'log', 4)
+        : Array.from({ length: 4 }, (_, index) => xMin + xRange * (index / 3));
       const xGridTicks = xTicks;
 
       return {
@@ -1971,7 +1984,8 @@
           sparklineHeight,
           options.yDomainOverride ?? null,
           profileXDomainOverride,
-          options.disableYPadding === true
+          options.disableYPadding === true,
+          profileScaleSelect?.value === 'log' ? 'log' : 'linear'
         );
         const markerPositionFromXValue = (xValue) => {
           const hasMarker = Number.isFinite(xValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
@@ -2021,8 +2035,8 @@
                       x2="${chart.width - chart.padding.right}" y2="${chart.padding.top + ((chart.yGridTicks[2] - tick) / (chart.yGridTicks[2] - chart.yGridTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"></line>
               `).join('')}
               ${chart.xGridTicks.map((tick) => `
-                <line x1="${chart.padding.left + ((tick - chart.xGridTicks[0]) / (chart.xGridTicks[chart.xGridTicks.length - 1] - chart.xGridTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
-                      y1="${chart.padding.top}" x2="${chart.padding.left + ((tick - chart.xGridTicks[0]) / (chart.xGridTicks[chart.xGridTicks.length - 1] - chart.xGridTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                <line x1="${chart.xScale(tick)}"
+                      y1="${chart.padding.top}" x2="${chart.xScale(tick)}"
                       y2="${chart.height - chart.padding.bottom}"></line>
               `).join('')}
             </g>
@@ -2034,8 +2048,8 @@
                       x2="${chart.padding.left}" y2="${chart.padding.top + ((chart.yTicks[2] - tick) / (chart.yTicks[2] - chart.yTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"></line>
               `).join('')}
               ${chart.xTicks.map((tick) => `
-                <line x1="${chart.padding.left + ((tick - chart.xTicks[0]) / (chart.xTicks[chart.xTicks.length - 1] - chart.xTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
-                      y1="${chart.height - chart.padding.bottom}" x2="${chart.padding.left + ((tick - chart.xTicks[0]) / (chart.xTicks[chart.xTicks.length - 1] - chart.xTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                <line x1="${chart.xScale(tick)}"
+                      y1="${chart.height - chart.padding.bottom}" x2="${chart.xScale(tick)}"
                       y2="${chart.height - chart.padding.bottom + 4}"></line>
               `).join('')}
             </g>
@@ -2046,7 +2060,7 @@
                 </text>
               `).join('')}
               ${chart.xTicks.map((tick) => `
-                <text x="${chart.padding.left + ((tick - chart.xTicks[0]) / (chart.xTicks[chart.xTicks.length - 1] - chart.xTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                <text x="${chart.xScale(tick)}"
                       y="${chart.height - chart.padding.bottom + 18}" text-anchor="middle">
                   ${chart.format(tick)}
                 </text>
