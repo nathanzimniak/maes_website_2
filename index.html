@@ -1889,31 +1889,33 @@
           return null;
         })();
         const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null, profileXDomainOverride);
-        const hasXSm = Number.isFinite(xSmValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
-          xSmValue >= chart.xMin && xSmValue <= chart.xMax;
-        const xSmX = hasXSm
-          ? chart.padding.left + ((xSmValue - chart.xMin) / (chart.xMax - chart.xMin || 1)) * (chart.width - chart.padding.left - chart.padding.right)
-          : null;
-        let xSmY = null;
-        let xSmY1 = null;
-        let xSmY2 = null;
-        if (hasXSm) {
-          const insertionIndex = profiles.x.findIndex((x) => x >= xSmValue);
+        const markerPositionFromXValue = (xValue) => {
+          const hasMarker = Number.isFinite(xValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
+            xValue >= chart.xMin && xValue <= chart.xMax;
+          if (!hasMarker) return null;
+          const markerX = chart.padding.left + ((xValue - chart.xMin) / (chart.xMax - chart.xMin || 1)) * (chart.width - chart.padding.left - chart.padding.right);
+          const insertionIndex = profiles.x.findIndex((x) => x >= xValue);
           const rightIndex = insertionIndex === -1 ? profiles.x.length - 1 : insertionIndex;
           const leftIndex = Math.max(0, rightIndex - 1);
           const xLeft = profiles.x[leftIndex];
           const xRight = profiles.x[rightIndex];
           const yLeft = values[leftIndex];
           const yRight = values[rightIndex];
-          const interpolationRatio = xRight !== xLeft ? (xSmValue - xLeft) / (xRight - xLeft) : 0;
-          const yAtXSm = yLeft + (yRight - yLeft) * interpolationRatio;
-          const centerY = chart.yScale(yAtXSm);
+          const interpolationRatio = xRight !== xLeft ? (xValue - xLeft) / (xRight - xLeft) : 0;
+          const yAtX = yLeft + (yRight - yLeft) * interpolationRatio;
+          const centerY = chart.yScale(yAtX);
           const pointRadius = 4;
           const markerHalfHeight = pointRadius;
-          xSmY = centerY;
-          xSmY1 = Math.max(chart.padding.top, centerY - markerHalfHeight);
-          xSmY2 = Math.min(chart.height - chart.padding.bottom, centerY + markerHalfHeight);
-        }
+          return {
+            x: markerX,
+            y: centerY,
+            y1: Math.max(chart.padding.top, centerY - markerHalfHeight),
+            y2: Math.min(chart.height - chart.padding.bottom, centerY + markerHalfHeight),
+          };
+        };
+
+        const xSmMarker = markerPositionFromXValue(xSmValue);
+        const xAMarker = xAValue === 0 ? null : markerPositionFromXValue(xAValue);
 
         const gradientId = `sparkline-gradient-${serie.key}`;
         const clipPathId = `sparkline-clip-${serie.key}`;
@@ -1974,7 +1976,8 @@
             <g clip-path="url(#${clipPathId})">
               <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
               <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
-              ${hasXSm ? `<line class="chart__sparkline-xsm-line" x1="${xSmX}" y1="${xSmY1}" x2="${xSmX}" y2="${xSmY2}" style="color:${serie.color};"></line>` : ''}
+              ${xSmMarker ? `<line class="chart__sparkline-xsm-line" x1="${xSmMarker.x}" y1="${xSmMarker.y1}" x2="${xSmMarker.x}" y2="${xSmMarker.y2}" style="color:${serie.color};"></line>` : ''}
+              ${xAMarker ? `<line class="chart__sparkline-xa-line" x1="${xAMarker.x}" y1="${xAMarker.y1}" x2="${xAMarker.x}" y2="${xAMarker.y2}" style="color:${serie.color};"></line>` : ''}
               <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
             </g>
           </svg>
