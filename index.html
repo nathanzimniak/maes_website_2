@@ -410,6 +410,7 @@
                     <select id="profile-title-select-1" class="chart__select chart__select--profile" aria-label="Focus option 1">
                       <option value="disk">Disk</option>
                       <option value="outflow">Outflow</option>
+                      <option value="disk-outflow">Disk/Outflow</option>
                     </select>
                     <select id="profile-title-select-2" class="chart__select chart__select--profile" aria-label="Title option 2">
                       <option value="test21">Test21</option>
@@ -1832,6 +1833,7 @@
     function renderProfiles(solution, options = {}) {
       const { profiles } = solution;
       const xSmValue = Number(solution?.g17);
+      const xAValue = Number(solution?.g19);
       const xEndValue = Number(solution?.g20);
       const profileCurveColor = '#60708f';
       const series = [
@@ -1872,6 +1874,12 @@
         const profileXDomainOverride = (() => {
           const dataXMin = Math.min(...profiles.x);
           const selectedFocus = profileFocusSelect?.value;
+          if (selectedFocus === 'disk-outflow') {
+            if (Number.isFinite(xAValue) && xAValue !== 0) {
+              return { min: dataXMin, max: Math.max(dataXMin, 2 * xAValue) };
+            }
+            return null;
+          }
           if (selectedFocus === 'outflow' && Number.isFinite(xEndValue)) {
             return { min: dataXMin, max: Math.max(dataXMin, xEndValue) };
           }
