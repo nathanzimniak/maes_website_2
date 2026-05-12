@@ -353,6 +353,14 @@
                 </span>
               </li>
               <li class="chart__hovered-item chart__control-label--aspect">
+                <span class="chart__label-text">Ideal point altitude</span>
+                <span class="chart__label-math">
+                  <span class="math-label" data-latex="x_{id}"></span>
+                  <span class="chart__label-equals">=</span>
+                  <span class="chart__label-value">―</span>
+                </span>
+              </li>
+              <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">SM point altitude</span>
                 <span class="chart__label-math">
                   <span class="math-label" data-latex="x_{SM}"></span>
@@ -364,6 +372,14 @@
                 <span class="chart__label-text">A point altitude</span>
                 <span class="chart__label-math">
                   <span class="math-label" data-latex="x_A"></span>
+                  <span class="chart__label-equals">=</span>
+                  <span class="chart__label-value">―</span>
+                </span>
+              </li>
+              <li class="chart__hovered-item chart__control-label--aspect">
+                <span class="chart__label-text">Maximum point altitude</span>
+                <span class="chart__label-math">
+                  <span class="math-label" data-latex="x_{end}"></span>
                   <span class="chart__label-equals">=</span>
                   <span class="chart__label-value">―</span>
                 </span>
@@ -695,8 +711,10 @@
         g14: 'lambdaBP',
         g15: 'omega_star',
         g16: 'e',
-        g17: 'x_sm',
-        g18: 'x_a',
+        g17: 'xid',
+        g18: 'x_sm',
+        g19: 'x_a',
+        g20: 'xend',
       };
       const quantityIndexMap = quantities.reduce((accumulator, name, index) => {
         accumulator[name] = index;
@@ -1158,8 +1176,10 @@
       g14: { label: 'Magnetic lever arm', latex: '\\lambda', symbol: 'λ' },
       g15: { label: 'Magnetic surface rotation', latex: '\\omega_*', symbol: 'ω*' },
       g16: { label: 'Bernoulli invariant', latex: 'e', symbol: 'e' },
-      g17: { label: 'SM point altitude', latex: 'x_{SM}', symbol: 'xSM' },
-      g18: { label: 'A point altitude', latex: 'x_A', symbol: 'xA' }
+      g17: { label: 'Ideal point altitude', latex: 'x_{id}', symbol: 'xid' },
+      g18: { label: 'SM point altitude', latex: 'x_{SM}', symbol: 'xSM' },
+      g19: { label: 'A point altitude', latex: 'x_A', symbol: 'xA' },
+      g20: { label: 'Maximum point altitude', latex: 'x_{end}', symbol: 'xend' }
     };
 
     function populateAxisSelectOptions() {
