@@ -2237,7 +2237,6 @@ section {
   stroke-width: 2.0;
   stroke-linecap: round;
   opacity: 0.95;
-  stroke-dasharray: 2 2;
 }
 
 .chart__sparkline-area {
