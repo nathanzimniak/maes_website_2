@@ -1915,7 +1915,7 @@
         };
 
         const xSmMarker = markerPositionFromXValue(xSmValue);
-        const xAMarker = markerPositionFromXValue(xAValue);
+        const xAMarker = xAValue === 0 ? null : markerPositionFromXValue(xAValue);
 
         const gradientId = `sparkline-gradient-${serie.key}`;
         const clipPathId = `sparkline-clip-${serie.key}`;
