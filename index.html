@@ -408,9 +408,9 @@
                   <label class="chart__settings-label" for="profile-title-select-1">Focus</label>
                   <div class="chart__settings-controls">
                     <select id="profile-title-select-1" class="chart__select chart__select--profile" aria-label="Focus option 1">
-                      <option value="disk">Disk</option>
-                      <option value="outflow">Outflow</option>
-                      <option value="disk-outflow">Disk/Outflow</option>
+                      <option value="disk" data-latex="[0, 2x_{SM}]">[0, 2x_{SM}]</option>
+                      <option value="outflow" data-latex="[0, x_{end}]">[0, x_{end}]</option>
+                      <option value="disk-outflow" data-latex="[0, 2x_{A}]">[0, 2x_{A}]</option>
                     </select>
                     <select id="profile-title-select-2" class="chart__select chart__select--profile" aria-label="Title option 2">
                       <option value="test21">Test21</option>
@@ -2215,13 +2215,21 @@
       });
     });
     profileLabelSelects.forEach((select) => {
+      const usesMath = select.id === 'profile-title-select-1';
       buildCustomSelect(select, {
+        usesMath,
         renderLabel: (label, select) => {
           const selectedOption = select.options[select.selectedIndex];
-          label.textContent = selectedOption ? selectedOption.textContent : select.value;
+          const latex = selectedOption?.dataset.latex;
+          label.innerHTML = usesMath && latex
+            ? `<span class="math-label" data-latex="${latex}"></span>`
+            : (selectedOption ? selectedOption.textContent : select.value);
         },
         renderOption: (item, option) => {
-          item.textContent = option.textContent;
+          const latex = option.dataset.latex;
+          item.innerHTML = usesMath && latex
+            ? `<span class="math-label" data-latex="${latex}"></span>`
+            : option.textContent;
         },
       });
     });
