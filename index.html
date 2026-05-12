@@ -1677,8 +1677,10 @@
       const plotHeight = height - padding.top - padding.bottom;
       const step = xRange / (xValues.length - 1 || 1);
 
-      const useLogXScale = xScaleType === 'log' && xMin > 0 && xMax > 0;
-      const safeXMin = useLogXScale ? xMin : 0;
+      const positiveVisibleXValues = xValues.filter((x) => x > 0 && x <= xMax);
+      const minPositiveVisibleX = positiveVisibleXValues.length ? Math.min(...positiveVisibleXValues) : null;
+      const useLogXScale = xScaleType === 'log' && xMax > 0 && Number.isFinite(minPositiveVisibleX);
+      const safeXMin = useLogXScale ? Math.max(minPositiveVisibleX, 1e-12) : 0;
       const safeXRange = useLogXScale ? Math.log10(xMax) - Math.log10(safeXMin) || 1 : xRange;
       const xScale = (x) => {
         if (useLogXScale) {
@@ -1689,10 +1691,14 @@
       };
       const yScale = (y) => padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
 
-      const pointPairs = xValues.map((x, idx) => ({
-        x: xScale(x),
-        y: yScale(yValues[idx]),
-      }));
+      const pointPairs = xValues.reduce((accumulator, x, index) => {
+        if (useLogXScale && x <= 0) return accumulator;
+        accumulator.push({
+          x: xScale(x),
+          y: yScale(yValues[index]),
+        });
+        return accumulator;
+      }, []);
       const points = pointPairs.map((point) => `${point.x},${point.y}`).join(' ');
       const baselineY = height - padding.bottom;
       const visibleAreaSamples = [];
@@ -1706,7 +1712,7 @@
         visibleAreaSamples.push({ x, y });
       };
 
-      const visibleProfileXMin = Math.max(xMin, dataXMin);
+      const visibleProfileXMin = useLogXScale ? Math.max(safeXMin, dataXMin) : Math.max(xMin, dataXMin);
       const visibleProfileXMax = Math.min(xMax, dataXMax);
       if (visibleProfileXMin <= visibleProfileXMax) {
         pushVisibleSample(visibleProfileXMin, getInterpolatedYAtX(visibleProfileXMin));
@@ -1991,7 +1997,7 @@
           const hasMarker = Number.isFinite(xValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
             xValue >= chart.xMin && xValue <= chart.xMax;
           if (!hasMarker) return null;
-          const markerX = chart.padding.left + ((xValue - chart.xMin) / (chart.xMax - chart.xMin || 1)) * (chart.width - chart.padding.left - chart.padding.right);
+          const markerX = chart.xScale(xValue);
           const insertionIndex = profiles.x.findIndex((x) => x >= xValue);
           const rightIndex = insertionIndex === -1 ? profiles.x.length - 1 : insertionIndex;
           const leftIndex = Math.max(0, rightIndex - 1);
