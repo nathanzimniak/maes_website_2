@@ -418,15 +418,6 @@
                     </select>
                   </div>
                 </div>
-                <div class="chart__settings-row">
-                  <label class="chart__settings-label" for="profile-scale-select">X-scale</label>
-                  <div class="chart__settings-controls">
-                    <select id="profile-scale-select" class="chart__select chart__select--scale" aria-label="Échelle X des profils 1D">
-                      <option value="linear">Linear</option>
-                      <option value="log">Logarithmic</option>
-                    </select>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -506,7 +497,6 @@
     const profileSettingsPanel = document.getElementById('profile-settings-panel');
     const profileContent = document.getElementById('profile-content');
     const profileFocusSelect = document.getElementById('profile-title-select-1');
-    const profileScaleSelect = document.getElementById('profile-scale-select');
     const hoveredValues = document.getElementById('hovered-values');
     const axisLabelElements = {
       x: document.getElementById('x-axis-label'),
@@ -552,7 +542,6 @@
     let yAxisKey = 'g6';
     let xScaleType = 'log';
     let yScaleType = 'log';
-    let profileScaleType = 'linear';
     let selectedScenario = 'SM';
     let axisDomainOverrides = null;
     let currentSolutions = [];
@@ -1563,14 +1552,12 @@
       });
     }
 
-    function buildProfileChart(xValues, yValues, width = 320, height = 200, yDomainOverride = null, xDomainOverride = null, xScaleType = 'linear') {
+    function buildProfileChart(xValues, yValues, width = 320, height = 200, yDomainOverride = null, xDomainOverride = null) {
       const padding = { top: 10, right: 16, bottom: 36, left: 40 };
       const dataXMin = Math.min(...xValues);
       const dataXMax = Math.max(...xValues);
-      const requestedXMin = xDomainOverride?.min ?? dataXMin;
-      const requestedXMax = xDomainOverride?.max ?? dataXMax;
-      const xMin = xScaleType === 'log' ? Math.max(requestedXMin, Number.MIN_VALUE) : requestedXMin;
-      const xMax = xScaleType === 'log' ? Math.max(requestedXMax, xMin * 10) : requestedXMax;
+      const xMin = xDomainOverride?.min ?? dataXMin;
+      const xMax = xDomainOverride?.max ?? dataXMax;
       const getInterpolatedYAtX = (targetX) => {
         if (!xValues.length) return null;
         if (targetX <= xValues[0]) return yValues[0];
@@ -1615,13 +1602,7 @@
       const plotHeight = height - padding.top - padding.bottom;
       const step = xRange / (xValues.length - 1 || 1);
 
-      const normalizeX = xScaleType === 'log'
-        ? (value) => Math.log10(Math.max(value, xMin))
-        : (value) => value;
-      const xStart = normalizeX(xMin);
-      const xEnd = normalizeX(xMax);
-      const xSpan = xEnd - xStart || 1;
-      const xScale = (x) => padding.left + ((normalizeX(x) - xStart) / xSpan) * plotWidth;
+      const xScale = (x) => padding.left + ((x - xMin) / xRange) * plotWidth;
       const yScale = (y) => padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
 
       const pointPairs = xValues.map((x, idx) => ({
@@ -1666,7 +1647,7 @@
 
       const yMid = (yMin + yMax) / 2;
       const yTicks = [yMin, yMid, yMax];
-      const xTicks = buildTicks({ min: xMin, max: xMax }, xScaleType, 3);
+      const xTicks = Array.from({ length: 4 }, (_, index) => xMin + xRange * (index / 3));
       const xGridTicks = xTicks;
 
       return {
@@ -1684,9 +1665,6 @@
         yScale,
         xMin,
         xMax,
-        xScaleType,
-        xNormalizedMin: xStart,
-        xNormalizedSpan: xSpan,
         plotWidth,
         plotHeight,
         step,
@@ -1723,9 +1701,7 @@
         const gridXMin = gridBox.x;
         const gridXMax = gridBox.x + gridBox.width;
         const localX = clamp(transformed.x, gridXMin, gridXMax);
-        const normalizedRatio = (localX - gridXMin) / (gridBox.width || 1);
-        const normalizedX = chart.xNormalizedMin + normalizedRatio * chart.xNormalizedSpan;
-        const xValue = chart.xScaleType === 'log' ? 10 ** normalizedX : normalizedX;
+        const xValue = chart.xMin + ((localX - gridXMin) / (gridBox.width || 1)) * (chart.xMax - chart.xMin);
         const clampedDataX = clamp(xValue, xValues[0], xValues[xValues.length - 1]);
         let upperIndex = xValues.findIndex((value) => value >= clampedDataX);
         if (upperIndex === -1) upperIndex = xValues.length - 1;
@@ -1915,12 +1891,12 @@
           }
           return null;
         })();
-        const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null, profileXDomainOverride, profileScaleType);
+        const chart = buildProfileChart(profiles.x, values, chartWidth, sparklineHeight, options.yDomainOverride ?? null, profileXDomainOverride);
         const markerPositionFromXValue = (xValue) => {
           const hasMarker = Number.isFinite(xValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
             xValue >= chart.xMin && xValue <= chart.xMax;
           if (!hasMarker) return null;
-          const markerX = chart.xScale(xValue);
+          const markerX = chart.padding.left + ((xValue - chart.xMin) / (chart.xMax - chart.xMin || 1)) * (chart.width - chart.padding.left - chart.padding.right);
           const insertionIndex = profiles.x.findIndex((x) => x >= xValue);
           const rightIndex = insertionIndex === -1 ? profiles.x.length - 1 : insertionIndex;
           const leftIndex = Math.max(0, rightIndex - 1);
@@ -1964,8 +1940,8 @@
                       x2="${chart.width - chart.padding.right}" y2="${chart.padding.top + ((chart.yGridTicks[2] - tick) / (chart.yGridTicks[2] - chart.yGridTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"></line>
               `).join('')}
               ${chart.xGridTicks.map((tick) => `
-                <line x1="${chart.xScale(tick)}"
-                      y1="${chart.padding.top}" x2="${chart.xScale(tick)}"
+                <line x1="${chart.padding.left + ((tick - chart.xGridTicks[0]) / (chart.xGridTicks[chart.xGridTicks.length - 1] - chart.xGridTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                      y1="${chart.padding.top}" x2="${chart.padding.left + ((tick - chart.xGridTicks[0]) / (chart.xGridTicks[chart.xGridTicks.length - 1] - chart.xGridTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
                       y2="${chart.height - chart.padding.bottom}"></line>
               `).join('')}
             </g>
@@ -1977,8 +1953,8 @@
                       x2="${chart.padding.left}" y2="${chart.padding.top + ((chart.yTicks[2] - tick) / (chart.yTicks[2] - chart.yTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"></line>
               `).join('')}
               ${chart.xTicks.map((tick) => `
-                <line x1="${chart.xScale(tick)}"
-                      y1="${chart.height - chart.padding.bottom}" x2="${chart.xScale(tick)}"
+                <line x1="${chart.padding.left + ((tick - chart.xTicks[0]) / (chart.xTicks[chart.xTicks.length - 1] - chart.xTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
+                      y1="${chart.height - chart.padding.bottom}" x2="${chart.padding.left + ((tick - chart.xTicks[0]) / (chart.xTicks[chart.xTicks.length - 1] - chart.xTicks[0] || 1)) * (chart.width - chart.padding.left - chart.padding.right)}"
                       y2="${chart.height - chart.padding.bottom + 4}"></line>
               `).join('')}
             </g>
@@ -2182,18 +2158,6 @@
         updateChart();
       });
     });
-
-    if (profileScaleSelect) {
-      profileScaleSelect.value = profileScaleType;
-      profileScaleSelect.addEventListener('change', () => {
-        profileScaleType = profileScaleSelect.value;
-        updateCustomSelectDisplay(profileScaleSelect);
-        const activeSolution = pinnedSolutionIndex !== null
-          ? currentSolutions[pinnedSolutionIndex]
-          : (selectedSolutionIndex !== null ? currentSolutions[selectedSolutionIndex] : null);
-        if (activeSolution?.profiles) renderProfiles(activeSolution);
-      });
-    }
 
     const profileCodeMap = {
       'exponential-decrease': 0,
