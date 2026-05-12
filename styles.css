@@ -2232,6 +2232,14 @@ section {
   opacity: 0.95;
 }
 
+.chart__sparkline-xa-line {
+  stroke: currentColor;
+  stroke-width: 2.0;
+  stroke-linecap: round;
+  opacity: 0.95;
+  stroke-dasharray: 2 2;
+}
+
 .chart__sparkline-area {
   pointer-events: none;
 }
