@@ -1689,6 +1689,13 @@
         }
         return padding.left + ((x - xMin) / xRange) * plotWidth;
       };
+      const xInvert = (screenX) => {
+        const ratio = (screenX - padding.left) / (plotWidth || 1);
+        if (useLogXScale) {
+          return 10 ** (Math.log10(safeXMin) + ratio * safeXRange);
+        }
+        return xMin + ratio * xRange;
+      };
       const yScale = (y) => padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
 
       const pointPairs = xValues.reduce((accumulator, x, index) => {
@@ -1754,6 +1761,7 @@
         yGridTicks: yTicks,
         format: (value) => formatTick(value),
         xScale,
+        xInvert,
         yScale,
         xMin,
         xMax,
@@ -1793,7 +1801,7 @@
         const gridXMin = gridBox.x;
         const gridXMax = gridBox.x + gridBox.width;
         const localX = clamp(transformed.x, gridXMin, gridXMax);
-        const xValue = chart.xMin + ((localX - gridXMin) / (gridBox.width || 1)) * (chart.xMax - chart.xMin);
+        const xValue = chart.xInvert(localX);
         const clampedDataX = clamp(xValue, xValues[0], xValues[xValues.length - 1]);
         let upperIndex = xValues.findIndex((value) => value >= clampedDataX);
         if (upperIndex === -1) upperIndex = xValues.length - 1;
