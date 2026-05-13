@@ -2003,22 +2003,28 @@
           const dataXMin = Math.min(...profiles.x);
           const selectedFocus = profileFocusSelect?.value;
           const isLogProfileScale = profileScaleSelect?.value === 'log';
+          const buildXDomain = (rawMax) => {
+            if (!Number.isFinite(rawMax)) {
+              return null;
+            }
+            const clampedMax = Math.max(dataXMin, rawMax);
+            if (isLogProfileScale && clampedMax > 0) {
+              const roundedMax = 10 ** Math.ceil(Math.log10(clampedMax));
+              return { min: dataXMin, max: Math.max(dataXMin, roundedMax) };
+            }
+            return { min: dataXMin, max: clampedMax };
+          };
           if (selectedFocus === 'disk-outflow') {
             if (Number.isFinite(xAValue) && xAValue !== 0) {
-              return { min: dataXMin, max: Math.max(dataXMin, 2 * xAValue) };
+              return buildXDomain(2 * xAValue);
             }
             return null;
           }
           if (selectedFocus === 'outflow' && Number.isFinite(xEndValue)) {
-            const outflowMax = Math.max(dataXMin, xEndValue);
-            if (isLogProfileScale && outflowMax > 0) {
-              const roundedMax = 10 ** Math.ceil(Math.log10(outflowMax));
-              return { min: dataXMin, max: Math.max(dataXMin, roundedMax) };
-            }
-            return { min: dataXMin, max: outflowMax };
+            return buildXDomain(xEndValue);
           }
           if (Number.isFinite(xSmValue)) {
-            return { min: dataXMin, max: Math.max(dataXMin, 2 * xSmValue) };
+            return buildXDomain(2 * xSmValue);
           }
           return null;
         })();
