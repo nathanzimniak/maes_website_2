@@ -416,7 +416,16 @@
                       <option value="disk-outflow" data-latex="[0, 2x_{A}]">[0, 2x_{A}]</option>
                       <option value="outflow" data-latex="[0, x_{end}]">[0, x_{end}]</option>
                     </select>
-                    <select id="profile-title-select-2" class="chart__select chart__select--profile chart__select--scale" aria-label="Profile scale">
+                    <select id="profile-title-select-2" class="chart__select chart__select--profile chart__select--scale" aria-label="Profile X scale">
+                      <option value="linear">Linear</option>
+                      <option value="log">Logarithmic</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="chart__settings-row">
+                  <label class="chart__settings-label" for="profile-y-scale-select">Y-axis</label>
+                  <div class="chart__settings-controls">
+                    <select id="profile-y-scale-select" class="chart__select chart__select--profile chart__select--scale" aria-label="Profile Y scale">
                       <option value="linear">Linear</option>
                       <option value="log">Logarithmic</option>
                     </select>
@@ -502,6 +511,7 @@
     const profileContent = document.getElementById('profile-content');
     const profileFocusSelect = document.getElementById('profile-title-select-1');
     const profileScaleSelect = document.getElementById('profile-title-select-2');
+    const profileYScaleSelect = document.getElementById('profile-y-scale-select');
     const hoveredValues = document.getElementById('hovered-values');
     const axisLabelElements = {
       x: document.getElementById('x-axis-label'),
@@ -516,6 +526,7 @@
       select.id === 'profile-axis-select'
       || select.id === 'profile-title-select-1'
       || select.id === 'profile-title-select-2'
+      || select.id === 'profile-y-scale-select'
     ));
     const resizeObserver = 'ResizeObserver' in window
       ? new ResizeObserver(() => updateChart())
@@ -2330,7 +2341,7 @@
         select.dataset.profileCode = String(profileCodeMap[select.value] ?? 0);
         select.dataset.previousValue = select.value;
         updateCustomSelectDisplay(select);
-        const isProfileFocusSelect = select.id === 'profile-title-select-1' || select.id === 'profile-title-select-2' || select.id === 'profile-axis-select';
+        const isProfileFocusSelect = select.id === 'profile-title-select-1' || select.id === 'profile-title-select-2' || select.id === 'profile-y-scale-select' || select.id === 'profile-axis-select';
         if (isProfileFocusSelect) {
           if (selectedSolution?.profiles) {
             renderProfiles(selectedSolution);
