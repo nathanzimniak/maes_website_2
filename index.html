@@ -416,7 +416,16 @@
                       <option value="disk-outflow" data-latex="[0, 2x_{A}]">[0, 2x_{A}]</option>
                       <option value="outflow" data-latex="[0, x_{end}]">[0, x_{end}]</option>
                     </select>
-                    <select id="profile-title-select-2" class="chart__select chart__select--profile chart__select--scale" aria-label="Profile scale">
+                    <select id="profile-title-select-2" class="chart__select chart__select--profile chart__select--scale" aria-label="Profile X scale">
+                      <option value="linear">Linear</option>
+                      <option value="log">Logarithmic</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="chart__settings-row">
+                  <label class="chart__settings-label" for="profile-y-scale-select">Y-axis</label>
+                  <div class="chart__settings-controls">
+                    <select id="profile-y-scale-select" class="chart__select chart__select--profile chart__select--scale" aria-label="Profile Y scale">
                       <option value="linear">Linear</option>
                       <option value="log">Logarithmic</option>
                     </select>
@@ -502,6 +511,7 @@
     const profileContent = document.getElementById('profile-content');
     const profileFocusSelect = document.getElementById('profile-title-select-1');
     const profileScaleSelect = document.getElementById('profile-title-select-2');
+    const profileYScaleSelect = document.getElementById('profile-y-scale-select');
     const hoveredValues = document.getElementById('hovered-values');
     const axisLabelElements = {
       x: document.getElementById('x-axis-label'),
@@ -516,6 +526,7 @@
       select.id === 'profile-axis-select'
       || select.id === 'profile-title-select-1'
       || select.id === 'profile-title-select-2'
+      || select.id === 'profile-y-scale-select'
     ));
     const resizeObserver = 'ResizeObserver' in window
       ? new ResizeObserver(() => updateChart())
@@ -1650,7 +1661,8 @@
       yDomainOverride = null,
       xDomainOverride = null,
       disableYPadding = false,
-      xScaleType = 'linear'
+      xScaleType = 'linear',
+      yScaleType = 'linear'
     ) {
       const padding = { top: 10, right: 16, bottom: 36, left: 40 };
       const dataXMin = Math.min(...xValues);
@@ -1685,8 +1697,24 @@
       if (Number.isFinite(yAtXMin)) visibleYValues.push(yAtXMin);
       if (Number.isFinite(yAtXMax)) visibleYValues.push(yAtXMax);
 
-      const computedYMin = visibleYValues.length ? Math.min(...visibleYValues) : Math.min(...yValues);
-      const computedYMax = visibleYValues.length ? Math.max(...visibleYValues) : Math.max(...yValues);
+      const useLogYScale = yScaleType === 'log';
+      const normalizeYValue = (value) => {
+        if (!Number.isFinite(value)) return null;
+        if (!useLogYScale) return value;
+        const absoluteValue = Math.abs(value);
+        return absoluteValue > 0 ? absoluteValue : null;
+      };
+      const normalizedYValues = yValues.map((value) => normalizeYValue(value));
+      const normalizedVisibleYValues = visibleYValues
+        .map((value) => normalizeYValue(value))
+        .filter((value) => Number.isFinite(value));
+      const fallbackNormalizedYValues = normalizedYValues.filter((value) => Number.isFinite(value));
+      const computedYMin = normalizedVisibleYValues.length
+        ? Math.min(...normalizedVisibleYValues)
+        : (fallbackNormalizedYValues.length ? Math.min(...fallbackNormalizedYValues) : 0);
+      const computedYMax = normalizedVisibleYValues.length
+        ? Math.max(...normalizedVisibleYValues)
+        : (fallbackNormalizedYValues.length ? Math.max(...fallbackNormalizedYValues) : 1);
       const rawYMin = yDomainOverride?.min ?? computedYMin;
       const rawYMax = yDomainOverride?.max ?? computedYMax;
       const xRange = xMax - xMin || 1;
@@ -1724,9 +1752,11 @@
 
       const pointPairs = xValues.reduce((accumulator, x, index) => {
         if (useLogXScale && x <= 0) return accumulator;
+        const normalizedYValue = normalizedYValues[index];
+        if (!Number.isFinite(normalizedYValue)) return accumulator;
         accumulator.push({
           x: xScale(x),
-          y: yScale(yValues[index]),
+          y: yScale(normalizedYValue),
         });
         return accumulator;
       }, []);
@@ -1746,13 +1776,13 @@
       const visibleProfileXMin = useLogXScale ? Math.max(safeXMin, dataXMin) : Math.max(xMin, dataXMin);
       const visibleProfileXMax = Math.min(xMax, dataXMax);
       if (visibleProfileXMin <= visibleProfileXMax) {
-        pushVisibleSample(visibleProfileXMin, getInterpolatedYAtX(visibleProfileXMin));
+        pushVisibleSample(visibleProfileXMin, normalizeYValue(getInterpolatedYAtX(visibleProfileXMin)));
         xValues.forEach((x, index) => {
           if (x > visibleProfileXMin && x < visibleProfileXMax) {
-            pushVisibleSample(x, yValues[index]);
+            pushVisibleSample(x, normalizedYValues[index]);
           }
         });
-        pushVisibleSample(visibleProfileXMax, getInterpolatedYAtX(visibleProfileXMax));
+        pushVisibleSample(visibleProfileXMax, normalizeYValue(getInterpolatedYAtX(visibleProfileXMax)));
       }
 
       const visiblePointPairs = visibleAreaSamples.map((sample) => ({
@@ -1979,6 +2009,14 @@
       const previousScrollLeft = profileContent?.scrollLeft ?? 0;
       profileContent.innerHTML = '';
       const sparklineHeight = 200;
+      const isLogProfileYScale = profileYScaleSelect?.value === 'log';
+      const normalizeYValue = (value) => {
+        if (!Number.isFinite(value)) return null;
+        if (!isLogProfileYScale) return value;
+        const absoluteValue = Math.abs(value);
+        return absoluteValue > 0 ? absoluteValue : null;
+      };
+
 
       series.forEach((serie) => {
         const values = profiles[serie.key];
@@ -2036,7 +2074,8 @@
           options.yDomainOverride ?? null,
           profileXDomainOverride,
           options.disableYPadding === true,
-          profileScaleSelect?.value === 'log' ? 'log' : 'linear'
+          profileScaleSelect?.value === 'log' ? 'log' : 'linear',
+          profileYScaleSelect?.value === 'log' ? 'log' : 'linear'
         );
         const markerPositionFromXValue = (xValue) => {
           const hasMarker = Number.isFinite(xValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
@@ -2048,9 +2087,11 @@
           const leftIndex = Math.max(0, rightIndex - 1);
           const xLeft = profiles.x[leftIndex];
           const xRight = profiles.x[rightIndex];
-          const yLeft = values[leftIndex];
-          const yRight = values[rightIndex];
+          const yLeft = normalizeYValue(values[leftIndex]);
+          const yRight = normalizeYValue(values[rightIndex]);
           const interpolationRatio = xRight !== xLeft ? (xValue - xLeft) / (xRight - xLeft) : 0;
+          const hasValidBounds = Number.isFinite(yLeft) && Number.isFinite(yRight);
+          if (!hasValidBounds) return null;
           const yAtX = yLeft + (yRight - yLeft) * interpolationRatio;
           const centerY = chart.yScale(yAtX);
           const pointRadius = 4;
@@ -2330,7 +2371,7 @@
         select.dataset.profileCode = String(profileCodeMap[select.value] ?? 0);
         select.dataset.previousValue = select.value;
         updateCustomSelectDisplay(select);
-        const isProfileFocusSelect = select.id === 'profile-title-select-1' || select.id === 'profile-title-select-2' || select.id === 'profile-axis-select';
+        const isProfileFocusSelect = select.id === 'profile-title-select-1' || select.id === 'profile-title-select-2' || select.id === 'profile-y-scale-select' || select.id === 'profile-axis-select';
         if (isProfileFocusSelect) {
           if (selectedSolution?.profiles) {
             renderProfiles(selectedSolution);
