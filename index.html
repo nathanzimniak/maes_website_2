@@ -1661,7 +1661,8 @@
       yDomainOverride = null,
       xDomainOverride = null,
       disableYPadding = false,
-      xScaleType = 'linear'
+      xScaleType = 'linear',
+      yScaleType = 'linear'
     ) {
       const padding = { top: 10, right: 16, bottom: 36, left: 40 };
       const dataXMin = Math.min(...xValues);
@@ -1731,10 +1732,22 @@
         }
         return xMin + ratio * xRange;
       };
-      const yScale = (y) => padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
+      const positiveVisibleYValues = visibleYValues.filter((y) => y > 0);
+      const minPositiveVisibleY = positiveVisibleYValues.length ? Math.min(...positiveVisibleYValues) : null;
+      const useLogYScale = yScaleType === 'log' && yMax > 0 && Number.isFinite(minPositiveVisibleY);
+      const safeYMin = useLogYScale ? Math.max(minPositiveVisibleY, 1e-12) : 0;
+      const safeYRange = useLogYScale ? Math.log10(yMax) - Math.log10(safeYMin) || 1 : yRange;
+      const yScale = (y) => {
+        if (useLogYScale) {
+          const clampedY = Math.max(y, safeYMin);
+          return padding.top + plotHeight - ((Math.log10(clampedY) - Math.log10(safeYMin)) / safeYRange) * plotHeight;
+        }
+        return padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
+      };
 
       const pointPairs = xValues.reduce((accumulator, x, index) => {
         if (useLogXScale && x <= 0) return accumulator;
+        if (useLogYScale && yValues[index] <= 0) return accumulator;
         accumulator.push({
           x: xScale(x),
           y: yScale(yValues[index]),
@@ -1777,8 +1790,9 @@
           .join(' ')} L ${visiblePointPairs[visiblePointPairs.length - 1].x},${baselineY} L ${visiblePointPairs[0].x},${baselineY} Z`
         : '';
 
-      const yMid = (yMin + yMax) / 2;
-      const yTicks = [yMin, yMid, yMax];
+      const yTicks = useLogYScale
+        ? buildTicks({ min: safeYMin, max: yMax }, 'log', 4)
+        : [yMin, (yMin + yMax) / 2, yMax];
       const xTicks = useLogXScale
         ? buildTicks({ min: safeXMin, max: xMax }, 'log', 4)
         : Array.from({ length: 4 }, (_, index) => xMin + xRange * (index / 3));
@@ -1795,7 +1809,7 @@
         xGridTicks,
         yGridTicks: yTicks,
         formatX: (value) => formatTick(value, { min: xMin, max: xMax }, xScaleType),
-        formatY: (value) => formatTick(value, { min: yMin, max: yMax }, 'linear'),
+        formatY: (value) => formatTick(value, useLogYScale ? { min: safeYMin, max: yMax } : { min: yMin, max: yMax }, useLogYScale ? 'log' : 'linear'),
         xScale,
         xInvert,
         yScale,
@@ -2047,7 +2061,8 @@
           options.yDomainOverride ?? null,
           profileXDomainOverride,
           options.disableYPadding === true,
-          profileScaleSelect?.value === 'log' ? 'log' : 'linear'
+          profileScaleSelect?.value === 'log' ? 'log' : 'linear',
+          profileYScaleSelect?.value === 'log' ? 'log' : 'linear'
         );
         const markerPositionFromXValue = (xValue) => {
           const hasMarker = Number.isFinite(xValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
