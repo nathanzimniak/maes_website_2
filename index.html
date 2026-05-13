@@ -2087,7 +2087,6 @@
             </g>
             <g class="chart__sparkline-axes" aria-hidden="true">
               <line x1="${chart.padding.left}" y1="${chart.padding.top}" x2="${chart.padding.left}" y2="${chart.height - chart.padding.bottom}"></line>
-              <line x1="${chart.width - chart.padding.right}" y1="${chart.padding.top}" x2="${chart.width - chart.padding.right}" y2="${chart.height - chart.padding.bottom}"></line>
               <line x1="${chart.padding.left}" y1="${chart.height - chart.padding.bottom}" x2="${chart.width - chart.padding.right}" y2="${chart.height - chart.padding.bottom}"></line>
               ${chart.yTicks.map((tick) => `
                 <line x1="${chart.padding.left - 4}" y1="${chart.padding.top + ((chart.yTicks[2] - tick) / (chart.yTicks[2] - chart.yTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom)}"
