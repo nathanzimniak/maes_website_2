@@ -1106,11 +1106,6 @@
             ticks.push(value);
           }
         }
-
-        if (!ticks.includes(domain.max)) {
-          ticks.push(domain.max);
-        }
-
         return ticks;
       }
 
@@ -1123,12 +1118,13 @@
       }
 
       if (scaleType === 'log') {
-        if (value === 0) return '0';
-        const absValue = Math.abs(value);
-        if (absValue >= 1e4 || absValue < 1e-3) {
-          return value.toExponential(0).replace('e+', 'e');
-        }
-        return Number.parseFloat(value.toPrecision(3)).toString();
+        if (value <= 0) return '';
+        const exponent = Math.log10(value);
+        const roundedExponent = Math.round(exponent);
+        const isIntegerExponent = Math.abs(exponent - roundedExponent) < 1e-8;
+        return isIntegerExponent
+          ? `10^${roundedExponent}`
+          : `10^${Number.parseFloat(exponent.toFixed(2)).toString()}`;
       }
 
       const span = Math.abs((domain?.max ?? value) - (domain?.min ?? value));
