@@ -2125,8 +2125,8 @@
             <g clip-path="url(#${clipPathId})">
               <path class="chart__sparkline-area" d="${chart.areaPath}" fill="url(#${gradientId})"></path>
               <polyline class="chart__sparkline-line" fill="none" stroke="${serie.color}" stroke-width="2" points="${chart.points}" />
-              ${xSmMarker ? `<line class="chart__sparkline-xsm-line" x1="${xSmMarker.x}" y1="${xSmMarker.y1}" x2="${xSmMarker.x}" y2="${xSmMarker.y2}" style="color:${serie.color};"></line>` : ''}
-              ${xAMarker ? `<line class="chart__sparkline-xa-line" x1="${xAMarker.x}" y1="${xAMarker.y1}" x2="${xAMarker.x}" y2="${xAMarker.y2}" style="color:${serie.color};"></line>` : ''}
+              ${xSmMarker ? `<circle class="chart__sparkline-xsm-line" cx="${xSmMarker.x}" cy="${xSmMarker.y}" r="2.5" style="color:${serie.color};"></circle>` : ''}
+              ${xAMarker ? `<circle class="chart__sparkline-xa-line" cx="${xAMarker.x}" cy="${xAMarker.y}" r="2.5" style="color:${serie.color};"></circle>` : ''}
               <circle class="chart__sparkline-marker" r="4" cx="0" cy="0"></circle>
             </g>
           </svg>
