@@ -1777,7 +1777,8 @@
         yTicks,
         xGridTicks,
         yGridTicks: yTicks,
-        format: (value) => formatTick(value, { min: xMin, max: xMax }, xScaleType),
+        formatX: (value) => formatTick(value, { min: xMin, max: xMax }, xScaleType),
+        formatY: (value) => formatTick(value, { min: yMin, max: yMax }, 'linear'),
         xScale,
         xInvert,
         yScale,
@@ -1842,7 +1843,7 @@
               <span class="chart__sparkline-tooltip-key">
                 <span class="math-label" data-latex="${yLabelLatex}"></span>
               </span>
-              <span class="chart__sparkline-tooltip-value">${chart.format(interpolatedY)}</span>
+              <span class="chart__sparkline-tooltip-value">${chart.formatY(interpolatedY)}</span>
             </span>
             <span class="chart__sparkline-tooltip-pair">
               <span class="chart__sparkline-tooltip-key">
@@ -2094,13 +2095,13 @@
             <g class="chart__sparkline-labels" aria-hidden="true">
               ${chart.yTicks.map((tick) => `
                 <text x="${chart.padding.left - 8}" y="${chart.padding.top + ((chart.yTicks[2] - tick) / (chart.yTicks[2] - chart.yTicks[0] || 1)) * (chart.height - chart.padding.top - chart.padding.bottom) + 4}" text-anchor="end">
-                  ${chart.format(tick)}
+                  ${chart.formatY(tick)}
                 </text>
               `).join('')}
               ${chart.xTicks.map((tick) => `
                 <text x="${chart.xScale(tick)}"
                       y="${chart.height - chart.padding.bottom + 18}" text-anchor="middle">
-                  ${chart.format(tick)}
+                  ${chart.formatX(tick)}
                 </text>
               `).join('')}
               <foreignObject class="chart__sparkline-axis-label" x="${chart.width / 2 - 24}" y="${chart.height - chart.padding.bottom + 18}" width="48" height="16">
