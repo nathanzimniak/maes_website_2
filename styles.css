@@ -2226,16 +2226,16 @@ section {
 }
 
 .chart__sparkline-xsm-line {
-  stroke: currentColor;
-  stroke-width: 2.0;
-  stroke-linecap: round;
+  fill: currentColor;
+  stroke: #ffffff;
+  stroke-width: 1.5;
   opacity: 0.95;
 }
 
 .chart__sparkline-xa-line {
-  stroke: currentColor;
-  stroke-width: 2.0;
-  stroke-linecap: round;
+  fill: currentColor;
+  stroke: #ffffff;
+  stroke-width: 1.5;
   opacity: 0.95;
 }
 
