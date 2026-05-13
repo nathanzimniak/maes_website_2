@@ -2178,6 +2178,11 @@
       });
     }
 
+    function renderProfilesPlaceholder() {
+      if (!profileContent) return;
+      profileContent.innerHTML = '<p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>';
+    }
+
     async function selectSolution(index) {
       selectedSolutionIndex = index;
       pinnedSolutionIndex = index;
@@ -2195,7 +2200,7 @@
     function resetProfiles() {
       selectedSolutionIndex = null;
       pinnedSolutionIndex = null;
-      renderFlatProfiles();
+      renderProfilesPlaceholder();
     }
 
     function updateScaleSelect(axis, scaleType) {
