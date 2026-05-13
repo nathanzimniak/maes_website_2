@@ -426,8 +426,9 @@
             </div>
           </div>
         </div>
-        <div id="profile-content" class="chart__profiles-grid">
-          <p class="chart__profiles-placeholder">Cliquez sur un point pour afficher les courbes correspondantes.</p>
+        <div id="profile-content" class="chart__profiles-grid"></div>
+        <div id="profile-empty-overlay" class="chart__profiles-overlay" aria-hidden="true">
+          <p class="chart__profiles-overlay-text">Please select a solution.</p>
         </div>
       </div>
 
@@ -2178,6 +2179,11 @@
       });
     }
 
+    function setProfilesOverlayVisible(visible) {
+      if (!chartProfiles) return;
+      chartProfiles.classList.toggle('chart__profiles--empty', visible);
+    }
+
     async function selectSolution(index) {
       selectedSolutionIndex = index;
       pinnedSolutionIndex = index;
@@ -2185,6 +2191,7 @@
       if (selectedSolution?.profiles) {
         renderProfiles(selectedSolution);
         renderHoveredValues(selectedSolution);
+        setProfilesOverlayVisible(false);
       }
 
       Array.from(pointsGroup.children).forEach((circle, idx) => {
@@ -2196,6 +2203,7 @@
       selectedSolutionIndex = null;
       pinnedSolutionIndex = null;
       renderFlatProfiles();
+      setProfilesOverlayVisible(true);
     }
 
     function updateScaleSelect(axis, scaleType) {
