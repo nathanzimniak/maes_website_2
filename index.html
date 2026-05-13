@@ -1722,9 +1722,12 @@
       const yScaleReference = Math.max(Math.abs(rawYMin), Math.abs(rawYMax), 1e-6);
       const minYPadding = Math.max(rawYRange * 0.03, yScaleReference * 0.015, 1e-6);
       const yPadding = disableYPadding ? 0 : Math.max(rawYRange * 0.2, minYPadding);
-      const yMin = rawYMin - yPadding;
-      const yMax = rawYMax + yPadding;
+      const yMin = Math.max(1e-12, rawYMin - yPadding);
+      const yMax = Math.max(yMin + 1e-12, rawYMax + yPadding);
       const yRange = yMax - yMin || 1;
+      const safeLogYMin = Math.max(yMin, 1e-12);
+      const safeLogYMax = Math.max(yMax, safeLogYMin * (1 + 1e-12));
+      const safeLogYRange = Math.log10(safeLogYMax) - Math.log10(safeLogYMin) || 1;
       const plotWidth = width - padding.left - padding.right;
       const plotHeight = height - padding.top - padding.bottom;
       const step = xRange / (xValues.length - 1 || 1);
@@ -1748,7 +1751,13 @@
         }
         return xMin + ratio * xRange;
       };
-      const yScale = (y) => padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
+      const yScale = (y) => {
+        if (useLogYScale) {
+          const clampedY = Math.max(y, safeLogYMin);
+          return padding.top + plotHeight - ((Math.log10(clampedY) - Math.log10(safeLogYMin)) / safeLogYRange) * plotHeight;
+        }
+        return padding.top + plotHeight - ((y - yMin) / yRange) * plotHeight;
+      };
 
       const pointPairs = xValues.reduce((accumulator, x, index) => {
         if (useLogXScale && x <= 0) return accumulator;
