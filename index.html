@@ -1661,8 +1661,7 @@
       yDomainOverride = null,
       xDomainOverride = null,
       disableYPadding = false,
-      xScaleType = 'linear',
-      yScaleType = 'linear'
+      xScaleType = 'linear'
     ) {
       const padding = { top: 10, right: 16, bottom: 36, left: 40 };
       const dataXMin = Math.min(...xValues);
@@ -1697,24 +1696,8 @@
       if (Number.isFinite(yAtXMin)) visibleYValues.push(yAtXMin);
       if (Number.isFinite(yAtXMax)) visibleYValues.push(yAtXMax);
 
-      const useLogYScale = yScaleType === 'log';
-      const normalizeYValue = (value) => {
-        if (!Number.isFinite(value)) return null;
-        if (!useLogYScale) return value;
-        const absoluteValue = Math.abs(value);
-        return absoluteValue > 0 ? absoluteValue : null;
-      };
-      const normalizedYValues = yValues.map((value) => normalizeYValue(value));
-      const normalizedVisibleYValues = visibleYValues
-        .map((value) => normalizeYValue(value))
-        .filter((value) => Number.isFinite(value));
-      const fallbackNormalizedYValues = normalizedYValues.filter((value) => Number.isFinite(value));
-      const computedYMin = normalizedVisibleYValues.length
-        ? Math.min(...normalizedVisibleYValues)
-        : (fallbackNormalizedYValues.length ? Math.min(...fallbackNormalizedYValues) : 0);
-      const computedYMax = normalizedVisibleYValues.length
-        ? Math.max(...normalizedVisibleYValues)
-        : (fallbackNormalizedYValues.length ? Math.max(...fallbackNormalizedYValues) : 1);
+      const computedYMin = visibleYValues.length ? Math.min(...visibleYValues) : Math.min(...yValues);
+      const computedYMax = visibleYValues.length ? Math.max(...visibleYValues) : Math.max(...yValues);
       const rawYMin = yDomainOverride?.min ?? computedYMin;
       const rawYMax = yDomainOverride?.max ?? computedYMax;
       const xRange = xMax - xMin || 1;
@@ -1752,11 +1735,9 @@
 
       const pointPairs = xValues.reduce((accumulator, x, index) => {
         if (useLogXScale && x <= 0) return accumulator;
-        const normalizedYValue = normalizedYValues[index];
-        if (!Number.isFinite(normalizedYValue)) return accumulator;
         accumulator.push({
           x: xScale(x),
-          y: yScale(normalizedYValue),
+          y: yScale(yValues[index]),
         });
         return accumulator;
       }, []);
@@ -1776,13 +1757,13 @@
       const visibleProfileXMin = useLogXScale ? Math.max(safeXMin, dataXMin) : Math.max(xMin, dataXMin);
       const visibleProfileXMax = Math.min(xMax, dataXMax);
       if (visibleProfileXMin <= visibleProfileXMax) {
-        pushVisibleSample(visibleProfileXMin, normalizeYValue(getInterpolatedYAtX(visibleProfileXMin)));
+        pushVisibleSample(visibleProfileXMin, getInterpolatedYAtX(visibleProfileXMin));
         xValues.forEach((x, index) => {
           if (x > visibleProfileXMin && x < visibleProfileXMax) {
-            pushVisibleSample(x, normalizedYValues[index]);
+            pushVisibleSample(x, yValues[index]);
           }
         });
-        pushVisibleSample(visibleProfileXMax, normalizeYValue(getInterpolatedYAtX(visibleProfileXMax)));
+        pushVisibleSample(visibleProfileXMax, getInterpolatedYAtX(visibleProfileXMax));
       }
 
       const visiblePointPairs = visibleAreaSamples.map((sample) => ({
@@ -2009,14 +1990,6 @@
       const previousScrollLeft = profileContent?.scrollLeft ?? 0;
       profileContent.innerHTML = '';
       const sparklineHeight = 200;
-      const isLogProfileYScale = profileYScaleSelect?.value === 'log';
-      const normalizeYValue = (value) => {
-        if (!Number.isFinite(value)) return null;
-        if (!isLogProfileYScale) return value;
-        const absoluteValue = Math.abs(value);
-        return absoluteValue > 0 ? absoluteValue : null;
-      };
-
 
       series.forEach((serie) => {
         const values = profiles[serie.key];
@@ -2074,8 +2047,7 @@
           options.yDomainOverride ?? null,
           profileXDomainOverride,
           options.disableYPadding === true,
-          profileScaleSelect?.value === 'log' ? 'log' : 'linear',
-          profileYScaleSelect?.value === 'log' ? 'log' : 'linear'
+          profileScaleSelect?.value === 'log' ? 'log' : 'linear'
         );
         const markerPositionFromXValue = (xValue) => {
           const hasMarker = Number.isFinite(xValue) && Number.isFinite(chart?.xMin) && Number.isFinite(chart?.xMax) &&
@@ -2087,11 +2059,9 @@
           const leftIndex = Math.max(0, rightIndex - 1);
           const xLeft = profiles.x[leftIndex];
           const xRight = profiles.x[rightIndex];
-          const yLeft = normalizeYValue(values[leftIndex]);
-          const yRight = normalizeYValue(values[rightIndex]);
+          const yLeft = values[leftIndex];
+          const yRight = values[rightIndex];
           const interpolationRatio = xRight !== xLeft ? (xValue - xLeft) / (xRight - xLeft) : 0;
-          const hasValidBounds = Number.isFinite(yLeft) && Number.isFinite(yRight);
-          if (!hasValidBounds) return null;
           const yAtX = yLeft + (yRight - yLeft) * interpolationRatio;
           const centerY = chart.yScale(yAtX);
           const pointRadius = 4;
