@@ -726,6 +726,10 @@
         g18: 'x_sm',
         g19: 'x_a',
         g20: 'x_end',
+        g21: 'z_id',
+        g22: 'z_sm',
+        g23: 'z_a',
+        g24: 'z_end',
       };
       const quantityIndexMap = quantities.reduce((accumulator, name, index) => {
         accumulator[name] = index;
@@ -1265,7 +1269,11 @@
       g17: { label: 'Ideal angle', latex: 'x_{id}', symbol: 'xid' },
       g18: { label: 'SM angle', latex: 'x_{SM}', symbol: 'xSM' },
       g19: { label: 'A angle', latex: 'x_A', symbol: 'xA' },
-      g20: { label: 'Maximum angle', latex: 'x_{end}', symbol: 'xend' }
+      g20: { label: 'Maximum angle', latex: 'x_{end}', symbol: 'xend' },
+      g21: { label: 'Ideal altitude', latex: 'z_{id}', symbol: 'zid' },
+      g22: { label: 'SM altitude', latex: 'z_{SM}', symbol: 'zSM' },
+      g23: { label: 'A altitude', latex: 'z_A', symbol: 'zA' },
+      g24: { label: 'Maximum altitude', latex: 'z_{end}', symbol: 'zend' }
     };
 
     const axisExcludedMetricKeys = new Set(['g1', 'g2', 'g3', 'g4', 'g5']);
