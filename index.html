@@ -1335,7 +1335,7 @@
       const state = customSelects.get(select);
       if (!state) return;
 
-      const { buttonLabel, menu, renderLabel, usesMath } = state;
+      const { buttonLabel, menu, renderLabel, usesMath, renderOption } = state;
       renderLabel(buttonLabel, select);
 
       if (usesMath) {
@@ -1343,7 +1343,13 @@
       }
 
       if (menu) {
-        Array.from(menu.querySelectorAll('[data-value]')).forEach((item) => {
+        const menuItems = Array.from(menu.querySelectorAll('[data-value]'));
+        const options = Array.from(select.options);
+        menuItems.forEach((item, index) => {
+          const option = options[index];
+          if (option && renderOption) {
+            renderOption(item, option);
+          }
           item.classList.toggle('chart__latex-option--selected', item.dataset.value === select.value);
         });
         if (usesMath) {
@@ -1456,7 +1462,7 @@
       select.parentNode.insertBefore(wrapper, select);
       wrapper.appendChild(select);
 
-      customSelects.set(select, { buttonLabel, menu, renderLabel, usesMath });
+      customSelects.set(select, { buttonLabel, menu, renderLabel, renderOption, usesMath });
       updateCustomSelectDisplay(select);
     }
 
