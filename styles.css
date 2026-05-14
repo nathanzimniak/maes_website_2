@@ -2128,14 +2128,6 @@ section {
   scroll-padding: var(--space-2);
 }
 
-.chart__profiles-placeholder {
-  margin: 0;
-  color: var(--color-muted);
-  padding: var(--space-3) var(--space-2);
-  min-width: 100%;
-  flex: 0 0 100%;
-}
-
 .chart__profile-card {
   padding: var(--space-2);
   border-radius: var(--radius-1);
