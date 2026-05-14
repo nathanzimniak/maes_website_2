@@ -875,37 +875,33 @@
       ruler.style.whiteSpace = 'nowrap';
       document.body.appendChild(ruler);
 
-      const referenceButton = profile1DSelects
-        .map((select) => select.parentElement?.querySelector('.chart__latex-button'))
-        .find(Boolean);
-
-      const referenceStyles = window.getComputedStyle(referenceButton || profile1DSelects[0]);
-      ruler.style.fontFamily = referenceStyles.fontFamily;
-      ruler.style.fontSize = referenceStyles.fontSize;
-      ruler.style.fontWeight = referenceStyles.fontWeight;
-      ruler.style.letterSpacing = referenceStyles.letterSpacing;
-
-      let maxTextWidth = 0;
       profile1DSelects.forEach((select) => {
+        const wrapper = select.closest('.chart__latex-select');
+        const button = wrapper?.querySelector('.chart__latex-button');
+        const referenceElement = button || select;
+        const referenceStyles = window.getComputedStyle(referenceElement);
+
+        ruler.style.fontFamily = referenceStyles.fontFamily;
+        ruler.style.fontSize = referenceStyles.fontSize;
+        ruler.style.fontWeight = referenceStyles.fontWeight;
+        ruler.style.letterSpacing = referenceStyles.letterSpacing;
+
+        let maxTextWidth = 0;
         Array.from(select.options).forEach((option) => {
           ruler.textContent = option.textContent || '';
           maxTextWidth = Math.max(maxTextWidth, ruler.getBoundingClientRect().width);
         });
-      });
 
-      const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
-      const paddingRight = parseFloat(referenceStyles.paddingRight) || 0;
-      const borderLeft = parseFloat(referenceStyles.borderLeftWidth) || 0;
-      const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
-      const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
-      const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
-      const targetWidth = Math.ceil(
-        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
-      );
+        const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
+        const paddingRight = parseFloat(referenceStyles.paddingRight) || 0;
+        const borderLeft = parseFloat(referenceStyles.borderLeftWidth) || 0;
+        const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
+        const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
+        const caretWidth = button?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
+        const targetWidth = Math.ceil(
+          maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+        );
 
-      profile1DSelects.forEach((select) => {
-        const wrapper = select.closest('.chart__latex-select');
-        const button = wrapper?.querySelector('.chart__latex-button');
         if (wrapper) {
           wrapper.style.width = `${targetWidth}px`;
         }
