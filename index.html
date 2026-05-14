@@ -2176,6 +2176,11 @@
       });
     }
 
+    function setProfilesOverlayVisible(visible) {
+      if (!chartProfiles) return;
+      chartProfiles.classList.toggle('chart__profiles--empty', visible);
+    }
+
     async function selectSolution(index) {
       selectedSolutionIndex = index;
       pinnedSolutionIndex = index;
@@ -2183,6 +2188,7 @@
       if (selectedSolution?.profiles) {
         renderProfiles(selectedSolution);
         renderHoveredValues(selectedSolution);
+        setProfilesOverlayVisible(false);
       }
 
       Array.from(pointsGroup.children).forEach((circle, idx) => {
@@ -2194,6 +2200,7 @@
       selectedSolutionIndex = null;
       pinnedSolutionIndex = null;
       renderFlatProfiles();
+      setProfilesOverlayVisible(true);
     }
 
     function updateScaleSelect(axis, scaleType) {
