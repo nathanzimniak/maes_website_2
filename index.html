@@ -409,7 +409,7 @@
                   <div class="chart__settings-controls">
                     <select id="profile-axis-select" class="chart__select chart__select--profile" aria-label="Axe des profils 1D">
                       <option value="x" data-latex="x">x</option>
-                      <option value="z" data-latex="z">z</option>
+                      <option value="z" data-latex="z(\Psi)">z(\Psi)</option>
                     </select>
                     <select id="profile-title-select-1" class="chart__select chart__select--profile" aria-label="Focus option 1">
                       <option value="disk" data-latex="[0, 2x_{SM}]">[0, 2x_{SM}]</option>
@@ -498,6 +498,7 @@
     const profileSettingsButton = document.getElementById('profile-settings-button');
     const profileSettingsPanel = document.getElementById('profile-settings-panel');
     const profileContent = document.getElementById('profile-content');
+    const profileAxisSelect = document.getElementById('profile-axis-select');
     const profileFocusSelect = document.getElementById('profile-title-select-1');
     const profileScaleSelect = document.getElementById('profile-title-select-2');
     const hoveredValues = document.getElementById('hovered-values');
@@ -875,37 +876,33 @@
       ruler.style.whiteSpace = 'nowrap';
       document.body.appendChild(ruler);
 
-      const referenceButton = profile1DSelects
-        .map((select) => select.parentElement?.querySelector('.chart__latex-button'))
-        .find(Boolean);
-
-      const referenceStyles = window.getComputedStyle(referenceButton || profile1DSelects[0]);
-      ruler.style.fontFamily = referenceStyles.fontFamily;
-      ruler.style.fontSize = referenceStyles.fontSize;
-      ruler.style.fontWeight = referenceStyles.fontWeight;
-      ruler.style.letterSpacing = referenceStyles.letterSpacing;
-
-      let maxTextWidth = 0;
       profile1DSelects.forEach((select) => {
+        const wrapper = select.closest('.chart__latex-select');
+        const button = wrapper?.querySelector('.chart__latex-button');
+        const referenceElement = button || select;
+        const referenceStyles = window.getComputedStyle(referenceElement);
+
+        ruler.style.fontFamily = referenceStyles.fontFamily;
+        ruler.style.fontSize = referenceStyles.fontSize;
+        ruler.style.fontWeight = referenceStyles.fontWeight;
+        ruler.style.letterSpacing = referenceStyles.letterSpacing;
+
+        let maxTextWidth = 0;
         Array.from(select.options).forEach((option) => {
           ruler.textContent = option.textContent || '';
           maxTextWidth = Math.max(maxTextWidth, ruler.getBoundingClientRect().width);
         });
-      });
 
-      const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
-      const paddingRight = parseFloat(referenceStyles.paddingRight) || 0;
-      const borderLeft = parseFloat(referenceStyles.borderLeftWidth) || 0;
-      const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
-      const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
-      const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
-      const targetWidth = Math.ceil(
-        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
-      );
+        const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
+        const paddingRight = parseFloat(referenceStyles.paddingRight) || 0;
+        const borderLeft = parseFloat(referenceStyles.borderLeftWidth) || 0;
+        const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
+        const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
+        const caretWidth = button?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
+        const targetWidth = Math.ceil(
+          maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+        );
 
-      profile1DSelects.forEach((select) => {
-        const wrapper = select.closest('.chart__latex-select');
-        const button = wrapper?.querySelector('.chart__latex-button');
         if (wrapper) {
           wrapper.style.width = `${targetWidth}px`;
         }
@@ -1798,7 +1795,7 @@
       return Math.min(Math.max(value, 0), max);
     }
 
-    function attachSparklineHover({ sparkline, sparklineGrid, tooltip, marker, chart, xValues, yValues, yLabelLatex = 'y' }) {
+    function attachSparklineHover({ sparkline, sparklineGrid, tooltip, marker, chart, xValues, yValues, yLabelLatex = 'y', xLabelLatex = 'x' }) {
       if (!sparkline || !tooltip || !marker || !chart) return;
 
       const updateHover = (event) => {
@@ -1851,7 +1848,7 @@
             </span>
             <span class="chart__sparkline-tooltip-pair">
               <span class="chart__sparkline-tooltip-key">
-                <span class="math-label" data-latex="x"></span>
+                <span class="math-label" data-latex="${xLabelLatex}"></span>
               </span>
               <span class="chart__sparkline-tooltip-value">${clampedDataX.toFixed(2)}</span>
             </span>
@@ -1928,9 +1925,8 @@
       }, {});
 
       const getSeries = (name) => payload.data.map((row) => Number(row[quantityIndexMap[name]])).filter((value) => Number.isFinite(value));
-      const x = getSeries('x');
-      const profiles = {
-        x,
+      const baseProfiles = {
+        x: getSeries('x'),
         pressure: getSeries('P'),
         density: getSeries('rho'),
         temperature: getSeries('T'),
@@ -1942,7 +1938,27 @@
         verticalMagneticField: getSeries('Bz'),
       };
 
-      const consistentLength = x.length && Object.values(profiles).every((values) => values.length === x.length);
+      const psiProfiles = {
+        x: getSeries('z_psi'),
+        pressure: getSeries('P_psi'),
+        density: getSeries('rho_psi'),
+        temperature: getSeries('T_psi'),
+        radialVelocity: getSeries('vr_psi'),
+        toroidalVelocity: getSeries('vphi_psi'),
+        verticalVelocity: getSeries('vz_psi'),
+        radialMagneticField: getSeries('Br_psi'),
+        toroidalMagneticField: getSeries('Bphi_psi'),
+        verticalMagneticField: getSeries('Bz_psi'),
+      };
+
+      const profiles = {
+        standard: baseProfiles,
+        psi: psiProfiles,
+      };
+
+      const standardLength = baseProfiles.x.length && Object.values(baseProfiles).every((values) => values.length === baseProfiles.x.length);
+      const psiLength = psiProfiles.x.length && Object.values(psiProfiles).every((values) => values.length === psiProfiles.x.length);
+      const consistentLength = standardLength && psiLength;
       if (!consistentLength) return null;
 
       solutionProfileCache.set(cacheKey, profiles);
@@ -1957,7 +1973,10 @@
     }
 
     function renderProfiles(solution, options = {}) {
-      const { profiles } = solution;
+      const selectedProfileAxis = profileAxisSelect?.value === 'z' ? 'psi' : 'standard';
+      const xLabelLatex = selectedProfileAxis === 'psi' ? 'z_{\Psi}' : 'x';
+      const profiles = solution.profiles?.[selectedProfileAxis] ?? solution.profiles?.standard;
+      if (!profiles) return;
       const xSmValue = Number(solution?.g17);
       const xAValue = Number(solution?.g19);
       const xEndValue = Number(solution?.g20);
@@ -2116,7 +2135,7 @@
               `).join('')}
               <foreignObject class="chart__sparkline-axis-label" x="${chart.width / 2 - 24}" y="${chart.height - chart.padding.bottom + 18}" width="48" height="16">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="chart__sparkline-axis-label-text">
-                  <span class="math-label" data-latex="x"></span>
+                  <span class="math-label" data-latex="${xLabelLatex}"></span>
                 </div>
               </foreignObject>
             </g>
@@ -2144,6 +2163,7 @@
           xValues: profiles.x,
           yValues: values,
           yLabelLatex: serie.tooltipSymbol,
+          xLabelLatex,
         });
       });
 
@@ -2157,18 +2177,23 @@
       const xValues = [0, 1];
       const flatValues = xValues.map(() => 0);
 
+      const flatProfileSet = {
+        x: xValues,
+        pressure: flatValues,
+        density: flatValues,
+        temperature: flatValues,
+        radialVelocity: flatValues,
+        toroidalVelocity: flatValues,
+        verticalVelocity: flatValues,
+        radialMagneticField: flatValues,
+        toroidalMagneticField: flatValues,
+        verticalMagneticField: flatValues,
+      };
+
       renderProfiles({
         profiles: {
-          x: xValues,
-          pressure: flatValues,
-          density: flatValues,
-          temperature: flatValues,
-          radialVelocity: flatValues,
-          toroidalVelocity: flatValues,
-          verticalVelocity: flatValues,
-          radialMagneticField: flatValues,
-          toroidalMagneticField: flatValues,
-          verticalMagneticField: flatValues,
+          standard: flatProfileSet,
+          psi: flatProfileSet,
         },
       }, {
         yDomainOverride: { min: -1, max: 1 },
