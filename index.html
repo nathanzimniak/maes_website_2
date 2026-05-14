@@ -408,7 +408,7 @@
                   <label class="chart__settings-label" for="profile-title-select-1">X-axis</label>
                   <div class="chart__settings-controls">
                     <select id="profile-axis-select" class="chart__select chart__select--profile" aria-label="Axe des profils 1D">
-                      <option value="x" data-latex="x">x</option>
+                      <option value="x" data-latex="${xLabelLatex}">x</option>
                       <option value="z" data-latex="z(\Psi)">z(\Psi)</option>
                     </select>
                     <select id="profile-title-select-1" class="chart__select chart__select--profile" aria-label="Focus option 1">
@@ -1795,7 +1795,7 @@
       return Math.min(Math.max(value, 0), max);
     }
 
-    function attachSparklineHover({ sparkline, sparklineGrid, tooltip, marker, chart, xValues, yValues, yLabelLatex = 'y' }) {
+    function attachSparklineHover({ sparkline, sparklineGrid, tooltip, marker, chart, xValues, yValues, yLabelLatex = 'y', xLabelLatex = 'x' }) {
       if (!sparkline || !tooltip || !marker || !chart) return;
 
       const updateHover = (event) => {
@@ -1848,7 +1848,7 @@
             </span>
             <span class="chart__sparkline-tooltip-pair">
               <span class="chart__sparkline-tooltip-key">
-                <span class="math-label" data-latex="x"></span>
+                <span class="math-label" data-latex="${xLabelLatex}"></span>
               </span>
               <span class="chart__sparkline-tooltip-value">${clampedDataX.toFixed(2)}</span>
             </span>
@@ -1974,6 +1974,7 @@
 
     function renderProfiles(solution, options = {}) {
       const selectedProfileAxis = profileAxisSelect?.value === 'z' ? 'psi' : 'standard';
+      const xLabelLatex = selectedProfileAxis === 'psi' ? 'z_{\Psi}' : 'x';
       const profiles = solution.profiles?.[selectedProfileAxis] ?? solution.profiles?.standard;
       if (!profiles) return;
       const xSmValue = Number(solution?.g17);
@@ -2134,7 +2135,7 @@
               `).join('')}
               <foreignObject class="chart__sparkline-axis-label" x="${chart.width / 2 - 24}" y="${chart.height - chart.padding.bottom + 18}" width="48" height="16">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="chart__sparkline-axis-label-text">
-                  <span class="math-label" data-latex="x"></span>
+                  <span class="math-label" data-latex="${xLabelLatex}"></span>
                 </div>
               </foreignObject>
             </g>
@@ -2162,6 +2163,7 @@
           xValues: profiles.x,
           yValues: values,
           yLabelLatex: serie.tooltipSymbol,
+          xLabelLatex,
         });
       });
 
@@ -2175,18 +2177,23 @@
       const xValues = [0, 1];
       const flatValues = xValues.map(() => 0);
 
+      const flatProfileSet = {
+        x: xValues,
+        pressure: flatValues,
+        density: flatValues,
+        temperature: flatValues,
+        radialVelocity: flatValues,
+        toroidalVelocity: flatValues,
+        verticalVelocity: flatValues,
+        radialMagneticField: flatValues,
+        toroidalMagneticField: flatValues,
+        verticalMagneticField: flatValues,
+      };
+
       renderProfiles({
         profiles: {
-          x: xValues,
-          pressure: flatValues,
-          density: flatValues,
-          temperature: flatValues,
-          radialVelocity: flatValues,
-          toroidalVelocity: flatValues,
-          verticalVelocity: flatValues,
-          radialMagneticField: flatValues,
-          toroidalMagneticField: flatValues,
-          verticalMagneticField: flatValues,
+          standard: flatProfileSet,
+          psi: flatProfileSet,
         },
       }, {
         yDomainOverride: { min: -1, max: 1 },
