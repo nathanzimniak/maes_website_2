@@ -1974,7 +1974,7 @@
 
     function renderProfiles(solution, options = {}) {
       const selectedProfileAxis = profileAxisSelect?.value === 'z' ? 'psi' : 'standard';
-      const xLabelLatex = selectedProfileAxis === 'psi' ? 'z_{\Psi}' : 'x';
+      const xLabelLatex = selectedProfileAxis === 'psi' ? 'z(\Psi)' : 'x';
       const profiles = solution.profiles?.[selectedProfileAxis] ?? solution.profiles?.standard;
       if (!profiles) return;
       const xSmValue = Number(solution?.g17);
