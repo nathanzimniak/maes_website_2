@@ -2129,31 +2129,6 @@ section {
   scroll-padding: var(--space-2);
 }
 
-.chart__profiles-overlay {
-  position: absolute;
-  top: 84px;
-  left: var(--space-6);
-  right: var(--space-6);
-  bottom: var(--space-2);
-  background: rgba(20, 24, 32, 0.5);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  z-index: 3;
-}
-
-.chart__profiles--empty .chart__profiles-overlay {
-  display: flex;
-}
-
-.chart__profiles-overlay-text {
-  margin: 0;
-  color: #fff;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
 .chart__profile-card {
   padding: var(--space-2);
   border-radius: var(--radius-1);
