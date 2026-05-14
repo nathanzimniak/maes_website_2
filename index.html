@@ -1985,8 +1985,8 @@
       const xLabelLatex = selectedProfileAxis === 'psi' ? 'z(\\Psi)' : 'x';
       const profiles = solution.profiles?.[selectedProfileAxis] ?? solution.profiles?.standard;
       if (!profiles) return;
-      const xSmValue = Number(solution?.g18);
-      const xAValue = Number(solution?.g19);
+      const xSmValue = selectedProfileAxis === 'psi' ? Number(solution?.g22) : Number(solution?.g18);
+      const xAValue = selectedProfileAxis === 'psi' ? Number(solution?.g23) : Number(solution?.g19);
       const xEndValue = Number(solution?.g20);
       const profileCurveColor = '#60708f';
       const series = [
