@@ -516,6 +516,18 @@
       || select.id === 'profile-title-select-1'
       || select.id === 'profile-title-select-2'
     ));
+    const profileFocusLatexByAxis = {
+      x: {
+        disk: '[0, 2x_{SM}]',
+        'disk-outflow': '[0, 2x_{A}]',
+        outflow: '[0, x_{end}]',
+      },
+      z: {
+        disk: '[0, 2z_{SM}]',
+        'disk-outflow': '[0, 2z_{A}]',
+        outflow: '[0, z_{end}]',
+      },
+    };
     const resizeObserver = 'ResizeObserver' in window
       ? new ResizeObserver(() => updateChart())
       : null;
@@ -1987,7 +1999,7 @@
       if (!profiles) return;
       const xSmValue = selectedProfileAxis === 'psi' ? Number(solution?.g22) : Number(solution?.g18);
       const xAValue = selectedProfileAxis === 'psi' ? Number(solution?.g23) : Number(solution?.g19);
-      const xEndValue = Number(solution?.g20);
+      const xEndValue = selectedProfileAxis === 'psi' ? Number(solution?.g24) : Number(solution?.g20);
       const profileCurveColor = '#60708f';
       const series = [
         { label: '<span class="chart__profile-title-text">Density</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho"></span></span>', ariaLabel: 'Density (rho)', key: 'density', color: profileCurveColor, tooltipSymbol: '\\rho' },
@@ -2360,8 +2372,20 @@
       select.addEventListener('change', () => {
         const previousValue = select.dataset.previousValue ?? select.value;
         const selectedSolution = selectedSolutionIndex !== null ? currentSolutions[selectedSolutionIndex] : null;
-        const xAValue = Number(selectedSolution?.g19);
+        const selectedProfileAxis = profileAxisSelect?.value === 'z' ? 'psi' : 'standard';
+        const xAValue = selectedProfileAxis === 'psi' ? Number(selectedSolution?.g23) : Number(selectedSolution?.g19);
         const hasNullAAltitude = Number.isFinite(xAValue) && xAValue === 0;
+
+        if (select.id === 'profile-axis-select' && profileFocusSelect) {
+          const axisFocusLatex = profileFocusLatexByAxis[select.value] ?? profileFocusLatexByAxis.x;
+          Array.from(profileFocusSelect.options).forEach((option) => {
+            const nextLatex = axisFocusLatex[option.value];
+            if (!nextLatex) return;
+            option.dataset.latex = nextLatex;
+            option.textContent = nextLatex;
+          });
+          updateCustomSelectDisplay(profileFocusSelect);
+        }
 
         if (select.id === 'profile-title-select-1' && select.value === 'disk-outflow' && hasNullAAltitude) {
           select.value = previousValue;
