@@ -2055,10 +2055,18 @@
             }
             const clampedMax = Math.max(dataXMin, rawMax);
             if (isLogProfileScale && clampedMax > 0) {
-              const positiveDataXMin = Number.isFinite(minPositiveX) ? minPositiveX : clampedMax;
+              const minPositiveVisibleX = profiles.x.reduce((minimum, value) => (
+                value > 0 && value <= clampedMax && Number.isFinite(value)
+                  ? Math.min(minimum, value)
+                  : minimum
+              ), Number.POSITIVE_INFINITY);
+              const positiveDataXMin = Number.isFinite(minPositiveVisibleX)
+                ? minPositiveVisibleX
+                : (Number.isFinite(minPositiveX) ? minPositiveX : clampedMax);
               const roundedMin = 10 ** Math.ceil(Math.log10(positiveDataXMin));
               const roundedMax = 10 ** Math.ceil(Math.log10(clampedMax));
-              return { min: roundedMin, max: Math.max(roundedMin, roundedMax) };
+              const domainMax = roundedMax > roundedMin ? roundedMax : roundedMin * 10;
+              return { min: roundedMin, max: domainMax };
             }
             return { min: dataXMin, max: clampedMax };
           };
