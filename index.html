@@ -1722,10 +1722,11 @@
       const plotHeight = height - padding.top - padding.bottom;
       const step = xRange / (xValues.length - 1 || 1);
 
-      const positiveVisibleXValues = xValues.filter((x) => x > 0 && x <= xMax);
+      const positiveVisibleXValues = xValues.filter((x) => x > 0 && x >= xMin && x <= xMax);
       const minPositiveVisibleX = positiveVisibleXValues.length ? Math.min(...positiveVisibleXValues) : null;
-      const useLogXScale = xScaleType === 'log' && xMax > 0 && Number.isFinite(minPositiveVisibleX);
-      const safeXMin = useLogXScale ? Math.max(minPositiveVisibleX, 1e-12) : 0;
+      const domainLogXMin = xMin > 0 ? xMin : minPositiveVisibleX;
+      const useLogXScale = xScaleType === 'log' && xMax > 0 && Number.isFinite(domainLogXMin);
+      const safeXMin = useLogXScale ? Math.max(domainLogXMin, 1e-12) : 0;
       const safeXRange = useLogXScale ? Math.log10(xMax) - Math.log10(safeXMin) || 1 : xRange;
       const xScale = (x) => {
         if (useLogXScale) {
@@ -2044,6 +2045,9 @@
         const chartWidth = Math.max(1, Math.floor(wrapperWidth || 320));
         const profileXDomainOverride = (() => {
           const dataXMin = Math.min(...profiles.x);
+          const minPositiveX = profiles.x.reduce((minimum, value) => (
+            value > 0 && Number.isFinite(value) ? Math.min(minimum, value) : minimum
+          ), Number.POSITIVE_INFINITY);
           const selectedFocus = profileFocusSelect?.value;
           const isLogProfileScale = profileScaleSelect?.value === 'log';
           const buildXDomain = (rawMax) => {
@@ -2052,8 +2056,18 @@
             }
             const clampedMax = Math.max(dataXMin, rawMax);
             if (isLogProfileScale && clampedMax > 0) {
+              const minPositiveVisibleX = profiles.x.reduce((minimum, value) => (
+                value > 0 && value <= clampedMax && Number.isFinite(value)
+                  ? Math.min(minimum, value)
+                  : minimum
+              ), Number.POSITIVE_INFINITY);
+              const positiveDataXMin = Number.isFinite(minPositiveVisibleX)
+                ? minPositiveVisibleX
+                : (Number.isFinite(minPositiveX) ? minPositiveX : clampedMax);
+              const roundedMin = 10 ** Math.ceil(Math.log10(positiveDataXMin));
               const roundedMax = 10 ** Math.ceil(Math.log10(clampedMax));
-              return { min: dataXMin, max: Math.max(dataXMin, roundedMax) };
+              const domainMax = roundedMax > roundedMin ? roundedMax : roundedMin * 10;
+              return { min: roundedMin, max: domainMax };
             }
             return { min: dataXMin, max: clampedMax };
           };
