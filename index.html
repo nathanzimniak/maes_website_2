@@ -915,8 +915,9 @@
         const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
         const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
         const caretWidth = button?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
+        const caretSpacing = 10;
         const targetWidth = Math.ceil(
-          maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+          maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + caretSpacing
         );
 
         if (wrapper) {
@@ -929,6 +930,19 @@
       });
 
       document.body.removeChild(ruler);
+    };
+
+    const refreshSelectWidths = () => {
+      updateScaleSelectWidths();
+      updateAxisSelectWidths();
+      updateProfile1DSelectWidths();
+    };
+
+    const scheduleSelectWidthRefresh = () => {
+      refreshSelectWidths();
+      requestAnimationFrame(refreshSelectWidths);
+      setTimeout(refreshSelectWidths, 120);
+      setTimeout(refreshSelectWidths, 320);
     };
 
 
@@ -1400,6 +1414,9 @@
       const shouldOpen = profileSettingsPanel.hidden;
       profileSettingsPanel.hidden = !shouldOpen;
       profileSettingsButton.setAttribute('aria-expanded', String(shouldOpen));
+      if (shouldOpen) {
+        scheduleSelectWidthRefresh();
+      }
     }
 
     function buildCustomSelect(select, { renderLabel, renderOption, usesMath = false, wrapperClass = '' }) {
@@ -2499,9 +2516,7 @@
       });
     });
 
-    updateScaleSelectWidths();
-    updateAxisSelectWidths();
-    updateProfile1DSelectWidths();
+    scheduleSelectWidthRefresh();
     updateScaleSelect('x', xScaleType);
     updateScaleSelect('y', yScaleType);
     updateAxisLabel('x');
@@ -2521,9 +2536,7 @@
     });
 
     window.addEventListener('resize', () => {
-      updateScaleSelectWidths();
-      updateAxisSelectWidths();
-      updateProfile1DSelectWidths();
+      scheduleSelectWidthRefresh();
       updateChart();
     });
 
@@ -2578,17 +2591,13 @@
     window.addEventListener('load', () => {
       renderMathLabels();
 
-      updateScaleSelectWidths();
-      updateAxisSelectWidths();
-      updateProfile1DSelectWidths();
+      scheduleSelectWidthRefresh();
       updateChart();
     });
 
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
-        updateScaleSelectWidths();
-        updateAxisSelectWidths();
-        updateProfile1DSelectWidths();
+        scheduleSelectWidthRefresh();
       });
     }
   </script>
