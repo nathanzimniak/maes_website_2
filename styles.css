@@ -2016,6 +2016,38 @@ section {
   --profile-x-label-y: 4px;
 }
 
+.chart__surface3d {
+  padding: var(--space-5) var(--space-6) var(--space-2) var(--space-6);
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  transition: box-shadow 800ms ease;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.chart__surface3d:hover {
+  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
+}
+
+.chart__surface3d-header > div {
+  width: 100%;
+}
+
+.chart__surface3d .chart__eyebrow--sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart__surface3d-canvas {
+  width: 100%;
+  height: 320px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0d1320;
+}
+
 .chart__profiles:hover {
   box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
 }
