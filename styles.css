@@ -990,6 +990,10 @@ section {
   height: 32px;
 }
 
+.chart__settings-panel--profiles .chart__settings-controls .chart__latex-select {
+  flex: 0 0 auto;
+}
+
 .chart__settings-controls .chart__latex-button {
   padding: 4px 10px;
 }
