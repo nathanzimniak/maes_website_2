@@ -2078,10 +2078,17 @@
       jetControls.target.set(0, 0, 0);
       jetControls.update();
 
-      const ambient = new THREE.AmbientLight(0xffffff, 0.8);
-      const dir = new THREE.DirectionalLight(0xffffff, 1.0);
+      const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+      const hemi = new THREE.HemisphereLight(0xbfd7ff, 0x1a1f2b, 0.5);
+      const dir = new THREE.DirectionalLight(0xffffff, 0.7);
       dir.position.set(2.5, 3, 4);
-      jetScene.add(ambient, dir);
+
+      const spot = new THREE.SpotLight(0xffffff, 1.2, 0, Math.PI / 6, 0.3, 1.0);
+      spot.position.set(6, 8, 10);
+      spot.target.position.set(0, 0, 0);
+      jetScene.add(spot.target);
+
+      jetScene.add(ambient, hemi, dir, spot);
 
       const axisHelper = new THREE.AxesHelper(0.8);
       jetScene.add(axisHelper);
@@ -2179,8 +2186,8 @@
 
       const material = new THREE.MeshStandardMaterial({
         vertexColors: true,
-        metalness: 0.15,
-        roughness: 0.4,
+        metalness: 0.05,
+        roughness: 0.55,
         side: THREE.DoubleSide,
       });
       const mesh = new THREE.Mesh(geometry, material);
