@@ -1862,6 +1862,8 @@ section {
 .chart__latex-button-label {
   flex: 1 1 auto;
   min-width: 0;
+  max-width: calc(100% - 18px);
+  display: block;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
