@@ -1860,14 +1860,9 @@ section {
 }
 
 .chart__latex-button-label {
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: calc(100% - 18px);
-  display: block;
+  display: inline-flex;
+  align-items: center;
   text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .chart__latex-button-caret {
@@ -1878,7 +1873,7 @@ section {
   display: inline-flex;
   align-items: center;
   color: var(--color-text);
-  pointer-events: none;
+  flex: 0 0 auto;
 }
 
 .chart__latex-button-caret svg {
