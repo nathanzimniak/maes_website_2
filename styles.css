@@ -2017,6 +2017,7 @@ section {
 }
 
 .chart__surface3d {
+  width: 100%;
   padding: var(--space-5) var(--space-6) var(--space-2) var(--space-6);
   border-radius: var(--radius);
   background: #fff;
