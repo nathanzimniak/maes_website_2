@@ -379,7 +379,7 @@
               <li class="chart__hovered-item chart__control-label--aspect">
                 <span class="chart__label-text">Maximum angle</span>
                 <span class="chart__label-math">
-                  <span class="math-label" data-latex="x_{end}"></span>
+                  <span class="math-label" data-latex="x_{max}"></span>
                   <span class="chart__label-equals">=</span>
                   <span class="chart__label-value">―</span>
                 </span>
@@ -414,7 +414,7 @@
                     <select id="profile-title-select-1" class="chart__select chart__select--profile" aria-label="Focus option 1">
                       <option value="disk" data-latex="[0, 2x_{SM}]">[0, 2x_{SM}]</option>
                       <option value="disk-outflow" data-latex="[0, 2x_{A}]">[0, 2x_{A}]</option>
-                      <option value="outflow" data-latex="[0, x_{end}]">[0, x_{end}]</option>
+                      <option value="outflow" data-latex="[0, x_{max}]">[0, x_{max}]</option>
                     </select>
                     <select id="profile-title-select-2" class="chart__select chart__select--profile chart__select--scale" aria-label="Profile scale">
                       <option value="linear">Linear</option>
@@ -520,12 +520,12 @@
       x: {
         disk: '[0, 2x_{SM}]',
         'disk-outflow': '[0, 2x_{A}]',
-        outflow: '[0, x_{end}]',
+        outflow: '[0, x_{max}]',
       },
       z: {
         disk: '[0, 2z_{SM}]',
         'disk-outflow': '[0, 2z_{A}]',
-        outflow: '[0, z_{end}]',
+        outflow: '[0, z_{max}]',
       },
     };
     const resizeObserver = 'ResizeObserver' in window
@@ -737,11 +737,11 @@
         g17: 'x_id',
         g18: 'x_sm',
         g19: 'x_a',
-        g20: 'x_end',
+        g20: 'x_max',
         g21: 'z_id',
         g22: 'z_sm',
         g23: 'z_a',
-        g24: 'z_end',
+        g24: 'z_max',
       };
       const quantityIndexMap = quantities.reduce((accumulator, name, index) => {
         accumulator[name] = index;
@@ -1312,11 +1312,11 @@
       g17: { label: 'Ideal angle', latex: 'x_{id}', symbol: 'xid' },
       g18: { label: 'SM angle', latex: 'x_{SM}', symbol: 'xSM' },
       g19: { label: 'A angle', latex: 'x_A', symbol: 'xA' },
-      g20: { label: 'Maximum angle', latex: 'x_{end}', symbol: 'xend' },
+      g20: { label: 'x_max', latex: 'x_{max}', symbol: 'xmax' },
       g21: { label: 'Ideal altitude', latex: 'z_{id}', symbol: 'zid' },
       g22: { label: 'SM altitude', latex: 'z_{SM}', symbol: 'zSM' },
       g23: { label: 'A altitude', latex: 'z_A', symbol: 'zA' },
-      g24: { label: 'Maximum altitude', latex: 'z_{end}', symbol: 'zend' }
+      g24: { label: 'z_max', latex: 'z_{max}', symbol: 'zmax' }
     };
 
     const axisExcludedMetricKeys = new Set(['g1', 'g2', 'g3', 'g4', 'g5']);
@@ -2040,7 +2040,7 @@
       if (!profiles) return;
       const xSmValue = selectedProfileAxis === 'psi' ? Number(solution?.g22) : Number(solution?.g18);
       const xAValue = selectedProfileAxis === 'psi' ? Number(solution?.g23) : Number(solution?.g19);
-      const xEndValue = selectedProfileAxis === 'psi' ? Number(solution?.g24) : Number(solution?.g20);
+      const xMaxValue = selectedProfileAxis === 'psi' ? Number(solution?.g24) : Number(solution?.g20);
       const profileCurveColor = '#60708f';
       const series = [
         { label: '<span class="chart__profile-title-text">Density</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho"></span></span>', ariaLabel: 'Density (rho)', key: 'density', color: profileCurveColor, tooltipSymbol: '\\rho' },
@@ -2111,8 +2111,8 @@
             }
             return null;
           }
-          if (selectedFocus === 'outflow' && Number.isFinite(xEndValue)) {
-            return buildXDomain(xEndValue);
+          if (selectedFocus === 'outflow' && Number.isFinite(xMaxValue)) {
+            return buildXDomain(xMaxValue);
           }
           if (Number.isFinite(xSmValue)) {
             return buildXDomain(2 * xSmValue);
