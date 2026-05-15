@@ -1156,7 +1156,6 @@
 
       return roundedValue.toString();
     }
-
     function toSuperscript(value) {
       const superscriptMap = {
         '-': '⁻',
@@ -1877,7 +1876,7 @@
               <span class="chart__sparkline-tooltip-key">
                 <span class="math-label" data-latex="${xLabelLatex}"></span>
               </span>
-              <span class="chart__sparkline-tooltip-value">${clampedDataX.toFixed(2)}</span>
+              <span class="chart__sparkline-tooltip-value">${formatTick(clampedDataX, { min: chart.xMin, max: chart.xMax }, 'linear')}</span>
             </span>
           </div>
         `;
