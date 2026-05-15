@@ -10,6 +10,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.css">
   <link rel="stylesheet" href="styles.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body id="top">
   <header class="site-header">
@@ -387,6 +395,14 @@
             </ul>
           </div>
         </div>
+        <div class="chart__hovered chart__hovered--solution" aria-live="polite">
+          <div class="chart__hovered-header">
+            <div>
+              <p class="chart__eyebrow chart__eyebrow--sub">Jet surface (3D)</p>
+            </div>
+          </div>
+          <div id="jet-surface-3d" style="width:100%;height:320px;border-radius:14px;overflow:hidden;background:#0d1320;"></div>
+        </div>
       </div>
 
       <div class="chart__profiles" aria-live="polite">
@@ -481,7 +497,9 @@
     </p>
   </section>
 
-  <script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     const footerYear = document.getElementById('year');
     if (footerYear) {
       footerYear.textContent = new Date().getFullYear();
@@ -572,6 +590,12 @@
 
     const realDataCache = new Map();
     const solutionProfileCache = new Map();
+    let jetScene = null;
+    let jetCamera = null;
+    let jetRenderer = null;
+    let jetControls = null;
+    let jetMesh = null;
+    let jetAnimationFrameId = null;
     const datasetDirectories = ['0.100_1.0_1.0_1.0_0.0_0_0'];
     const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
 
@@ -2001,6 +2025,7 @@
 
       const psiProfiles = {
         x: getSeries('z_psi'),
+        r: getSeries('r_psi'),
         pressure: getSeries('P_psi'),
         density: getSeries('rho_psi'),
         temperature: getSeries('T_psi'),
@@ -2024,6 +2049,130 @@
 
       solutionProfileCache.set(cacheKey, profiles);
       return profiles;
+    }
+
+    function initJetRenderer() {
+      const container = document.getElementById('jet-surface-3d');
+      if (!container || typeof THREE === 'undefined' || jetRenderer) return;
+
+      jetScene = new THREE.Scene();
+      jetScene.background = new THREE.Color(0x0d1320);
+
+      const width = container.clientWidth || 480;
+      const height = container.clientHeight || 320;
+      jetCamera = new THREE.PerspectiveCamera(45, width / height, 0.01, 2000);
+      jetCamera.position.set(1.8, 1.8, 2.2);
+      jetCamera.lookAt(0, 0, 0.5);
+
+      jetRenderer = new THREE.WebGLRenderer({ antialias: true });
+      jetRenderer.setSize(width, height);
+      jetRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      container.appendChild(jetRenderer.domElement);
+      jetControls = new OrbitControls(jetCamera, jetRenderer.domElement);
+      jetControls.enableDamping = true;
+      jetControls.dampingFactor = 0.08;
+      jetControls.rotateSpeed = 0.9;
+      jetControls.zoomSpeed = 1.1;
+      jetControls.panSpeed = 0.7;
+      jetControls.target.set(0, 0, 0);
+      jetControls.update();
+
+      const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+      const dir = new THREE.DirectionalLight(0xffffff, 1.0);
+      dir.position.set(2.5, 3, 4);
+      jetScene.add(ambient, dir);
+
+      const axisHelper = new THREE.AxesHelper(0.8);
+      jetScene.add(axisHelper);
+
+      const animate = () => {
+        jetAnimationFrameId = requestAnimationFrame(animate);
+        if (jetControls) jetControls.update();
+        jetRenderer.render(jetScene, jetCamera);
+      };
+      animate();
+
+      window.addEventListener('resize', () => {
+        if (!jetRenderer || !jetCamera) return;
+        const w = container.clientWidth || 480;
+        const h = container.clientHeight || 320;
+        jetCamera.aspect = w / h;
+        jetCamera.updateProjectionMatrix();
+        jetRenderer.setSize(w, h);
+      });
+    }
+
+    function buildJetSurfaceMesh(rValues, zValues, phiSegments = 64) {
+      if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
+      if (!rValues.length || rValues.length !== zValues.length) return null;
+
+      const nz = rValues.length;
+      const nphi = phiSegments;
+      const positions = [];
+      const indices = [];
+
+      for (let i = 0; i < nz; i += 1) {
+        const r = Math.abs(Number(rValues[i]));
+        const z = Number(zValues[i]);
+        if (!Number.isFinite(r) || !Number.isFinite(z)) continue;
+        for (let j = 0; j < nphi; j += 1) {
+          const phi = (j / nphi) * Math.PI * 2;
+          const x = r * Math.cos(phi);
+          const y = r * Math.sin(phi);
+          positions.push(x, y, z);
+        }
+      }
+
+      for (let i = 0; i < nz - 1; i += 1) {
+        for (let j = 0; j < nphi; j += 1) {
+          const jp1 = (j + 1) % nphi;
+          const a = i * nphi + j;
+          const b = i * nphi + jp1;
+          const c = (i + 1) * nphi + j;
+          const d = (i + 1) * nphi + jp1;
+          indices.push(a, c, b);
+          indices.push(b, c, d);
+        }
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setIndex(indices);
+      geometry.computeVertexNormals();
+      geometry.computeBoundingBox();
+
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x6aa7ff,
+        metalness: 0.15,
+        roughness: 0.4,
+        side: THREE.DoubleSide,
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      if (geometry.boundingBox) {
+        const center = new THREE.Vector3();
+        geometry.boundingBox.getCenter(center);
+        mesh.position.sub(center);
+      }
+      return mesh;
+    }
+
+    function renderJetSurface(solution) {
+      initJetRenderer();
+      if (!jetScene || !solution?.profiles?.psi) return;
+
+      if (jetMesh) {
+        jetScene.remove(jetMesh);
+        jetMesh.geometry.dispose();
+        jetMesh.material.dispose();
+        jetMesh = null;
+      }
+
+      const rValues = solution.profiles.psi.r;
+      const zValues = solution.profiles.psi.x;
+      jetMesh = buildJetSurfaceMesh(rValues, zValues, 72);
+      if (jetMesh) {
+        jetScene.add(jetMesh);
+      }
     }
 
     async function ensureSolutionProfiles(solution) {
@@ -2286,6 +2435,7 @@
       const selectedSolution = await ensureSolutionProfiles(currentSolutions[index]);
       if (selectedSolution?.profiles) {
         renderProfiles(selectedSolution);
+        renderJetSurface(selectedSolution);
         renderHoveredValues(selectedSolution);
         setProfilesOverlayVisible(false);
       }
@@ -2297,6 +2447,12 @@
 
     function resetProfiles() {
       selectedSolutionIndex = null;
+      if (jetScene && jetMesh) {
+        jetScene.remove(jetMesh);
+        jetMesh.geometry.dispose();
+        jetMesh.material.dispose();
+        jetMesh = null;
+      }
       pinnedSolutionIndex = null;
       renderFlatProfiles();
       setProfilesOverlayVisible(true);
@@ -2454,6 +2610,7 @@
             ensureSolutionProfiles(selectedSolution).then((solutionWithProfiles) => {
               if (solutionWithProfiles?.profiles) {
                 renderProfiles(solutionWithProfiles);
+                renderJetSurface(solutionWithProfiles);
               }
             });
           } else {
