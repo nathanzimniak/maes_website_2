@@ -2134,8 +2134,8 @@
       const logDensityMax = hasCustomRange ? customVmax : computedLogDensityMax;
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-12);
 
-      // Denser Inferno ramp (sampled from Matplotlib's inferno) to avoid washed-out interpolation.
-      const infernoStops = [
+      // Inferno ramp base stops (sampled from Matplotlib's inferno).
+      const infernoBaseStops = [
         [0.001462, 0.000466, 0.013866],
         [0.016561, 0.013136, 0.080282],
         [0.046915, 0.030324, 0.150164],
@@ -2157,6 +2157,22 @@
         [0.978422, 0.877281, 0.349178],
         [0.988362, 0.998364, 0.644924],
       ];
+
+      // Match Matplotlib's default listed colormap size (256 samples).
+      const infernoStops = Array.from({ length: 256 }, (_, idx) => {
+        const t = idx / 255;
+        const scaled = t * (infernoBaseStops.length - 1);
+        const i0 = Math.floor(scaled);
+        const i1 = Math.min(i0 + 1, infernoBaseStops.length - 1);
+        const f = scaled - i0;
+        const c0 = infernoBaseStops[i0];
+        const c1 = infernoBaseStops[i1];
+        return [
+          c0[0] + (c1[0] - c0[0]) * f,
+          c0[1] + (c1[1] - c0[1]) * f,
+          c0[2] + (c1[2] - c0[2]) * f,
+        ];
+      });
 
       const densityToColor = (density) => {
         const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
