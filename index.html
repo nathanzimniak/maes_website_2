@@ -775,6 +775,8 @@
     }
 
 
+    const SELECT_CARET_GAP_BUFFER = 12;
+
     const updateScaleSelectWidths = () => {
       if (!scaleSelects.length) {
         return;
@@ -812,7 +814,7 @@
       const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
       const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
       const targetWidth = Math.ceil(
-        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + SELECT_CARET_GAP_BUFFER
       );
 
       scaleSelects.forEach((select) => {
@@ -863,7 +865,7 @@
       const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
       const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
       const targetWidth = Math.ceil(
-        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + SELECT_CARET_GAP_BUFFER
       );
 
       axisSelects.forEach((select) => {
@@ -917,7 +919,7 @@
         const caretWidth = button?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
         const caretSpacing = 10;
         const targetWidth = Math.ceil(
-          maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + caretSpacing
+          maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + SELECT_CARET_GAP_BUFFER
         );
 
         if (wrapper) {
