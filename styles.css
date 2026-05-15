@@ -1874,6 +1874,7 @@ section {
   align-items: center;
   color: var(--color-text);
   flex: 0 0 auto;
+  margin-left: 10px;
 }
 
 .chart__latex-button-caret svg {
