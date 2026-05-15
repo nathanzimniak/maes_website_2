@@ -2298,10 +2298,6 @@
     function resetProfiles() {
       selectedSolutionIndex = null;
       pinnedSolutionIndex = null;
-      if (profileScaleSelect && profileScaleSelect.value !== 'linear') {
-        profileScaleSelect.value = 'linear';
-        updateCustomSelectDisplay(profileScaleSelect);
-      }
       renderFlatProfiles();
       setProfilesOverlayVisible(true);
     }
