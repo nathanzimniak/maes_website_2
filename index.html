@@ -2056,7 +2056,7 @@
             const clampedMax = Math.max(dataXMin, rawMax);
             if (isLogProfileScale && clampedMax > 0) {
               const positiveDataXMin = Number.isFinite(minPositiveX) ? minPositiveX : clampedMax;
-              const roundedMin = 10 ** Math.floor(Math.log10(positiveDataXMin));
+              const roundedMin = 10 ** Math.ceil(Math.log10(positiveDataXMin));
               const roundedMax = 10 ** Math.ceil(Math.log10(clampedMax));
               return { min: roundedMin, max: Math.max(roundedMin, roundedMax) };
             }
