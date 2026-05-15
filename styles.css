@@ -1855,10 +1855,10 @@ section {
   font-size: 0.78rem;
   font-weight: 400;
   line-height: 1.2;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: flex-start;
-  position: relative;
+  column-gap: 12px;
   cursor: pointer;
   transition: border-color 500ms ease;
 }
@@ -1867,6 +1867,8 @@ section {
   display: inline-flex;
   align-items: center;
   text-align: left;
+  min-width: 0;
+  padding-right: 2px;
 }
 
 .chart__latex-button-caret {

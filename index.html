@@ -932,6 +932,19 @@
       document.body.removeChild(ruler);
     };
 
+    const refreshSelectWidths = () => {
+      updateScaleSelectWidths();
+      updateAxisSelectWidths();
+      updateProfile1DSelectWidths();
+    };
+
+    const scheduleSelectWidthRefresh = () => {
+      refreshSelectWidths();
+      requestAnimationFrame(refreshSelectWidths);
+      setTimeout(refreshSelectWidths, 120);
+      setTimeout(refreshSelectWidths, 320);
+    };
+
 
     configureSlidersFromDatasets();
 
@@ -1401,6 +1414,9 @@
       const shouldOpen = profileSettingsPanel.hidden;
       profileSettingsPanel.hidden = !shouldOpen;
       profileSettingsButton.setAttribute('aria-expanded', String(shouldOpen));
+      if (shouldOpen) {
+        scheduleSelectWidthRefresh();
+      }
     }
 
     function buildCustomSelect(select, { renderLabel, renderOption, usesMath = false, wrapperClass = '' }) {
@@ -2500,9 +2516,7 @@
       });
     });
 
-    updateScaleSelectWidths();
-    updateAxisSelectWidths();
-    updateProfile1DSelectWidths();
+    scheduleSelectWidthRefresh();
     updateScaleSelect('x', xScaleType);
     updateScaleSelect('y', yScaleType);
     updateAxisLabel('x');
@@ -2522,9 +2536,7 @@
     });
 
     window.addEventListener('resize', () => {
-      updateScaleSelectWidths();
-      updateAxisSelectWidths();
-      updateProfile1DSelectWidths();
+      scheduleSelectWidthRefresh();
       updateChart();
     });
 
@@ -2579,17 +2591,13 @@
     window.addEventListener('load', () => {
       renderMathLabels();
 
-      updateScaleSelectWidths();
-      updateAxisSelectWidths();
-      updateProfile1DSelectWidths();
+      scheduleSelectWidthRefresh();
       updateChart();
     });
 
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
-        updateScaleSelectWidths();
-        updateAxisSelectWidths();
-        updateProfile1DSelectWidths();
+        scheduleSelectWidthRefresh();
       });
     }
   </script>
