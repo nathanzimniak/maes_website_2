@@ -1858,10 +1858,18 @@ section {
   transition: border-color 500ms ease;
 }
 
+.chart__latex-button-label {
+  display: inline-flex;
+  align-items: center;
+  text-align: left;
+}
+
 .chart__latex-button-caret {
   display: inline-flex;
   align-items: center;
   color: var(--color-text);
+  flex: 0 0 auto;
+  margin-left: 10px;
 }
 
 .chart__latex-button-caret svg {
