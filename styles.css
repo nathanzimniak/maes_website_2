@@ -1843,7 +1843,7 @@ section {
   width: 100%;
   min-width: 60px;
   padding: 8px 12px;
-  padding-right: 28px;
+  padding-right: 34px;
   border-radius: 10px;
   border: 1px solid transparent;
   background: #f8f9fb;
@@ -1863,6 +1863,9 @@ section {
   flex: 1 1 auto;
   min-width: 0;
   text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chart__latex-button-caret {
