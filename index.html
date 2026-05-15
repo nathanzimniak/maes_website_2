@@ -1157,6 +1157,13 @@
       return roundedValue.toString();
     }
 
+    function formatScientificE(value, decimals = 2) {
+      if (!Number.isFinite(value)) {
+        return '';
+      }
+      return value.toExponential(decimals).replace('e+', 'e');
+    }
+
     function toSuperscript(value) {
       const superscriptMap = {
         '-': '⁻',
@@ -1877,7 +1884,7 @@
               <span class="chart__sparkline-tooltip-key">
                 <span class="math-label" data-latex="${xLabelLatex}"></span>
               </span>
-              <span class="chart__sparkline-tooltip-value">${chart.formatX(clampedDataX)}</span>
+              <span class="chart__sparkline-tooltip-value">${formatScientificE(clampedDataX, 2)}</span>
             </span>
           </div>
         `;
