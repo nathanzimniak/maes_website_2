@@ -892,6 +892,9 @@
       ruler.style.position = 'absolute';
       ruler.style.visibility = 'hidden';
       ruler.style.whiteSpace = 'nowrap';
+      ruler.style.pointerEvents = 'none';
+      ruler.style.left = '-9999px';
+      ruler.style.top = '-9999px';
       document.body.appendChild(ruler);
 
       profile1DSelects.forEach((select) => {
@@ -905,10 +908,23 @@
         ruler.style.fontWeight = referenceStyles.fontWeight;
         ruler.style.letterSpacing = referenceStyles.letterSpacing;
 
+        const customSelectState = customSelects.get(select);
+        const measureNode = document.createElement('span');
+        measureNode.style.display = 'inline-flex';
+        measureNode.style.alignItems = 'center';
+        measureNode.style.whiteSpace = 'nowrap';
+        ruler.innerHTML = '';
+        ruler.appendChild(measureNode);
+
         let maxTextWidth = 0;
         Array.from(select.options).forEach((option) => {
-          ruler.textContent = option.textContent || '';
-          maxTextWidth = Math.max(maxTextWidth, ruler.getBoundingClientRect().width);
+          if (customSelectState?.renderOption) {
+            customSelectState.renderOption(measureNode, option);
+            renderMathLabels(measureNode);
+          } else {
+            measureNode.textContent = option.textContent || '';
+          }
+          maxTextWidth = Math.max(maxTextWidth, measureNode.getBoundingClientRect().width);
         });
 
         const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
