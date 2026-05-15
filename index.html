@@ -2044,6 +2044,9 @@
         const chartWidth = Math.max(1, Math.floor(wrapperWidth || 320));
         const profileXDomainOverride = (() => {
           const dataXMin = Math.min(...profiles.x);
+          const minPositiveX = profiles.x.reduce((minimum, value) => (
+            value > 0 && Number.isFinite(value) ? Math.min(minimum, value) : minimum
+          ), Number.POSITIVE_INFINITY);
           const selectedFocus = profileFocusSelect?.value;
           const isLogProfileScale = profileScaleSelect?.value === 'log';
           const buildXDomain = (rawMax) => {
@@ -2052,8 +2055,10 @@
             }
             const clampedMax = Math.max(dataXMin, rawMax);
             if (isLogProfileScale && clampedMax > 0) {
+              const positiveDataXMin = Number.isFinite(minPositiveX) ? minPositiveX : clampedMax;
+              const roundedMin = 10 ** Math.ceil(Math.log10(positiveDataXMin));
               const roundedMax = 10 ** Math.ceil(Math.log10(clampedMax));
-              return { min: dataXMin, max: Math.max(dataXMin, roundedMax) };
+              return { min: roundedMin, max: Math.max(roundedMin, roundedMax) };
             }
             return { min: dataXMin, max: clampedMax };
           };
