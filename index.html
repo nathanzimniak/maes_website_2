@@ -2062,8 +2062,8 @@
       const width = container.clientWidth || 480;
       const height = container.clientHeight || 320;
       jetCamera = new THREE.PerspectiveCamera(45, width / height, 0.01, 2000);
-      jetCamera.position.set(1.8, 1.8, 2.2);
-      jetCamera.lookAt(0, 0, 0.5);
+      jetCamera.position.set(2.6, 2.6, 3.2);
+      jetCamera.lookAt(0, 0, 0);
 
       jetRenderer = new THREE.WebGLRenderer({ antialias: true });
       jetRenderer.setSize(width, height);
