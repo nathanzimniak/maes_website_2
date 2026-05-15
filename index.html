@@ -775,6 +775,8 @@
     }
 
 
+    const SELECT_CARET_GAP_BUFFER = 12;
+
     const updateScaleSelectWidths = () => {
       if (!scaleSelects.length) {
         return;
@@ -812,7 +814,7 @@
       const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
       const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
       const targetWidth = Math.ceil(
-        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + SELECT_CARET_GAP_BUFFER
       );
 
       scaleSelects.forEach((select) => {
@@ -863,7 +865,7 @@
       const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
       const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
       const targetWidth = Math.ceil(
-        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+        maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + SELECT_CARET_GAP_BUFFER
       );
 
       axisSelects.forEach((select) => {
@@ -916,7 +918,7 @@
         const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
         const caretWidth = button?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
         const targetWidth = Math.ceil(
-          maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth
+          maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + SELECT_CARET_GAP_BUFFER
         );
 
         if (wrapper) {
@@ -929,6 +931,19 @@
       });
 
       document.body.removeChild(ruler);
+    };
+
+    const refreshSelectWidths = () => {
+      updateScaleSelectWidths();
+      updateAxisSelectWidths();
+      updateProfile1DSelectWidths();
+    };
+
+    const scheduleSelectWidthRefresh = () => {
+      refreshSelectWidths();
+      requestAnimationFrame(refreshSelectWidths);
+      setTimeout(refreshSelectWidths, 120);
+      setTimeout(refreshSelectWidths, 320);
     };
 
 
@@ -1400,6 +1415,9 @@
       const shouldOpen = profileSettingsPanel.hidden;
       profileSettingsPanel.hidden = !shouldOpen;
       profileSettingsButton.setAttribute('aria-expanded', String(shouldOpen));
+      if (shouldOpen) {
+        scheduleSelectWidthRefresh();
+      }
     }
 
     function buildCustomSelect(select, { renderLabel, renderOption, usesMath = false, wrapperClass = '' }) {
@@ -2499,9 +2517,7 @@
       });
     });
 
-    updateScaleSelectWidths();
-    updateAxisSelectWidths();
-    updateProfile1DSelectWidths();
+    scheduleSelectWidthRefresh();
     updateScaleSelect('x', xScaleType);
     updateScaleSelect('y', yScaleType);
     updateAxisLabel('x');
@@ -2521,9 +2537,7 @@
     });
 
     window.addEventListener('resize', () => {
-      updateScaleSelectWidths();
-      updateAxisSelectWidths();
-      updateProfile1DSelectWidths();
+      scheduleSelectWidthRefresh();
       updateChart();
     });
 
@@ -2578,17 +2592,13 @@
     window.addEventListener('load', () => {
       renderMathLabels();
 
-      updateScaleSelectWidths();
-      updateAxisSelectWidths();
-      updateProfile1DSelectWidths();
+      scheduleSelectWidthRefresh();
       updateChart();
     });
 
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
-        updateScaleSelectWidths();
-        updateAxisSelectWidths();
-        updateProfile1DSelectWidths();
+        scheduleSelectWidthRefresh();
       });
     }
   </script>
