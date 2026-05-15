@@ -442,6 +442,16 @@
           <div>
             <p class="chart__eyebrow chart__eyebrow--sub">Jet surface (3D)</p>
           </div>
+          <div class="chart__control-group" style="display:flex; gap:.6rem; align-items:center;">
+            <label class="chart__control-label" for="jet-vmin" style="display:flex; align-items:center; gap:.25rem;">
+              <span class="chart__label-text">vmin</span>
+              <input id="jet-vmin" type="number" step="any" placeholder="auto" class="chart__select" style="width:7rem;" />
+            </label>
+            <label class="chart__control-label" for="jet-vmax" style="display:flex; align-items:center; gap:.25rem;">
+              <span class="chart__label-text">vmax</span>
+              <input id="jet-vmax" type="number" step="any" placeholder="auto" class="chart__select" style="width:7rem;" />
+            </label>
+          </div>
         </div>
         <div id="jet-surface-3d" class="chart__surface3d-canvas"></div>
       </div>
@@ -521,6 +531,8 @@
     const profileFocusSelect = document.getElementById('profile-title-select-1');
     const profileScaleSelect = document.getElementById('profile-title-select-2');
     const hoveredValues = document.getElementById('hovered-values');
+    const jetVminInput = document.getElementById('jet-vmin');
+    const jetVmaxInput = document.getElementById('jet-vmax');
     const axisLabelElements = {
       x: document.getElementById('x-axis-label'),
       y: document.getElementById('y-axis-label'),
@@ -2113,8 +2125,13 @@
       const colors = [];
       const indices = [];
       const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
-      const logDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : 0;
-      const logDensityMax = finitePositiveDensities.length ? Math.log10(Math.max(...finitePositiveDensities)) : 1;
+      const computedLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : 0;
+      const computedLogDensityMax = finitePositiveDensities.length ? Math.log10(Math.max(...finitePositiveDensities)) : 1;
+      const customVmin = Number(jetVminInput?.value);
+      const customVmax = Number(jetVmaxInput?.value);
+      const hasCustomRange = Number.isFinite(customVmin) && Number.isFinite(customVmax) && customVmax > customVmin;
+      const logDensityMin = hasCustomRange ? customVmin : computedLogDensityMin;
+      const logDensityMax = hasCustomRange ? customVmax : computedLogDensityMax;
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-12);
 
       const infernoStops = [
@@ -2669,6 +2686,15 @@
           yAxisKey = select.value;
         }
         updateChart();
+      });
+    });
+
+    [jetVminInput, jetVmaxInput].forEach((input) => {
+      input?.addEventListener('input', () => {
+        const selectedSolution = selectedSolutionIndex !== null ? currentSolutions[selectedSolutionIndex] : null;
+        if (selectedSolution?.profiles) {
+          renderJetSurface(selectedSolution);
+        }
       });
     });
 
