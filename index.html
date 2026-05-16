@@ -442,6 +442,16 @@
           <div>
             <p class="chart__eyebrow chart__eyebrow--sub">Jet surface (3D)</p>
           </div>
+          <div class="chart__control-group" style="display:flex; gap:.6rem; align-items:center;">
+            <label class="chart__control-label" for="jet-vmin" style="display:flex; align-items:center; gap:.25rem;">
+              <span class="chart__label-text">vmin</span>
+              <input id="jet-vmin" type="number" step="any" placeholder="" class="chart__select" style="width:12.5rem;" />
+            </label>
+            <label class="chart__control-label" for="jet-vmax" style="display:flex; align-items:center; gap:.25rem;">
+              <span class="chart__label-text">vmax</span>
+              <input id="jet-vmax" type="number" step="any" placeholder="" class="chart__select" style="width:7rem;" />
+            </label>
+          </div>
         </div>
         <div id="jet-surface-3d" class="chart__surface3d-canvas"></div>
       </div>
@@ -521,6 +531,8 @@
     const profileFocusSelect = document.getElementById('profile-title-select-1');
     const profileScaleSelect = document.getElementById('profile-title-select-2');
     const hoveredValues = document.getElementById('hovered-values');
+    const jetVminInput = document.getElementById('jet-vmin');
+    const jetVmaxInput = document.getElementById('jet-vmax');
     const axisLabelElements = {
       x: document.getElementById('x-axis-label'),
       y: document.getElementById('y-axis-label'),
@@ -2104,7 +2116,23 @@
     }
 
 
+    function updateJetRangeDefaultsDisplay(densityValues = []) {
+      const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
+      const computedLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : 0;
+      const defaultLogDensityMin = computedLogDensityMin - 0.5;
+      const defaultLogDensityMax = 0.0;
 
+      if (jetVminInput) {
+        const hasUserValue = Boolean(jetVminInput.value?.trim());
+        jetVminInput.placeholder = defaultLogDensityMin.toFixed(3);
+        if (!hasUserValue) jetVminInput.value = defaultLogDensityMin.toFixed(3);
+      }
+      if (jetVmaxInput) {
+        const hasUserValue = Boolean(jetVmaxInput.value?.trim());
+        jetVmaxInput.placeholder = defaultLogDensityMax.toFixed(3);
+        if (!hasUserValue) jetVmaxInput.value = defaultLogDensityMax.toFixed(3);
+      }
+    }
 
     function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
@@ -2117,10 +2145,18 @@
       const indices = [];
       const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
       const computedLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : 0;
+      const parseOptionalNumberInput = (inputElement) => {
+        const rawValue = inputElement?.value?.trim();
+        if (!rawValue) return null;
+        const parsed = Number(rawValue);
+        return Number.isFinite(parsed) ? parsed : null;
+      };
+      const customVmin = parseOptionalNumberInput(jetVminInput);
+      const customVmax = parseOptionalNumberInput(jetVmaxInput);
       const defaultLogDensityMin = computedLogDensityMin - 0.5;
       const defaultLogDensityMax = 0.0;
-      const logDensityMin = defaultLogDensityMin;
-      const logDensityMax = defaultLogDensityMax;
+      const logDensityMin = customVmin ?? defaultLogDensityMin;
+      const logDensityMax = customVmax ?? defaultLogDensityMax;
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-12);
 
       // Inferno ramp base stops (sampled from Matplotlib's inferno).
@@ -2709,6 +2745,15 @@
           yAxisKey = select.value;
         }
         updateChart();
+      });
+    });
+
+    [jetVminInput, jetVmaxInput].forEach((input) => {
+      input?.addEventListener('input', () => {
+        const selectedSolution = selectedSolutionIndex !== null ? currentSolutions[selectedSolutionIndex] : null;
+        if (selectedSolution?.profiles) {
+          renderJetSurface(selectedSolution);
+        }
       });
     });
 
