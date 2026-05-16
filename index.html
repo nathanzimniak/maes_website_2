@@ -2879,6 +2879,7 @@
 
       renderAxes(xDomain, yDomain, xScale, yScale, xScaleType, yScaleType, xTicks, yTicks);
       renderPoints(solutions, xKey, yKey, xScale, yScale);
+      syncSurfaceHeightWithProfiles();
     }
 
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
