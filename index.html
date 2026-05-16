@@ -451,11 +451,6 @@
               <span class="chart__label-text">vmax</span>
               <input id="jet-vmax" type="number" step="any" placeholder="auto" class="chart__select" style="width:7rem;" />
             </label>
-            <label class="chart__control-label" for="jet-opacity" style="display:flex; align-items:center; gap:.25rem; min-width:10rem;">
-              <span class="chart__label-text">opacity</span>
-              <input id="jet-opacity" type="range" min="0.05" max="1" step="0.05" value="0.85" style="width:6rem;" />
-              <span id="jet-opacity-value" class="chart__label-text" style="font-variant-numeric:tabular-nums; min-width:2.5rem; text-align:right;">0.85</span>
-            </label>
           </div>
         </div>
         <div id="jet-surface-3d" class="chart__surface3d-canvas"></div>
@@ -538,8 +533,6 @@
     const hoveredValues = document.getElementById('hovered-values');
     const jetVminInput = document.getElementById('jet-vmin');
     const jetVmaxInput = document.getElementById('jet-vmax');
-    const jetOpacityInput = document.getElementById('jet-opacity');
-    const jetOpacityValue = document.getElementById('jet-opacity-value');
     const axisLabelElements = {
       x: document.getElementById('x-axis-label'),
       y: document.getElementById('y-axis-label'),
@@ -2235,13 +2228,10 @@
       geometry.computeBoundingBox();
 
       // Use an unlit material so the colormap matches scientific plotting (no scene-light washout).
-      const opacity = Math.min(1, Math.max(0.05, Number(jetOpacityInput?.value) || 0.85));
       const material = new THREE.MeshBasicMaterial({
         vertexColors: true,
         toneMapped: false,
         side: THREE.DoubleSide,
-        transparent: opacity < 1,
-        opacity,
       });
       const mesh = new THREE.Mesh(geometry, material);
       if (geometry.boundingBox) {
@@ -2732,11 +2722,8 @@
       });
     });
 
-    [jetVminInput, jetVmaxInput, jetOpacityInput].forEach((input) => {
+    [jetVminInput, jetVmaxInput].forEach((input) => {
       input?.addEventListener('input', () => {
-        if (jetOpacityInput && jetOpacityValue) {
-          jetOpacityValue.textContent = Number(jetOpacityInput.value || 0.85).toFixed(2);
-        }
         const selectedSolution = selectedSolutionIndex !== null ? currentSolutions[selectedSolutionIndex] : null;
         if (selectedSolution?.profiles) {
           renderJetSurface(selectedSolution);
