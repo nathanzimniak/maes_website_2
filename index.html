@@ -2126,12 +2126,18 @@
       const indices = [];
       const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
       const computedLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : 0;
-      const customVmin = Number(jetVminInput?.value);
-      const customVmax = Number(jetVmaxInput?.value);
+      const parseOptionalNumberInput = (inputElement) => {
+        const rawValue = inputElement?.value?.trim();
+        if (!rawValue) return null;
+        const parsed = Number(rawValue);
+        return Number.isFinite(parsed) ? parsed : null;
+      };
+      const customVmin = parseOptionalNumberInput(jetVminInput);
+      const customVmax = parseOptionalNumberInput(jetVmaxInput);
       const defaultLogDensityMin = computedLogDensityMin - 1.3;
       const defaultLogDensityMax = 0.0;
-      const logDensityMin = Number.isFinite(customVmin) ? customVmin : defaultLogDensityMin;
-      const logDensityMax = Number.isFinite(customVmax) ? customVmax : defaultLogDensityMax;
+      const logDensityMin = customVmin ?? defaultLogDensityMin;
+      const logDensityMax = customVmax ?? defaultLogDensityMax;
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-12);
 
       // Inferno ramp base stops (sampled from Matplotlib's inferno).
