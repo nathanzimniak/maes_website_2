@@ -2502,14 +2502,17 @@
       jetLogVmax = Number(jetVmaxInput?.value);
       diskLogVmin = Number(diskVminInput?.value);
       diskLogVmax = Number(diskVmaxInput?.value);
+      const selectedSolution = selectedSolutionIndex !== null ? currentSolutions[selectedSolutionIndex] : null;
       if (
         Number.isFinite(jetLogVmin)
         && Number.isFinite(jetLogVmax)
         && Number.isFinite(diskLogVmin)
         && Number.isFinite(diskLogVmax)
-        && activeSolution
+        && jetLogVmin < jetLogVmax
+        && diskLogVmin < diskLogVmax
+        && selectedSolution?.profiles
       ) {
-        renderJetSurface(activeSolution);
+        renderJetSurface(selectedSolution);
       }
     }
 
@@ -2895,6 +2898,7 @@
     [jetVminInput, jetVmaxInput, diskVminInput, diskVmaxInput].forEach((input) => {
       if (!input) return;
       input.addEventListener('change', updateSurfaceColorBounds);
+      input.addEventListener('input', updateSurfaceColorBounds);
     });
 
     scaleSelects.forEach((select) => {
