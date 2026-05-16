@@ -513,6 +513,7 @@
     const chartPlot = document.querySelector('.chart__plot');
     const scatterTooltip = document.getElementById('scatter-tooltip');
     const chartProfiles = document.querySelector('.chart__profiles');
+    const chartSurface3d = document.querySelector('.chart__surface3d');
     const chartSettingsButton = document.getElementById('chart-settings-button');
     const chartSettingsPanel = document.getElementById('chart-settings-panel');
     const profileSettingsButton = document.getElementById('profile-settings-button');
@@ -550,6 +551,9 @@
     };
     const resizeObserver = 'ResizeObserver' in window
       ? new ResizeObserver(() => updateChart())
+      : null;
+    const profileHeightObserver = ('ResizeObserver' in window && chartProfiles)
+      ? new ResizeObserver(() => syncSurfaceHeightWithProfiles())
       : null;
 
     const sliders = [
@@ -2096,12 +2100,7 @@
       animate();
 
       window.addEventListener('resize', () => {
-        if (!jetRenderer || !jetCamera) return;
-        const w = container.clientWidth || 480;
-        const h = container.clientHeight || 320;
-        jetCamera.aspect = w / h;
-        jetCamera.updateProjectionMatrix();
-        jetRenderer.setSize(w, h);
+        resizeJetRendererToContainer();
       });
     }
 
@@ -2112,6 +2111,25 @@
       jetCamera.position.set(-5.0, -20.0, 10.0);
       jetControls.target.set(0, 0, 0);
       jetControls.update();
+    }
+
+
+    function resizeJetRendererToContainer() {
+      const container = document.getElementById('jet-surface-3d');
+      if (!container || !jetRenderer || !jetCamera) return;
+      const w = container.clientWidth || 480;
+      const h = container.clientHeight || 320;
+      jetCamera.aspect = w / h;
+      jetCamera.updateProjectionMatrix();
+      jetRenderer.setSize(w, h);
+    }
+
+    function syncSurfaceHeightWithProfiles() {
+      if (!chartProfiles || !chartSurface3d) return;
+      const profilesHeight = chartProfiles.getBoundingClientRect().height;
+      if (!Number.isFinite(profilesHeight) || profilesHeight <= 0) return;
+      chartSurface3d.style.height = `${Math.ceil(profilesHeight)}px`;
+      resizeJetRendererToContainer();
     }
 
     function interpolateProfileValue(xValues, yValues, targetX) {
@@ -3026,6 +3044,7 @@
     window.addEventListener('resize', () => {
       scheduleSelectWidthRefresh();
       updateChart();
+      syncSurfaceHeightWithProfiles();
     });
 
     document.addEventListener('click', () => {
@@ -3071,9 +3090,14 @@
     }
 
     updateChart();
+    syncSurfaceHeightWithProfiles();
 
     if (resizeObserver && chartControls) {
       resizeObserver.observe(chartControls);
+    }
+
+    if (profileHeightObserver && chartProfiles) {
+      profileHeightObserver.observe(chartProfiles);
     }
 
     window.addEventListener('load', () => {
@@ -3081,6 +3105,7 @@
 
       scheduleSelectWidthRefresh();
       updateChart();
+      syncSurfaceHeightWithProfiles();
     });
 
     if (document.fonts && document.fonts.ready) {
