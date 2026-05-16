@@ -2048,6 +2048,7 @@ section {
   border-radius: 14px;
   overflow: hidden;
   background: #000000;
+  cursor: pointer;
 }
 
 .chart__profiles:hover {
