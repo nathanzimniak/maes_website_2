@@ -2106,7 +2106,7 @@
     }
 
 
-    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64) {
+    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
       if (!rValues.length || rValues.length !== zValues.length) return null;
 
