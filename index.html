@@ -2178,7 +2178,7 @@
       };
     }
 
-    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMaxOverride = null, reflectAcrossXY = false) {
+    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMinOverride = null, logDensityMaxOverride = null, reflectAcrossXY = false) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
       if (!rValues.length || rValues.length !== zValues.length) return null;
 
@@ -2191,7 +2191,7 @@
       const computedLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : 0;
       const defaultLogDensityMin = computedLogDensityMin - 0.5;
       const defaultLogDensityMax = 0.0;
-      const logDensityMin = defaultLogDensityMin;
+      const logDensityMin = Number.isFinite(logDensityMinOverride) ? logDensityMinOverride : defaultLogDensityMin;
       const logDensityMax = Number.isFinite(logDensityMaxOverride) ? logDensityMaxOverride : defaultLogDensityMax;
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-12);
 
@@ -2453,8 +2453,14 @@
       const center = new THREE.Vector3(0, 0, 0);
 
       const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
-      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, false);
-      jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, true);
+      const finitePositiveDensities = densityValues.filter((value) => Number.isFinite(value) && value > 0);
+      const zAValue = Number(solution?.g23);
+      const rhoPsiAtZA = interpolateProfileValue(zValues, densityValues, zAValue);
+      const jetLogDensityMin = solution?.scenario === 'SM'
+        ? (finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : null)
+        : (solution?.scenario === 'A' && Number.isFinite(rhoPsiAtZA) && rhoPsiAtZA > 0 ? Math.log10(rhoPsiAtZA) : null);
+      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, false);
+      jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, true);
       if (jetMesh) jetScene.add(jetMesh);
       if (jetMeshMirror) jetScene.add(jetMeshMirror);
 
