@@ -2441,21 +2441,10 @@
         return rhoPsiAtZid * rho * (r ** exponent);
       });
 
+      // Keep the 3D structure centered on the world origin.
+      // We render both +z and mirrored -z branches, so applying an automatic
+      // z recentering would offset the combined disk+jet away from (0, 0, 0).
       const center = new THREE.Vector3(0, 0, 0);
-      if (Array.isArray(zValues) && zValues.length) {
-        let zMin = Infinity;
-        let zMax = -Infinity;
-        zValues.forEach((z) => {
-          const zNum = Number(z);
-          if (Number.isFinite(zNum)) {
-            zMin = Math.min(zMin, zNum);
-            zMax = Math.max(zMax, zNum);
-          }
-        });
-        if (Number.isFinite(zMin) && Number.isFinite(zMax)) {
-          center.z = (zMin + zMax) / 2;
-        }
-      }
 
       const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
       jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, false);
