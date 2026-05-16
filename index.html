@@ -2100,12 +2100,7 @@
       animate();
 
       window.addEventListener('resize', () => {
-        if (!jetRenderer || !jetCamera) return;
-        const w = container.clientWidth || 480;
-        const h = container.clientHeight || 320;
-        jetCamera.aspect = w / h;
-        jetCamera.updateProjectionMatrix();
-        jetRenderer.setSize(w, h);
+        resizeJetRendererToContainer();
       });
     }
 
@@ -2119,11 +2114,22 @@
     }
 
 
+    function resizeJetRendererToContainer() {
+      const container = document.getElementById('jet-surface-3d');
+      if (!container || !jetRenderer || !jetCamera) return;
+      const w = container.clientWidth || 480;
+      const h = container.clientHeight || 320;
+      jetCamera.aspect = w / h;
+      jetCamera.updateProjectionMatrix();
+      jetRenderer.setSize(w, h);
+    }
+
     function syncSurfaceHeightWithProfiles() {
       if (!chartProfiles || !chartSurface3d) return;
       const profilesHeight = chartProfiles.getBoundingClientRect().height;
       if (!Number.isFinite(profilesHeight) || profilesHeight <= 0) return;
       chartSurface3d.style.height = `${Math.ceil(profilesHeight)}px`;
+      resizeJetRendererToContainer();
     }
 
     function interpolateProfileValue(xValues, yValues, targetX) {
