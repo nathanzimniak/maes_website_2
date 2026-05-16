@@ -608,7 +608,6 @@
     let jetRenderer = null;
     let jetControls = null;
     let jetMesh = null;
-    let jetFieldLines = null;
     let jetAnimationFrameId = null;
     const datasetDirectories = ['0.100_1.0_1.0_1.0_0.0_0_0'];
     const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
@@ -2243,58 +2242,6 @@
       return mesh;
     }
 
-    function buildJetFieldLines(rValues, zValues, brValues, bphiValues, bzValues, phiSegments = 72) {
-      if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
-      if (!Array.isArray(brValues) || !Array.isArray(bphiValues) || !Array.isArray(bzValues)) return null;
-      const nz = rValues.length;
-      if (!nz || zValues.length !== nz || brValues.length !== nz || bphiValues.length !== nz || bzValues.length !== nz) return null;
-
-      const lineSegments = [];
-      const lineMaterial = new THREE.LineBasicMaterial({
-        color: 0xf8f4c8,
-        transparent: true,
-        opacity: 0.9,
-        toneMapped: false,
-      });
-
-      const minAbsBphiForPitch = 1e-6;
-      const maxDphi = Math.PI / 8;
-      for (let j = 0; j < phiSegments; j += 1) {
-        let phi = (j / phiSegments) * Math.PI * 2;
-        const points = [];
-        for (let i = 0; i < nz; i += 1) {
-          const r = Math.abs(Number(rValues[i]));
-          const z = Number(zValues[i]);
-          const br = Number(brValues[i]);
-          const bphi = Number(bphiValues[i]);
-          const bz = Number(bzValues[i]);
-          if (!Number.isFinite(r) || !Number.isFinite(z) || !Number.isFinite(br) || !Number.isFinite(bphi) || !Number.isFinite(bz)) continue;
-
-          if (i < nz - 1) {
-            const nextZ = Number(zValues[i + 1]);
-            const dz = Number.isFinite(nextZ) ? nextZ - z : 0;
-            const pitchDenominator = r * (Math.abs(bz) > 1e-12 ? bz : Math.sign(bz || 1) * 1e-12);
-            const rawDphi = Math.abs(bphi) > minAbsBphiForPitch ? (bphi / pitchDenominator) * dz : 0;
-            phi += clamp(rawDphi, -maxDphi, maxDphi);
-          }
-          points.push(new THREE.Vector3(r * Math.cos(phi), r * Math.sin(phi), z));
-        }
-
-        if (points.length >= 2) {
-          const geometry = new THREE.BufferGeometry().setFromPoints(points);
-          lineSegments.push(new THREE.Line(geometry, lineMaterial));
-        }
-      }
-
-      if (!lineSegments.length) {
-        lineMaterial.dispose();
-        return null;
-      }
-      const linesGroup = new THREE.Group();
-      lineSegments.forEach((line) => linesGroup.add(line));
-      return linesGroup;
-    }
-
     function renderJetSurface(solution) {
       initJetRenderer();
       if (!jetScene || !solution?.profiles?.psi) return;
@@ -2305,16 +2252,6 @@
         jetMesh.material.dispose();
         jetMesh = null;
       }
-      if (jetFieldLines) {
-        jetScene.remove(jetFieldLines);
-        jetFieldLines.traverse((child) => {
-          if (child.isLine && child.geometry) child.geometry.dispose();
-        });
-        if (jetFieldLines.children[0]?.material) {
-          jetFieldLines.children[0].material.dispose();
-        }
-        jetFieldLines = null;
-      }
 
       const rValues = solution.profiles.psi.r;
       const zValues = solution.profiles.psi.x;
@@ -2322,17 +2259,6 @@
       jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72);
       if (jetMesh) {
         jetScene.add(jetMesh);
-      }
-
-      const brValues = solution.profiles.psi.radialMagneticField;
-      const bphiValues = solution.profiles.psi.toroidalMagneticField;
-      const bzValues = solution.profiles.psi.verticalMagneticField;
-      jetFieldLines = buildJetFieldLines(rValues, zValues, brValues, bphiValues, bzValues, 36);
-      if (jetFieldLines) {
-        if (jetMesh?.position) {
-          jetFieldLines.position.copy(jetMesh.position);
-        }
-        jetScene.add(jetFieldLines);
       }
     }
 
@@ -2613,16 +2539,6 @@
         jetMesh.geometry.dispose();
         jetMesh.material.dispose();
         jetMesh = null;
-      }
-      if (jetScene && jetFieldLines) {
-        jetScene.remove(jetFieldLines);
-        jetFieldLines.traverse((child) => {
-          if (child.isLine && child.geometry) child.geometry.dispose();
-        });
-        if (jetFieldLines.children[0]?.material) {
-          jetFieldLines.children[0].material.dispose();
-        }
-        jetFieldLines = null;
       }
       pinnedSolutionIndex = null;
       renderFlatProfiles();
