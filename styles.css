@@ -2046,7 +2046,7 @@ section {
   height: 320px;
   border-radius: 14px;
   overflow: hidden;
-  background: #0d1320;
+  background: #000000;
 }
 
 .chart__profiles:hover {
