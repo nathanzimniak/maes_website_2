@@ -2372,24 +2372,20 @@
       const xIdValue = Number(solution?.g17);
       const diskRMin = 1.0;
       const diskRMax = 4.0;
-      const diskIndices = Array.isArray(rValues)
-        ? rValues.reduce((acc, r, i) => {
-            const rNum = Math.abs(Number(r));
-            if (Number.isFinite(rNum) && rNum >= diskRMin && rNum <= diskRMax) acc.push(i);
-            return acc;
-          }, [])
-        : [];
-      const diskRValues = diskIndices.map((i) => Number(rValues[i]));
-      const diskZValues = diskIndices.map((i) => epValue * Number(rValues[i]) * xIdValue);
+      const diskRadialSamples = 72;
+      const diskRValues = Array.from({ length: diskRadialSamples }, (_, i) => {
+        const t = diskRadialSamples <= 1 ? 0 : i / (diskRadialSamples - 1);
+        return diskRMin + (diskRMax - diskRMin) * t;
+      });
+      const diskZValues = diskRValues.map((r) => epValue * r * xIdValue);
       const xiValue = Number(solution?.g6);
       const zIdValue = Number(solution?.g21);
       const rhoPsiAtZid = interpolateProfileValue(zValues, densityValues, zIdValue);
-      const diskDensityValues = diskIndices.map((i) => {
-        const rNum = Math.abs(Number(rValues?.[i]));
-        const rho = Number(densityValues?.[i]);
-        const exponent = 2.0 * (0.75 + 0.5 * xiValue) - 3.0;
-        if (!Number.isFinite(rhoPsiAtZid) || !Number.isFinite(rho) || !Number.isFinite(rNum) || rNum <= 0 || !Number.isFinite(exponent)) return NaN;
-        return rhoPsiAtZid * rho * (rNum ** exponent);
+      const exponent = 2.0 * (0.75 + 0.5 * xiValue) - 3.0;
+      const diskDensityValues = diskRValues.map((r) => {
+        const rho = interpolateProfileValue(rValues, densityValues, r);
+        if (!Number.isFinite(rhoPsiAtZid) || !Number.isFinite(rho) || !Number.isFinite(r) || r <= 0 || !Number.isFinite(exponent)) return NaN;
+        return rhoPsiAtZid * rho * (r ** exponent);
       });
 
       const center = new THREE.Vector3(0, 0, 0);
