@@ -2110,6 +2110,13 @@
 
 
 
+    function resetJetCameraView() {
+      if (!jetCamera || !jetControls) return;
+      jetCamera.position.set(10.0, 10.0, 10.0);
+      jetControls.target.set(0, 0, 0);
+      jetControls.update();
+    }
+
     function interpolateProfileValue(xValues, yValues, targetX) {
       if (!Array.isArray(xValues) || !Array.isArray(yValues) || xValues.length !== yValues.length || xValues.length === 0) {
         return NaN;
@@ -2733,6 +2740,7 @@
       selectedSolutionIndex = index;
       pinnedSolutionIndex = index;
       const selectedSolution = await ensureSolutionProfiles(currentSolutions[index]);
+      resetJetCameraView();
       if (selectedSolution?.profiles) {
         renderProfiles(selectedSolution);
         renderJetSurface(selectedSolution);
