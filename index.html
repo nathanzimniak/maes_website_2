@@ -552,6 +552,9 @@
     const resizeObserver = 'ResizeObserver' in window
       ? new ResizeObserver(() => updateChart())
       : null;
+    const profileHeightObserver = ('ResizeObserver' in window && chartProfiles)
+      ? new ResizeObserver(() => syncSurfaceHeightWithProfiles())
+      : null;
 
     const sliders = [
       {
@@ -2120,7 +2123,7 @@
       if (!chartProfiles || !chartSurface3d) return;
       const profilesHeight = chartProfiles.getBoundingClientRect().height;
       if (!Number.isFinite(profilesHeight) || profilesHeight <= 0) return;
-      chartSurface3d.style.minHeight = `${Math.ceil(profilesHeight)}px`;
+      chartSurface3d.style.height = `${Math.ceil(profilesHeight)}px`;
     }
 
     function interpolateProfileValue(xValues, yValues, targetX) {
@@ -3036,6 +3039,7 @@
     window.addEventListener('resize', () => {
       scheduleSelectWidthRefresh();
       updateChart();
+      syncSurfaceHeightWithProfiles();
     });
 
     document.addEventListener('click', () => {
@@ -3081,9 +3085,14 @@
     }
 
     updateChart();
+    syncSurfaceHeightWithProfiles();
 
     if (resizeObserver && chartControls) {
       resizeObserver.observe(chartControls);
+    }
+
+    if (profileHeightObserver && chartProfiles) {
+      profileHeightObserver.observe(chartProfiles);
     }
 
     window.addEventListener('load', () => {
@@ -3091,6 +3100,7 @@
 
       scheduleSelectWidthRefresh();
       updateChart();
+      syncSurfaceHeightWithProfiles();
     });
 
     if (document.fonts && document.fonts.ready) {
