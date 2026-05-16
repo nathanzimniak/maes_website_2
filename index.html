@@ -2452,7 +2452,7 @@
       // z recentering would offset the combined disk+jet away from (0, 0, 0).
       const center = new THREE.Vector3(0, 0, 0);
 
-      const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
+      const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log(rhoPsiAtZid) : null;
       jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, false);
       jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, true);
       if (jetMesh) jetScene.add(jetMesh);
