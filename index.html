@@ -513,6 +513,7 @@
     const chartPlot = document.querySelector('.chart__plot');
     const scatterTooltip = document.getElementById('scatter-tooltip');
     const chartProfiles = document.querySelector('.chart__profiles');
+    const chartSurface3d = document.querySelector('.chart__surface3d');
     const chartSettingsButton = document.getElementById('chart-settings-button');
     const chartSettingsPanel = document.getElementById('chart-settings-panel');
     const profileSettingsButton = document.getElementById('profile-settings-button');
@@ -2114,6 +2115,14 @@
       jetControls.update();
     }
 
+
+    function syncSurfaceHeightWithProfiles() {
+      if (!chartProfiles || !chartSurface3d) return;
+      const profilesHeight = chartProfiles.getBoundingClientRect().height;
+      if (!Number.isFinite(profilesHeight) || profilesHeight <= 0) return;
+      chartSurface3d.style.minHeight = `${Math.ceil(profilesHeight)}px`;
+    }
+
     function interpolateProfileValue(xValues, yValues, targetX) {
       if (!Array.isArray(xValues) || !Array.isArray(yValues) || xValues.length !== yValues.length || xValues.length === 0) {
         return NaN;
@@ -2861,6 +2870,7 @@
 
       renderAxes(xDomain, yDomain, xScale, yScale, xScaleType, yScaleType, xTicks, yTicks);
       renderPoints(solutions, xKey, yKey, xScale, yScale);
+      syncSurfaceHeightWithProfiles();
     }
 
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
