@@ -441,6 +441,7 @@
         <div class="chart__surface3d-header">
           <div>
             <p class="chart__eyebrow chart__eyebrow--sub">Jet surface (3D)</p>
+            <p class="chart__surface3d-camera-position">Caméra (x, y, z) : <span id="jet-camera-position">—</span></p>
           </div>
           <div class="chart__control-group" style="display:flex; gap:.6rem; align-items:center;"></div>
         </div>
@@ -602,8 +603,15 @@
     let jetDiskMeshMirror = null;
     let jetDiskOuterMesh = null;
     let jetAnimationFrameId = null;
+    let jetCameraPositionLabel = null;
     const datasetDirectories = ['0.100_1.0_1.0_1.0_0.0_0_0'];
     const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
+
+    function updateJetCameraPositionLabel() {
+      if (!jetCameraPositionLabel || !jetCamera?.position) return;
+      const { x, y, z } = jetCamera.position;
+      jetCameraPositionLabel.textContent = `${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(2)}`;
+    }
 
     const datasetConfigs = datasetDirectories
       .map((folderName) => {
@@ -2060,6 +2068,7 @@
     function initJetRenderer() {
       const container = document.getElementById('jet-surface-3d');
       if (!container || typeof THREE === 'undefined' || jetRenderer) return;
+      jetCameraPositionLabel = document.getElementById('jet-camera-position');
 
       jetScene = new THREE.Scene();
       jetScene.background = new THREE.Color(0x000000);
@@ -2082,6 +2091,8 @@
       jetControls.panSpeed = 0.7;
       jetControls.target.set(0, 0, 0);
       jetControls.update();
+      jetControls.addEventListener('change', updateJetCameraPositionLabel);
+      updateJetCameraPositionLabel();
 
       const ambient = new THREE.AmbientLight(0xffffff, 0.8);
       const dir = new THREE.DirectionalLight(0xffffff, 1.0);
@@ -2094,6 +2105,7 @@
       const animate = () => {
         jetAnimationFrameId = requestAnimationFrame(animate);
         if (jetControls) jetControls.update();
+        updateJetCameraPositionLabel();
         jetRenderer.render(jetScene, jetCamera);
       };
       animate();
@@ -2115,6 +2127,7 @@
       jetCamera.position.set(10.0, 10.0, 10.0);
       jetControls.target.set(0, 0, 0);
       jetControls.update();
+      updateJetCameraPositionLabel();
     }
 
     function interpolateProfileValue(xValues, yValues, targetX) {
