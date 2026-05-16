@@ -2088,9 +2088,6 @@
       dir.position.set(2.5, 3, 4);
       jetScene.add(ambient, dir);
 
-      const axisHelper = new THREE.AxesHelper(0.8);
-      jetScene.add(axisHelper);
-
       const animate = () => {
         jetAnimationFrameId = requestAnimationFrame(animate);
         if (jetControls) jetControls.update();
