@@ -597,7 +597,10 @@
     let jetRenderer = null;
     let jetControls = null;
     let jetMesh = null;
+    let jetMeshMirror = null;
     let jetDiskMesh = null;
+    let jetDiskMeshMirror = null;
+    let jetDiskOuterMesh = null;
     let jetAnimationFrameId = null;
     const datasetDirectories = ['0.100_1.0_1.0_1.0_0.0_0_0'];
     const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
@@ -2171,7 +2174,7 @@
       };
     }
 
-    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMaxOverride = null) {
+    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMaxOverride = null, reflectAcrossXY = false) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
       if (!rValues.length || rValues.length !== zValues.length) return null;
 
@@ -2249,7 +2252,8 @@
 
       for (let i = 0; i < nz; i += 1) {
         const r = Math.abs(Number(rValues[i]));
-        const z = Number(zValues[i]);
+        const originalZ = Number(zValues[i]);
+        const z = reflectAcrossXY ? -originalZ : originalZ;
         const density = Number(densityValues[i]);
         if (!Number.isFinite(r) || !Number.isFinite(z)) continue;
         const vertexColor = densityToColor(density);
@@ -2294,7 +2298,7 @@
       return mesh;
     }
 
-    function buildDiskSurfaceMesh(rValues, zValues, densityValues = [], nphi = 64, center = null) {
+    function buildDiskSurfaceMesh(rValues, zValues, densityValues = [], nphi = 64, center = null, reflectAcrossXY = false) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues) || rValues.length !== zValues.length || rValues.length < 2) {
         return null;
       }
@@ -2307,7 +2311,8 @@
 
       for (let i = 0; i < nz; i += 1) {
         const r = Math.abs(Number(rValues[i]));
-        const z = Number(zValues[i]);
+        const originalZ = Number(zValues[i]);
+        const z = reflectAcrossXY ? -originalZ : originalZ;
         if (!Number.isFinite(r) || !Number.isFinite(z)) continue;
         for (let j = 0; j < nphi; j += 1) {
           const phi = (j / nphi) * Math.PI * 2;
@@ -2348,22 +2353,70 @@
       return mesh;
     }
 
+
+    function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, center = null) {
+      if (!Number.isFinite(rOuter) || rOuter <= 0 || !Number.isFinite(zOuter) || !Number.isFinite(densityOuter)) return null;
+
+      const positions = [];
+      const colors = [];
+      const indices = [];
+      const densityToColor = createInfernoDensityMapper([densityOuter]);
+      const color = densityToColor(densityOuter);
+
+      for (let j = 0; j < nphi; j += 1) {
+        const phi = (j / nphi) * Math.PI * 2;
+        const x = rOuter * Math.cos(phi);
+        const y = rOuter * Math.sin(phi);
+        positions.push(x, y, zOuter);
+        positions.push(x, y, -zOuter);
+        colors.push(color.r, color.g, color.b);
+        colors.push(color.r, color.g, color.b);
+      }
+
+      for (let j = 0; j < nphi; j += 1) {
+        const jp1 = (j + 1) % nphi;
+        const a = j * 2;
+        const b = jp1 * 2;
+        const c = a + 1;
+        const d = b + 1;
+        indices.push(a, c, b);
+        indices.push(b, c, d);
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+      geometry.setIndex(indices);
+      geometry.computeVertexNormals();
+
+      const material = new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        toneMapped: false,
+        side: THREE.DoubleSide,
+      });
+
+      const mesh = new THREE.Mesh(geometry, material);
+      if (center) mesh.position.sub(center);
+      return mesh;
+    }
+
     function renderJetSurface(solution) {
       initJetRenderer();
       if (!jetScene || !solution?.profiles?.psi) return;
 
-      if (jetMesh) {
-        jetScene.remove(jetMesh);
-        jetMesh.geometry.dispose();
-        jetMesh.material.dispose();
-        jetMesh = null;
-      }
-      if (jetDiskMesh) {
-        jetScene.remove(jetDiskMesh);
-        jetDiskMesh.geometry.dispose();
-        jetDiskMesh.material.dispose();
-        jetDiskMesh = null;
-      }
+      const clearMesh = (meshRefSetter, mesh) => {
+        if (!mesh) return;
+        jetScene.remove(mesh);
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+        meshRefSetter(null);
+      };
+
+      clearMesh((value) => { jetMesh = value; }, jetMesh);
+      clearMesh((value) => { jetMeshMirror = value; }, jetMeshMirror);
+      clearMesh((value) => { jetDiskMesh = value; }, jetDiskMesh);
+      clearMesh((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
+      clearMesh((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
 
       const rValues = solution.profiles.psi.r;
       const zValues = solution.profiles.psi.x;
@@ -2405,10 +2458,10 @@
       }
 
       const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
-      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax);
-      if (jetMesh) {
-        jetScene.add(jetMesh);
-      }
+      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, false);
+      jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, true);
+      if (jetMesh) jetScene.add(jetMesh);
+      if (jetMeshMirror) jetScene.add(jetMeshMirror);
 
       if (
         Number.isFinite(epValue)
@@ -2420,10 +2473,16 @@
         && diskRValues.length >= 2
         && diskDensityValues.length >= 2
       ) {
-        jetDiskMesh = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center);
-        if (jetDiskMesh) {
-          jetScene.add(jetDiskMesh);
-        }
+        jetDiskMesh = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, false);
+        jetDiskMeshMirror = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, true);
+        if (jetDiskMesh) jetScene.add(jetDiskMesh);
+        if (jetDiskMeshMirror) jetScene.add(jetDiskMeshMirror);
+
+        const diskROuter = Number(diskRValues[diskRValues.length - 1]);
+        const diskZOuter = Number(diskZValues[diskZValues.length - 1]);
+        const diskDensityOuter = Number(diskDensityValues[diskDensityValues.length - 1]);
+        jetDiskOuterMesh = buildDiskOuterClosureMesh(diskROuter, diskZOuter, diskDensityOuter, 72, center);
+        if (jetDiskOuterMesh) jetScene.add(jetDiskOuterMesh);
       }
     }
 
@@ -2699,18 +2758,18 @@
 
     function resetProfiles() {
       selectedSolutionIndex = null;
-      if (jetScene && jetMesh) {
-        jetScene.remove(jetMesh);
-        jetMesh.geometry.dispose();
-        jetMesh.material.dispose();
-        jetMesh = null;
-      }
-      if (jetScene && jetDiskMesh) {
-        jetScene.remove(jetDiskMesh);
-        jetDiskMesh.geometry.dispose();
-        jetDiskMesh.material.dispose();
-        jetDiskMesh = null;
-      }
+      const clearResetMesh = (meshRefSetter, mesh) => {
+        if (!jetScene || !mesh) return;
+        jetScene.remove(mesh);
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+        meshRefSetter(null);
+      };
+      clearResetMesh((value) => { jetMesh = value; }, jetMesh);
+      clearResetMesh((value) => { jetMeshMirror = value; }, jetMeshMirror);
+      clearResetMesh((value) => { jetDiskMesh = value; }, jetDiskMesh);
+      clearResetMesh((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
+      clearResetMesh((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
       pinnedSolutionIndex = null;
       renderFlatProfiles();
       setProfilesOverlayVisible(true);
