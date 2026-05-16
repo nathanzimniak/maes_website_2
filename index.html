@@ -2142,14 +2142,12 @@
       return prevY;
     }
 
-    function createInfernoDensityMapper(densityValues, logDensityMinOverride = null, logDensityMaxOverride = null) {
+    function createInfernoDensityMapper(densityValues) {
       const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
       const densityMin = finitePositiveDensities.length ? Math.min(...finitePositiveDensities) : 1e-10;
       const densityMax = finitePositiveDensities.length ? Math.max(...finitePositiveDensities) : 1;
-      const computedLogDensityMin = Math.log10(densityMin);
-      const computedLogDensityMax = Math.log10(densityMax);
-      const logDensityMin = Number.isFinite(logDensityMinOverride) ? logDensityMinOverride : computedLogDensityMin;
-      const logDensityMax = Number.isFinite(logDensityMaxOverride) ? logDensityMaxOverride : computedLogDensityMax;
+      const logDensityMin = Math.log10(densityMin);
+      const logDensityMax = Math.log10(densityMax);
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-6);
       const infernoBaseStops = [
         [0.001462, 0.000466, 0.013866], [0.072489, 0.040205, 0.278199], [0.219940, 0.070209, 0.431995],
@@ -2304,7 +2302,7 @@
       return mesh;
     }
 
-    function buildDiskSurfaceMesh(rValues, zValues, densityValues = [], nphi = 64, center = null, reflectAcrossXY = false, logDensityMinOverride = null, logDensityMaxOverride = null) {
+    function buildDiskSurfaceMesh(rValues, zValues, densityValues = [], nphi = 64, center = null, reflectAcrossXY = false) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues) || rValues.length !== zValues.length || rValues.length < 2) {
         return null;
       }
@@ -2313,7 +2311,7 @@
       const positions = [];
       const colors = [];
       const indices = [];
-      const densityToColor = createInfernoDensityMapper(densityValues, logDensityMinOverride, logDensityMaxOverride);
+      const densityToColor = createInfernoDensityMapper(densityValues);
 
       for (let i = 0; i < nz; i += 1) {
         const r = Math.abs(Number(rValues[i]));
@@ -2360,13 +2358,13 @@
     }
 
 
-    function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, center = null, logDensityMinOverride = null, logDensityMaxOverride = null) {
+    function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, center = null) {
       if (!Number.isFinite(rOuter) || rOuter <= 0 || !Number.isFinite(zOuter) || !Number.isFinite(densityOuter)) return null;
 
       const positions = [];
       const colors = [];
       const indices = [];
-      const densityToColor = createInfernoDensityMapper([densityOuter], logDensityMinOverride, logDensityMaxOverride);
+      const densityToColor = createInfernoDensityMapper([densityOuter]);
       const color = densityToColor(densityOuter);
 
       for (let j = 0; j < nphi; j += 1) {
@@ -2440,9 +2438,6 @@
       const diskZValues = diskRValues.map((r) => epValue * r * xIdValue);
       const xiValue = Number(solution?.g6);
       const rhoPsiAtZid = interpolateProfileValue(zValues, densityValues, zIdValue);
-      const jetFinitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
-      const jetComputedLogDensityMin = jetFinitePositiveDensities.length ? Math.log10(Math.min(...jetFinitePositiveDensities)) : 0;
-      const jetLogDensityMin = jetComputedLogDensityMin - 0.5;
       const exponent = 2.0 * (0.75 + 0.5 * xiValue) - 3.0;
       const diskDensityValues = diskRValues.map((r) => {
         const rho = interpolateProfileValue(rValues, densityValues, r);
@@ -2471,15 +2466,15 @@
         && diskRValues.length >= 2
         && diskDensityValues.length >= 2
       ) {
-        jetDiskMesh = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, false, jetLogDensityMin, jetLogDensityMax);
-        jetDiskMeshMirror = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, true, jetLogDensityMin, jetLogDensityMax);
+        jetDiskMesh = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, false);
+        jetDiskMeshMirror = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, true);
         if (jetDiskMesh) jetScene.add(jetDiskMesh);
         if (jetDiskMeshMirror) jetScene.add(jetDiskMeshMirror);
 
         const diskROuter = Number(diskRValues[diskRValues.length - 1]);
         const diskZOuter = Number(diskZValues[diskZValues.length - 1]);
         const diskDensityOuter = Number(diskDensityValues[diskDensityValues.length - 1]);
-        jetDiskOuterMesh = buildDiskOuterClosureMesh(diskROuter, diskZOuter, diskDensityOuter, 72, center, jetLogDensityMin, jetLogDensityMax);
+        jetDiskOuterMesh = buildDiskOuterClosureMesh(diskROuter, diskZOuter, diskDensityOuter, 72, center);
         if (jetDiskOuterMesh) jetScene.add(jetDiskOuterMesh);
       }
     }
