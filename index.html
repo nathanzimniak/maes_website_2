@@ -445,11 +445,11 @@
           <div class="chart__control-group" style="display:flex; gap:.6rem; align-items:center;">
             <label class="chart__control-label" for="jet-vmin" style="display:flex; align-items:center; gap:.25rem;">
               <span class="chart__label-text">vmin</span>
-              <input id="jet-vmin" type="number" step="any" placeholder="auto" class="chart__select" style="width:7rem;" />
+              <input id="jet-vmin" type="number" step="any" placeholder="log10(min(rho_psi)) - 0.5" class="chart__select" style="width:12.5rem;" />
             </label>
             <label class="chart__control-label" for="jet-vmax" style="display:flex; align-items:center; gap:.25rem;">
               <span class="chart__label-text">vmax</span>
-              <input id="jet-vmax" type="number" step="any" placeholder="auto" class="chart__select" style="width:7rem;" />
+              <input id="jet-vmax" type="number" step="any" placeholder="0.0" class="chart__select" style="width:7rem;" />
             </label>
           </div>
         </div>
@@ -2126,12 +2126,18 @@
       const indices = [];
       const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
       const computedLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : 0;
-      const computedLogDensityMax = finitePositiveDensities.length ? Math.log10(Math.max(...finitePositiveDensities)) : 1;
-      const customVmin = Number(jetVminInput?.value);
-      const customVmax = Number(jetVmaxInput?.value);
-      const hasCustomRange = Number.isFinite(customVmin) && Number.isFinite(customVmax) && customVmax > customVmin;
-      const logDensityMin = hasCustomRange ? customVmin : computedLogDensityMin;
-      const logDensityMax = hasCustomRange ? customVmax : computedLogDensityMax;
+      const parseOptionalNumberInput = (inputElement) => {
+        const rawValue = inputElement?.value?.trim();
+        if (!rawValue) return null;
+        const parsed = Number(rawValue);
+        return Number.isFinite(parsed) ? parsed : null;
+      };
+      const customVmin = parseOptionalNumberInput(jetVminInput);
+      const customVmax = parseOptionalNumberInput(jetVmaxInput);
+      const defaultLogDensityMin = computedLogDensityMin - 0.5;
+      const defaultLogDensityMax = 0.0;
+      const logDensityMin = customVmin ?? defaultLogDensityMin;
+      const logDensityMax = customVmax ?? defaultLogDensityMax;
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-12);
 
       // Inferno ramp base stops (sampled from Matplotlib's inferno).
