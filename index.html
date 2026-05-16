@@ -2370,17 +2370,27 @@
       const densityValues = solution.profiles.psi.density;
       const epValue = Number(solution?.g1);
       const xIdValue = Number(solution?.g17);
-      const diskZValues = Array.isArray(rValues) ? rValues.map((r) => epValue * Number(r) * xIdValue) : null;
+      const diskRMin = 1.0;
+      const diskRMax = 4.0;
+      const diskIndices = Array.isArray(rValues)
+        ? rValues.reduce((acc, r, i) => {
+            const rNum = Math.abs(Number(r));
+            if (Number.isFinite(rNum) && rNum >= diskRMin && rNum <= diskRMax) acc.push(i);
+            return acc;
+          }, [])
+        : [];
+      const diskRValues = diskIndices.map((i) => Number(rValues[i]));
+      const diskZValues = diskIndices.map((i) => epValue * Number(rValues[i]) * xIdValue);
       const xiValue = Number(solution?.g6);
       const zIdValue = Number(solution?.g21);
       const rhoPsiAtZid = interpolateProfileValue(zValues, densityValues, zIdValue);
-      const diskDensityValues = Array.isArray(rValues) ? rValues.map((r, i) => {
-        const rNum = Math.abs(Number(r));
+      const diskDensityValues = diskIndices.map((i) => {
+        const rNum = Math.abs(Number(rValues?.[i]));
         const rho = Number(densityValues?.[i]);
         const exponent = 2.0 * (0.75 + 0.5 * xiValue) - 3.0;
         if (!Number.isFinite(rhoPsiAtZid) || !Number.isFinite(rho) || !Number.isFinite(rNum) || rNum <= 0 || !Number.isFinite(exponent)) return NaN;
         return rhoPsiAtZid * rho * (rNum ** exponent);
-      }) : null;
+      });
 
       const center = new THREE.Vector3(0, 0, 0);
       if (Array.isArray(zValues) && zValues.length) {
@@ -2404,8 +2414,8 @@
         jetScene.add(jetMesh);
       }
 
-      if (Number.isFinite(epValue) && Number.isFinite(xIdValue) && diskZValues && diskDensityValues) {
-        jetDiskMesh = buildDiskSurfaceMesh(rValues, diskZValues, diskDensityValues, 72, center);
+      if (Number.isFinite(epValue) && Number.isFinite(xIdValue) && diskRValues.length >= 2 && diskDensityValues.length >= 2) {
+        jetDiskMesh = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center);
         if (jetDiskMesh) {
           jetScene.add(jetDiskMesh);
         }
