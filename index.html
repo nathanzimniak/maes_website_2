@@ -442,7 +442,16 @@
           <div>
             <p class="chart__eyebrow chart__eyebrow--sub">3D Image</p>
           </div>
-          <div class="chart__control-group" style="display:flex; gap:.6rem; align-items:center;"></div>
+          <div class="chart__control-group" style="display:flex; gap:.6rem; align-items:center; flex-wrap:wrap;">
+            <label class="chart__dropdown-label" for="jet-vmin-input">Jet vmin</label>
+            <input id="jet-vmin-input" class="chart__select chart__select--profile chart__select--axis" type="number" step="0.1" value="-5" aria-label="Jet vmin en log10">
+            <label class="chart__dropdown-label" for="jet-vmax-input">Jet vmax</label>
+            <input id="jet-vmax-input" class="chart__select chart__select--profile chart__select--axis" type="number" step="0.1" value="0" aria-label="Jet vmax en log10">
+            <label class="chart__dropdown-label" for="disk-vmin-input">Disk vmin</label>
+            <input id="disk-vmin-input" class="chart__select chart__select--profile chart__select--axis" type="number" step="0.1" value="-5" aria-label="Disk vmin en log10">
+            <label class="chart__dropdown-label" for="disk-vmax-input">Disk vmax</label>
+            <input id="disk-vmax-input" class="chart__select chart__select--profile chart__select--axis" type="number" step="0.1" value="0" aria-label="Disk vmax en log10">
+          </div>
         </div>
         <div id="jet-surface-3d" class="chart__surface3d-canvas"></div>
       </div>
@@ -518,6 +527,10 @@
     const profileSettingsButton = document.getElementById('profile-settings-button');
     const profileSettingsPanel = document.getElementById('profile-settings-panel');
     const profileContent = document.getElementById('profile-content');
+    const jetVminInput = document.getElementById('jet-vmin-input');
+    const jetVmaxInput = document.getElementById('jet-vmax-input');
+    const diskVminInput = document.getElementById('disk-vmin-input');
+    const diskVmaxInput = document.getElementById('disk-vmax-input');
     const profileAxisSelect = document.getElementById('profile-axis-select');
     const profileFocusSelect = document.getElementById('profile-title-select-1');
     const profileScaleSelect = document.getElementById('profile-title-select-2');
@@ -602,6 +615,10 @@
     let jetDiskMeshMirror = null;
     let jetDiskOuterMesh = null;
     let jetAnimationFrameId = null;
+    let jetLogVmin = -5;
+    let jetLogVmax = 0;
+    let diskLogVmin = -5;
+    let diskLogVmax = 0;
     const datasetDirectories = ['0.100_1.0_1.0_1.0_0.0_0_0'];
     const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
 
@@ -2142,12 +2159,14 @@
       return prevY;
     }
 
-    function createInfernoDensityMapper(densityValues) {
+    function createInfernoDensityMapper(densityValues = [], logDensityMinOverride = null, logDensityMaxOverride = null) {
       const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
       const densityMin = finitePositiveDensities.length ? Math.min(...finitePositiveDensities) : 1e-10;
       const densityMax = finitePositiveDensities.length ? Math.max(...finitePositiveDensities) : 1;
-      const logDensityMin = Math.log10(densityMin);
-      const logDensityMax = Math.log10(densityMax);
+      const defaultLogDensityMin = Math.log10(densityMin);
+      const defaultLogDensityMax = Math.log10(densityMax);
+      const logDensityMin = Number.isFinite(logDensityMinOverride) ? Number(logDensityMinOverride) : defaultLogDensityMin;
+      const logDensityMax = Number.isFinite(logDensityMaxOverride) ? Number(logDensityMaxOverride) : defaultLogDensityMax;
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-6);
       const infernoBaseStops = [
         [0.001462, 0.000466, 0.013866], [0.072489, 0.040205, 0.278199], [0.219940, 0.070209, 0.431995],
@@ -2178,7 +2197,7 @@
       };
     }
 
-    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMaxOverride = null, reflectAcrossXY = false) {
+    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMinOverride = null, logDensityMaxOverride = null, reflectAcrossXY = false) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
       if (!rValues.length || rValues.length !== zValues.length) return null;
 
@@ -2191,7 +2210,7 @@
       const computedLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : 0;
       const defaultLogDensityMin = computedLogDensityMin - 0.5;
       const defaultLogDensityMax = 0.0;
-      const logDensityMin = defaultLogDensityMin;
+      const logDensityMin = Number.isFinite(logDensityMinOverride) ? Number(logDensityMinOverride) : defaultLogDensityMin;
       const logDensityMax = Number.isFinite(logDensityMaxOverride) ? logDensityMaxOverride : defaultLogDensityMax;
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-12);
 
@@ -2302,7 +2321,7 @@
       return mesh;
     }
 
-    function buildDiskSurfaceMesh(rValues, zValues, densityValues = [], nphi = 64, center = null, reflectAcrossXY = false) {
+    function buildDiskSurfaceMesh(rValues, zValues, densityValues = [], nphi = 64, center = null, reflectAcrossXY = false, logDensityMinOverride = null, logDensityMaxOverride = null) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues) || rValues.length !== zValues.length || rValues.length < 2) {
         return null;
       }
@@ -2311,7 +2330,7 @@
       const positions = [];
       const colors = [];
       const indices = [];
-      const densityToColor = createInfernoDensityMapper(densityValues);
+      const densityToColor = createInfernoDensityMapper(densityValues, logDensityMinOverride, logDensityMaxOverride);
 
       for (let i = 0; i < nz; i += 1) {
         const r = Math.abs(Number(rValues[i]));
@@ -2358,13 +2377,13 @@
     }
 
 
-    function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, center = null) {
+    function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, center = null, logDensityMinOverride = null, logDensityMaxOverride = null) {
       if (!Number.isFinite(rOuter) || rOuter <= 0 || !Number.isFinite(zOuter) || !Number.isFinite(densityOuter)) return null;
 
       const positions = [];
       const colors = [];
       const indices = [];
-      const densityToColor = createInfernoDensityMapper([densityOuter]);
+      const densityToColor = createInfernoDensityMapper([densityOuter], logDensityMinOverride, logDensityMaxOverride);
       const color = densityToColor(densityOuter);
 
       for (let j = 0; j < nphi; j += 1) {
@@ -2450,9 +2469,8 @@
       // z recentering would offset the combined disk+jet away from (0, 0, 0).
       const center = new THREE.Vector3(0, 0, 0);
 
-      const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
-      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, false);
-      jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, true);
+      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogVmin, jetLogVmax, false);
+      jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogVmin, jetLogVmax, true);
       if (jetMesh) jetScene.add(jetMesh);
       if (jetMeshMirror) jetScene.add(jetMeshMirror);
 
@@ -2466,16 +2484,32 @@
         && diskRValues.length >= 2
         && diskDensityValues.length >= 2
       ) {
-        jetDiskMesh = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, false);
-        jetDiskMeshMirror = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, true);
+        jetDiskMesh = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, false, diskLogVmin, diskLogVmax);
+        jetDiskMeshMirror = buildDiskSurfaceMesh(diskRValues, diskZValues, diskDensityValues, 72, center, true, diskLogVmin, diskLogVmax);
         if (jetDiskMesh) jetScene.add(jetDiskMesh);
         if (jetDiskMeshMirror) jetScene.add(jetDiskMeshMirror);
 
         const diskROuter = Number(diskRValues[diskRValues.length - 1]);
         const diskZOuter = Number(diskZValues[diskZValues.length - 1]);
         const diskDensityOuter = Number(diskDensityValues[diskDensityValues.length - 1]);
-        jetDiskOuterMesh = buildDiskOuterClosureMesh(diskROuter, diskZOuter, diskDensityOuter, 72, center);
+        jetDiskOuterMesh = buildDiskOuterClosureMesh(diskROuter, diskZOuter, diskDensityOuter, 72, center, diskLogVmin, diskLogVmax);
         if (jetDiskOuterMesh) jetScene.add(jetDiskOuterMesh);
+      }
+    }
+
+    function updateSurfaceColorBounds() {
+      jetLogVmin = Number(jetVminInput?.value);
+      jetLogVmax = Number(jetVmaxInput?.value);
+      diskLogVmin = Number(diskVminInput?.value);
+      diskLogVmax = Number(diskVmaxInput?.value);
+      if (
+        Number.isFinite(jetLogVmin)
+        && Number.isFinite(jetLogVmax)
+        && Number.isFinite(diskLogVmin)
+        && Number.isFinite(diskLogVmax)
+        && activeSolution
+      ) {
+        renderJetSurface(activeSolution);
       }
     }
 
@@ -2858,6 +2892,10 @@
     }
 
     sliders.forEach(({ element }) => element.addEventListener('input', updateChart));
+    [jetVminInput, jetVmaxInput, diskVminInput, diskVmaxInput].forEach((input) => {
+      if (!input) return;
+      input.addEventListener('change', updateSurfaceColorBounds);
+    });
 
     scaleSelects.forEach((select) => {
       select.addEventListener('change', () => {
