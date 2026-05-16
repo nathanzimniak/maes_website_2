@@ -2439,13 +2439,6 @@
       });
       const diskZValues = diskRValues.map((r) => epValue * r * xIdValue);
       const xiValue = Number(solution?.g6);
-      const scenario = solution?.scenario;
-      const zSmValue = Number(solution?.g22);
-      const zAValue = Number(solution?.g23);
-      const vminReferenceZ = scenario === 'A'
-        ? zAValue
-        : (scenario === 'SM' ? zSmValue : zIdValue);
-      const rhoPsiAtVmin = interpolateProfileValue(zValues, densityValues, vminReferenceZ);
       const rhoPsiAtZid = interpolateProfileValue(zValues, densityValues, zIdValue);
       const exponent = 2.0 * (0.75 + 0.5 * xiValue) - 3.0;
       const diskDensityValues = diskRValues.map((r) => {
@@ -2459,7 +2452,7 @@
       // z recentering would offset the combined disk+jet away from (0, 0, 0).
       const center = new THREE.Vector3(0, 0, 0);
 
-      const jetLogDensityMax = Number.isFinite(rhoPsiAtVmin) && rhoPsiAtVmin > 0 ? Math.log10(rhoPsiAtVmin) : null;
+      const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
       jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, false);
       jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax, true);
       if (jetMesh) jetScene.add(jetMesh);
