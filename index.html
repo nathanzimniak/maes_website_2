@@ -597,6 +597,7 @@
     let jetRenderer = null;
     let jetControls = null;
     let jetMesh = null;
+    let jetDiskMesh = null;
     let jetAnimationFrameId = null;
     const datasetDirectories = ['0.100_1.0_1.0_1.0_0.0_0_0'];
     const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
@@ -2105,7 +2106,72 @@
     }
 
 
-    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64) {
+
+    function interpolateProfileValue(xValues, yValues, targetX) {
+      if (!Array.isArray(xValues) || !Array.isArray(yValues) || xValues.length !== yValues.length || xValues.length === 0) {
+        return NaN;
+      }
+      const tx = Number(targetX);
+      if (!Number.isFinite(tx)) return NaN;
+
+      let prevX = Number(xValues[0]);
+      let prevY = Number(yValues[0]);
+      if (!Number.isFinite(prevX) || !Number.isFinite(prevY)) return NaN;
+      if (xValues.length === 1) return prevY;
+
+      for (let i = 1; i < xValues.length; i += 1) {
+        const currX = Number(xValues[i]);
+        const currY = Number(yValues[i]);
+        if (!Number.isFinite(currX) || !Number.isFinite(currY)) continue;
+        if ((tx >= prevX && tx <= currX) || (tx >= currX && tx <= prevX)) {
+          const span = currX - prevX;
+          if (Math.abs(span) < 1e-12) return currY;
+          const t = (tx - prevX) / span;
+          return prevY + (currY - prevY) * t;
+        }
+        prevX = currX;
+        prevY = currY;
+      }
+      return prevY;
+    }
+
+    function createInfernoDensityMapper(densityValues) {
+      const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
+      const densityMin = finitePositiveDensities.length ? Math.min(...finitePositiveDensities) : 1e-10;
+      const densityMax = finitePositiveDensities.length ? Math.max(...finitePositiveDensities) : 1;
+      const logDensityMin = Math.log10(densityMin);
+      const logDensityMax = Math.log10(densityMax);
+      const safeRange = Math.max(logDensityMax - logDensityMin, 1e-6);
+      const infernoBaseStops = [
+        [0.001462, 0.000466, 0.013866], [0.072489, 0.040205, 0.278199], [0.219940, 0.070209, 0.431995],
+        [0.398125, 0.083257, 0.433183], [0.572081, 0.122312, 0.374438], [0.740143, 0.213864, 0.275191],
+        [0.878001, 0.391874, 0.183656], [0.969163, 0.643203, 0.173518], [0.988362, 0.998364, 0.644924],
+      ];
+      const infernoStops = Array.from({ length: 256 }, (_, idx) => {
+        const t = idx / 255;
+        const scaled = t * (infernoBaseStops.length - 1);
+        const i0 = Math.floor(scaled);
+        const i1 = Math.min(i0 + 1, infernoBaseStops.length - 1);
+        const f = scaled - i0;
+        const c0 = infernoBaseStops[i0];
+        const c1 = infernoBaseStops[i1];
+        return [c0[0] + (c1[0] - c0[0]) * f, c0[1] + (c1[1] - c0[1]) * f, c0[2] + (c1[2] - c0[2]) * f];
+      });
+      return (density) => {
+        const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
+        const logDensity = Math.log10(safeDensity);
+        const t = Math.min(1, Math.max(0, (logDensity - logDensityMin) / safeRange));
+        const scaled = t * (infernoStops.length - 1);
+        const i0 = Math.floor(scaled);
+        const i1 = Math.min(i0 + 1, infernoStops.length - 1);
+        const frac = scaled - i0;
+        const c0 = infernoStops[i0];
+        const c1 = infernoStops[i1];
+        return new THREE.Color(c0[0] + (c1[0] - c0[0]) * frac, c0[1] + (c1[1] - c0[1]) * frac, c0[2] + (c1[2] - c0[2]) * frac).convertSRGBToLinear();
+      };
+    }
+
+    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
       if (!rValues.length || rValues.length !== zValues.length) return null;
 
@@ -2222,9 +2288,61 @@
         side: THREE.DoubleSide,
       });
       const mesh = new THREE.Mesh(geometry, material);
-      if (geometry.boundingBox) {
-        const center = new THREE.Vector3();
-        geometry.boundingBox.getCenter(center);
+      if (center) {
+        mesh.position.sub(center);
+      }
+      return mesh;
+    }
+
+    function buildDiskSurfaceMesh(rValues, zValues, densityValues = [], nphi = 64, center = null) {
+      if (!Array.isArray(rValues) || !Array.isArray(zValues) || rValues.length !== zValues.length || rValues.length < 2) {
+        return null;
+      }
+
+      const nz = rValues.length;
+      const positions = [];
+      const colors = [];
+      const indices = [];
+      const densityToColor = createInfernoDensityMapper(densityValues);
+
+      for (let i = 0; i < nz; i += 1) {
+        const r = Math.abs(Number(rValues[i]));
+        const z = Number(zValues[i]);
+        if (!Number.isFinite(r) || !Number.isFinite(z)) continue;
+        for (let j = 0; j < nphi; j += 1) {
+          const phi = (j / nphi) * Math.PI * 2;
+          positions.push(r * Math.cos(phi), r * Math.sin(phi), z);
+          const c = densityToColor(Number(densityValues[i]));
+          colors.push(c.r, c.g, c.b);
+        }
+      }
+
+      for (let i = 0; i < nz - 1; i += 1) {
+        for (let j = 0; j < nphi; j += 1) {
+          const jp1 = (j + 1) % nphi;
+          const a = i * nphi + j;
+          const b = i * nphi + jp1;
+          const c = (i + 1) * nphi + j;
+          const d = (i + 1) * nphi + jp1;
+          indices.push(a, c, b);
+          indices.push(b, c, d);
+        }
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+      geometry.setIndex(indices);
+      geometry.computeVertexNormals();
+
+      const material = new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        toneMapped: false,
+        side: THREE.DoubleSide,
+      });
+
+      const mesh = new THREE.Mesh(geometry, material);
+      if (center) {
         mesh.position.sub(center);
       }
       return mesh;
@@ -2240,13 +2358,56 @@
         jetMesh.material.dispose();
         jetMesh = null;
       }
+      if (jetDiskMesh) {
+        jetScene.remove(jetDiskMesh);
+        jetDiskMesh.geometry.dispose();
+        jetDiskMesh.material.dispose();
+        jetDiskMesh = null;
+      }
 
       const rValues = solution.profiles.psi.r;
       const zValues = solution.profiles.psi.x;
       const densityValues = solution.profiles.psi.density;
-      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72);
+      const epValue = Number(solution?.g1);
+      const xIdValue = Number(solution?.g17);
+      const diskZValues = Array.isArray(rValues) ? rValues.map((r) => epValue * Number(r) * xIdValue) : null;
+      const xiValue = Number(solution?.g6);
+      const zIdValue = Number(solution?.g21);
+      const rhoPsiAtZid = interpolateProfileValue(zValues, densityValues, zIdValue);
+      const diskDensityValues = Array.isArray(rValues) ? rValues.map((r, i) => {
+        const rNum = Math.abs(Number(r));
+        const rho = Number(densityValues?.[i]);
+        const exponent = 2.0 * (0.75 + 0.5 * xiValue) - 3.0;
+        if (!Number.isFinite(rhoPsiAtZid) || !Number.isFinite(rho) || !Number.isFinite(rNum) || rNum <= 0 || !Number.isFinite(exponent)) return NaN;
+        return rhoPsiAtZid * rho * (rNum ** exponent);
+      }) : null;
+
+      const center = new THREE.Vector3(0, 0, 0);
+      if (Array.isArray(zValues) && zValues.length) {
+        let zMin = Infinity;
+        let zMax = -Infinity;
+        zValues.forEach((z) => {
+          const zNum = Number(z);
+          if (Number.isFinite(zNum)) {
+            zMin = Math.min(zMin, zNum);
+            zMax = Math.max(zMax, zNum);
+          }
+        });
+        if (Number.isFinite(zMin) && Number.isFinite(zMax)) {
+          center.z = (zMin + zMax) / 2;
+        }
+      }
+
+      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center);
       if (jetMesh) {
         jetScene.add(jetMesh);
+      }
+
+      if (Number.isFinite(epValue) && Number.isFinite(xIdValue) && diskZValues && diskDensityValues) {
+        jetDiskMesh = buildDiskSurfaceMesh(rValues, diskZValues, diskDensityValues, 72, center);
+        if (jetDiskMesh) {
+          jetScene.add(jetDiskMesh);
+        }
       }
     }
 
@@ -2527,6 +2688,12 @@
         jetMesh.geometry.dispose();
         jetMesh.material.dispose();
         jetMesh = null;
+      }
+      if (jetScene && jetDiskMesh) {
+        jetScene.remove(jetDiskMesh);
+        jetDiskMesh.geometry.dispose();
+        jetDiskMesh.material.dispose();
+        jetDiskMesh = null;
       }
       pinnedSolutionIndex = null;
       renderFlatProfiles();
