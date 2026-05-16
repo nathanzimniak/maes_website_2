@@ -2171,7 +2171,7 @@
       };
     }
 
-    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null) {
+    function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMaxOverride = null) {
       if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
       if (!rValues.length || rValues.length !== zValues.length) return null;
 
@@ -2185,7 +2185,7 @@
       const defaultLogDensityMin = computedLogDensityMin - 0.5;
       const defaultLogDensityMax = 0.0;
       const logDensityMin = defaultLogDensityMin;
-      const logDensityMax = defaultLogDensityMax;
+      const logDensityMax = Number.isFinite(logDensityMaxOverride) ? logDensityMaxOverride : defaultLogDensityMax;
       const safeRange = Math.max(logDensityMax - logDensityMin, 1e-12);
 
       // Inferno ramp base stops (sampled from Matplotlib's inferno).
@@ -2398,7 +2398,8 @@
         }
       }
 
-      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center);
+      const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
+      jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMax);
       if (jetMesh) {
         jetScene.add(jetMesh);
       }
