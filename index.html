@@ -2239,7 +2239,9 @@
         const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
         const logDensity = Math.log10(safeDensity);
         const t = Math.min(1, Math.max(0, (logDensity - logDensityMin) / safeRange));
-        const scaled = t * (infernoStops.length - 1);
+        // Remove the darkest 10% of Inferno to avoid near-black values in the rendering.
+        const clippedT = 0.1 + t * 0.9;
+        const scaled = clippedT * (infernoStops.length - 1);
         const i0 = Math.floor(scaled);
         const i1 = Math.min(i0 + 1, infernoStops.length - 1);
         const frac = scaled - i0;
