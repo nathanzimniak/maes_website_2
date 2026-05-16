@@ -2245,6 +2245,7 @@
       const rValues = solution.profiles.psi.r;
       const zValues = solution.profiles.psi.x;
       const densityValues = solution.profiles.psi.density;
+      updateJetRangeDefaultsDisplay(densityValues);
       jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72);
       if (jetMesh) {
         jetScene.add(jetMesh);
