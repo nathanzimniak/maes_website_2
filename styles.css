@@ -51,10 +51,11 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
 }
 
 body {
-  scroll-snap-type: y proximity;
+  min-height: 100%;
 }
 
 #chart,
