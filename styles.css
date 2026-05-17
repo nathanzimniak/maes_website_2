@@ -671,6 +671,25 @@ section {
   font-weight: 700;
 }
 
+.contact__github-link {
+  justify-self: center;
+  color: #2b2b2b;
+  display: inline-flex;
+  line-height: 0;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.contact__github-link:hover,
+.contact__github-link:focus-visible {
+  transform: scale(1.08);
+  opacity: 0.8;
+}
+
+.contact__github-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
 .contact__details {
   color: var(--color-muted);
   font-size: var(--font-size-sm);
