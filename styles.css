@@ -51,7 +51,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
 }
 
 body {
@@ -61,7 +61,6 @@ body {
 #chart,
 #faq {
   scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 body {
