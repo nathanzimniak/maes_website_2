@@ -2133,7 +2133,12 @@ section {
   gap: var(--space-2);
 }
 
-.chart__eyebrow-text {
+.chart__profiles .chart__eyebrow--sub::before {
+  content: "";
+  flex: 0 0 24px;
+}
+
+.chart__profiles .chart__eyebrow--sub .chart__eyebrow-text {
   flex: 1;
   text-align: center;
 }
