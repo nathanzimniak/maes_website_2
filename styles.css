@@ -48,6 +48,21 @@
   box-sizing: border-box;
 }
 
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  scroll-snap-type: y proximity;
+}
+
+#chart,
+#faq {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);
