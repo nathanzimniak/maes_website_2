@@ -48,6 +48,20 @@
   box-sizing: border-box;
 }
 
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+}
+
+#chart,
+#faq {
+  scroll-snap-align: start;
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);
