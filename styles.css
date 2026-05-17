@@ -509,13 +509,14 @@ section {
   padding: var(--section-padding-y) var(--section-padding-x);
   display: flex;
   justify-content: center;
+  margin-top: 50px;
 }
 
 .faq {
   padding: var(--section-padding-y) var(--section-padding-x);
   display: flex;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
 .contact {
@@ -523,7 +524,7 @@ section {
   margin-top: var(--space-8);
   display: flex;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
 .faq__card {
