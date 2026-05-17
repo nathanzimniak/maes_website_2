@@ -509,7 +509,7 @@ section {
   padding: var(--section-padding-y) var(--section-padding-x);
   display: flex;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .faq {
