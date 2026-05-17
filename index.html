@@ -626,7 +626,6 @@
     let jetDiskMesh = null;
     let jetDiskMeshMirror = null;
     let jetDiskOuterMesh = null;
-    let jetGridHelper = null;
     let jetAnimationFrameId = null;
     const datasetDirectories = ['0.100_1.0_1.0_1.0_0.0_0_0'];
     const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
@@ -2113,13 +2112,6 @@
       const dir = new THREE.DirectionalLight(0xffffff, 1.0);
       dir.position.set(2.5, 3, 4);
       jetScene.add(ambient, dir);
-
-      jetGridHelper = new THREE.GridHelper(24, 24, 0x7a7a7a, 0x2b2b2b);
-      jetGridHelper.rotation.x = Math.PI / 2;
-      jetGridHelper.position.set(0, 0, 0);
-      jetGridHelper.material.transparent = true;
-      jetGridHelper.material.opacity = 0.45;
-      jetScene.add(jetGridHelper);
 
       const animate = () => {
         jetAnimationFrameId = requestAnimationFrame(animate);
