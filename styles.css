@@ -163,6 +163,8 @@ section {
 }
 
 .site-header__pill {
+  display: grid;
+  place-items: center;
   justify-self: end;
   border: none;
   padding: 8px 10px;
@@ -178,16 +180,18 @@ section {
 }
 
 .site-header__pill span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
+  line-height: 0;
 }
 
 .site-header__pill svg {
+  display: block;
   width: 16px;
   height: 16px;
   fill: currentColor;
   transition: filter 400ms ease;
+  transform: translateY(1px);
   transform-origin: center;
 }
 
