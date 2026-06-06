@@ -188,6 +188,7 @@ section {
   height: 16px;
   fill: currentColor;
   transition: filter 400ms ease;
+  transform: translateY(1px);
   transform-origin: center;
 }
 
