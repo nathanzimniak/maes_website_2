@@ -163,6 +163,8 @@ section {
 }
 
 .site-header__pill {
+  display: grid;
+  place-items: center;
   justify-self: end;
   border: none;
   padding: 8px 10px;
@@ -183,7 +185,12 @@ section {
   height: 16px;
   fill: currentColor;
   transition: filter 400ms ease;
+  transform: translateY(1px);
   transform-origin: center;
+}
+
+:root[data-theme="dark"] .site-header__pill svg {
+  transform: translateY(3px);
 }
 
 .site-header__pill:hover svg {
