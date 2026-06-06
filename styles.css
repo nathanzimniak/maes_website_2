@@ -2533,25 +2533,6 @@ section {
   filter: drop-shadow(0 0 3px rgba(17, 22, 29, 0.8));
 }
 
-:root[data-theme="dark"] .chart__card,
-:root[data-theme="dark"] .chart__controls,
-:root[data-theme="dark"] .chart__figure,
-:root[data-theme="dark"] .chart__profiles,
-:root[data-theme="dark"] .chart__surface3d,
-:root[data-theme="dark"] .faq__item,
-:root[data-theme="dark"] .contact__card {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.28);
-}
-
-:root[data-theme="dark"] .chart__card:hover,
-:root[data-theme="dark"] .chart__controls:hover,
-:root[data-theme="dark"] .chart__figure:hover,
-:root[data-theme="dark"] .chart__profiles:hover,
-:root[data-theme="dark"] .chart__surface3d:hover,
-:root[data-theme="dark"] .faq__item:hover,
-:root[data-theme="dark"] .contact__card:hover {
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.42);
-}
 
 :root[data-theme="dark"] .chart__select--profile {
   background-image:
