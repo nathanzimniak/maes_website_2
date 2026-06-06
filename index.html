@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MAES | Magnetized Accretion-Ejection Structures</title>
-  <script src="theme.js?v=20260606-1"></script>
+  <script src="theme.js?v=20260606-4"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900;1000&family=Montserrat:wght@400;500;600;700;800&family=Racing+Sans+One&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.css">
-  <link rel="stylesheet" href="styles.css?v=20260606-2">
+  <link rel="stylesheet" href="styles.css?v=20260606-8">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.js"></script>
   <script type="importmap">
     {
@@ -35,11 +35,9 @@
         <a href="#contact">CONTACT</a>
       </nav>
       <button id="theme-toggle" class="site-header__pill" type="button" aria-label="Activer le mode sombre" aria-pressed="false" title="Activer le mode sombre">
-        <span aria-hidden="true">
-          <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
-            <path d="M22.81 15.95a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 22.81 15.95Z"></path>
-          </svg>
-        </span>
+        <svg viewBox="0 0 24 24" width="16" height="16" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+          <path d="M22.81 15.95a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 22.81 15.95Z"></path>
+        </svg>
       </button>
     </div>
   </header>
@@ -527,7 +525,7 @@
       const themeIconPath = themeToggle?.querySelector('path');
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
       const moonIconPath = 'M22.81 15.95a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 22.81 15.95Z';
-      const sunIconPath = 'M12 4.5V2m0 20v-2.5M4.5 12H2m20 0h-2.5M6.7 6.7 4.93 4.93m14.14 14.14-1.77-1.77M17.3 6.7l1.77-1.77M4.93 19.07 6.7 17.3M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z';
+      const sunIconPath = 'M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9ZM11 2h2v3.5h-2V2Zm0 16.5h2V22h-2v-3.5ZM2 11h3.5v2H2v-2Zm16.5 0H22v2h-3.5v-2ZM4.293 5.707l1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm11.525 11.525 1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm0-10.464 2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414ZM4.293 18.293l2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414Z';
 
       const getSavedTheme = () => {
         try {
@@ -587,7 +585,7 @@
     const themeIconPath = themeToggle?.querySelector('path');
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
     const moonIconPath = 'M22.81 15.95a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 22.81 15.95Z';
-    const sunIconPath = 'M12 4.5V2m0 20v-2.5M4.5 12H2m20 0h-2.5M6.7 6.7 4.93 4.93m14.14 14.14-1.77-1.77M17.3 6.7l1.77-1.77M4.93 19.07 6.7 17.3M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z';
+    const sunIconPath = 'M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9ZM11 2h2v3.5h-2V2Zm0 16.5h2V22h-2v-3.5ZM2 11h3.5v2H2v-2Zm16.5 0H22v2h-3.5v-2ZM4.293 5.707l1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm11.525 11.525 1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm0-10.464 2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414ZM4.293 18.293l2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414Z';
 
     const getSavedTheme = () => {
       try {

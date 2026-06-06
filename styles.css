@@ -177,13 +177,8 @@ section {
   font-size: 0.8rem;
 }
 
-.site-header__pill span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .site-header__pill svg {
+  display: block;
   width: 16px;
   height: 16px;
   fill: currentColor;
