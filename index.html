@@ -4,6 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MAES | Magnetized Accretion-Ejection Structures</title>
+  <script>
+    (() => {
+      const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      let savedTheme = null;
+
+      try {
+        savedTheme = localStorage.getItem('maes-theme');
+      } catch {
+        // Storage can be unavailable in restrictive browsing contexts.
+      }
+
+      document.documentElement.dataset.theme = savedTheme || preferredTheme;
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900;1000&family=Montserrat:wght@400;500;600;700;800&family=Racing+Sans+One&display=swap">
@@ -33,7 +47,7 @@
         <a href="#faq">FAQ</a>
         <a href="#contact">CONTACT</a>
       </nav>
-      <button class="site-header__pill" type="button" aria-label="Basculer le mode sombre ou clair">
+      <button class="site-header__pill" type="button" aria-label="Activer le mode sombre" aria-pressed="false" title="Activer le mode sombre">
         <span aria-hidden="true">
           <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
             <path d="M22.81 15.95a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 22.81 15.95Z"></path>
@@ -519,6 +533,67 @@
       © <span id="year"></span> Nathan Zimniak
     </p>
   </section>
+
+  <script>
+    (() => {
+      const themeToggle = document.querySelector('.site-header__pill');
+      const themeIconPath = themeToggle?.querySelector('path');
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+      const moonIconPath = 'M22.81 15.95a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 22.81 15.95Z';
+      const sunIconPath = 'M12 4.5V2m0 20v-2.5M4.5 12H2m20 0h-2.5M6.7 6.7 4.93 4.93m14.14 14.14-1.77-1.77M17.3 6.7l1.77-1.77M4.93 19.07 6.7 17.3M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z';
+
+      const getSavedTheme = () => {
+        try {
+          return localStorage.getItem('maes-theme');
+        } catch {
+          return null;
+        }
+      };
+
+      const saveTheme = (theme) => {
+        try {
+          localStorage.setItem('maes-theme', theme);
+        } catch {
+          // The selected theme still applies for the current page.
+        }
+      };
+
+      const updateThemeToggle = (theme) => {
+        const isDark = theme === 'dark';
+        const label = isDark ? 'Activer le mode clair' : 'Activer le mode sombre';
+        themeToggle?.setAttribute('aria-label', label);
+        themeToggle?.setAttribute('title', label);
+        themeToggle?.setAttribute('aria-pressed', String(isDark));
+        themeIconPath?.setAttribute('d', isDark ? sunIconPath : moonIconPath);
+      };
+
+      const applyTheme = (theme, persist = false) => {
+        document.documentElement.dataset.theme = theme;
+        updateThemeToggle(theme);
+        if (persist) saveTheme(theme);
+        window.dispatchEvent(new CustomEvent('maes:themechange', { detail: { theme } }));
+      };
+
+      updateThemeToggle(document.documentElement.dataset.theme);
+
+      themeToggle?.addEventListener('click', () => {
+        const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme, true);
+      });
+
+      const handleSystemThemeChange = (event) => {
+        if (!getSavedTheme()) {
+          applyTheme(event.matches ? 'dark' : 'light');
+        }
+      };
+
+      if (typeof systemTheme.addEventListener === 'function') {
+        systemTheme.addEventListener('change', handleSystemThemeChange);
+      } else {
+        systemTheme.addListener(handleSystemThemeChange);
+      }
+    })();
+  </script>
 
   <script type="module">
     import * as THREE from 'three';
@@ -2539,7 +2614,7 @@
       const xSmValue = selectedProfileAxis === 'psi' ? Number(solution?.g22) : Number(solution?.g18);
       const xAValue = selectedProfileAxis === 'psi' ? Number(solution?.g23) : Number(solution?.g19);
       const xMaxValue = selectedProfileAxis === 'psi' ? Number(solution?.g24) : Number(solution?.g20);
-      const profileCurveColor = '#60708f';
+      const profileCurveColor = getComputedStyle(document.documentElement).getPropertyValue('--color-neutral').trim();
       const series = [
         { label: '<span class="chart__profile-title-text">Density</span><span class="chart__profile-title-math"><span class="math-label" data-latex="\\rho"></span></span>', ariaLabel: 'Density (rho)', key: 'density', color: profileCurveColor, tooltipSymbol: '\\rho' },
         { label: '<span class="chart__profile-title-text">Thermal pressure</span><span class="chart__profile-title-math"><span class="math-label" data-latex="P"></span></span>', ariaLabel: 'Thermal pressure (P)', key: 'pressure', color: profileCurveColor, tooltipSymbol: 'P' },
@@ -3067,6 +3142,10 @@
       scheduleSelectWidthRefresh();
       updateChart();
       syncSurfaceHeightWithProfiles();
+    });
+
+    window.addEventListener('maes:themechange', () => {
+      updateChart({ preserveAxisLimits: true });
     });
 
     document.addEventListener('click', () => {
