@@ -180,9 +180,10 @@ section {
 }
 
 .site-header__pill span {
-  display: grid;
-  place-items: center;
-  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
 }
 
 .site-header__pill svg {
