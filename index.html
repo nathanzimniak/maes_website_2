@@ -4,25 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MAES | Magnetized Accretion-Ejection Structures</title>
-  <script>
-    (() => {
-      const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      let savedTheme = null;
-
-      try {
-        savedTheme = localStorage.getItem('maes-theme');
-      } catch {
-        // Storage can be unavailable in restrictive browsing contexts.
-      }
-
-      document.documentElement.dataset.theme = savedTheme || preferredTheme;
-    })();
-  </script>
+  <script src="theme.js?v=20260606-1"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900;1000&family=Montserrat:wght@400;500;600;700;800&family=Racing+Sans+One&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260606-1">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.js"></script>
   <script type="importmap">
     {
@@ -47,7 +34,7 @@
         <a href="#faq">FAQ</a>
         <a href="#contact">CONTACT</a>
       </nav>
-      <button class="site-header__pill" type="button" aria-label="Activer le mode sombre" aria-pressed="false" title="Activer le mode sombre">
+      <button id="theme-toggle" class="site-header__pill" type="button" aria-label="Activer le mode sombre" aria-pressed="false" title="Activer le mode sombre">
         <span aria-hidden="true">
           <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
             <path d="M22.81 15.95a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 22.81 15.95Z"></path>
