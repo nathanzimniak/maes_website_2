@@ -13,6 +13,8 @@
   --color-axis-label: #374151;
   --point-color: #ffb543;
   --shadow-card: 0px 4px 0px 0px rgba(15, 20, 40, 0.1);
+  --shadow-panel: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  --shadow-panel-hover: 0px 4px 8px 0px rgba(15, 20, 40, 0.2);
   --shadow-float: 0 16px 30px rgba(15, 23, 42, 0.12);
   --color-header-bg: rgba(248, 249, 251, 0.9);
   --color-strong: #2b2b2b;
@@ -286,7 +288,7 @@ section {
   border-radius: var(--radius);
   border: 1px solid var(--color-line);
   background: var(--color-surface);
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  box-shadow: var(--shadow-panel);
 }
 
 .hero__actions {
@@ -369,7 +371,7 @@ section {
   border-radius: var(--radius);
   border: 1px solid var(--color-line);
   background: var(--color-surface);
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  box-shadow: var(--shadow-panel);
   display: grid;
   gap: var(--space-4);
   transition: box-shadow 800ms ease;
@@ -839,12 +841,12 @@ section {
   align-items: stretch;
   justify-content: flex-start;
   gap: var(--space-4);
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  box-shadow: var(--shadow-panel);
   transition: box-shadow 800ms ease;
 }
 
 .chart__figure:hover {
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
+  box-shadow: var(--shadow-panel-hover);
 }
 
 .chart__figure-header {
@@ -974,7 +976,7 @@ section {
   opacity: 1.0;
   display: grid;
   gap: var(--space-2);
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  box-shadow: var(--shadow-panel);
 }
 
 .chart__settings-button:hover .chart__settings-icon svg circle,
@@ -1195,12 +1197,12 @@ section {
   align-self: flex-start;
   flex: 0 0 auto;
   width: var(--chart-side-panel-width);
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  box-shadow: var(--shadow-panel);
   transition: box-shadow 400ms ease;
 }
 
 .chart__hovered:hover {
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
+  box-shadow: var(--shadow-panel-hover);
 }
 
 .chart__hovered-header {
@@ -1403,12 +1405,12 @@ section {
   align-self: flex-start;
   flex: 0 0 auto;
   width: var(--chart-side-panel-width);
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  box-shadow: var(--shadow-panel);
   transition: box-shadow 800ms ease;
 }
 
 .chart__controls:hover {
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
+  box-shadow: var(--shadow-panel-hover);
 }
 
 .chart__control {
@@ -2044,10 +2046,9 @@ section {
   padding: var(--space-5) var(--space-6) var(--space-2) var(--space-6);
   border-radius: var(--radius);
   background: var(--color-surface);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-panel);
   display: grid;
   gap: var(--space-1);
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
   transition: box-shadow 800ms ease;
   position: relative;
   --profile-title-x: 10px;
@@ -2062,7 +2063,7 @@ section {
   box-sizing: border-box;
   border-radius: var(--radius);
   background: var(--color-surface);
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  box-shadow: var(--shadow-panel);
   transition: box-shadow 800ms ease;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
@@ -2070,7 +2071,7 @@ section {
 }
 
 .chart__surface3d:hover {
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
+  box-shadow: var(--shadow-panel-hover);
 }
 
 .chart__surface3d-header > div {
@@ -2095,7 +2096,7 @@ section {
 }
 
 .chart__profiles:hover {
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.20);
+  box-shadow: var(--shadow-panel-hover);
 }
 
 .chart__profiles-header {
@@ -2362,7 +2363,7 @@ section {
   transform: translateY(4px);
   transition: opacity 400ms ease, transform 400ms ease;
   z-index: 1;
-  box-shadow: 0px 4px 8px 0px rgba(15, 20, 40, 0.07);
+  box-shadow: var(--shadow-panel);
 }
 
 .chart__scatter-tooltip {
@@ -2512,6 +2513,8 @@ section {
   --color-neutral: #94a7c5;
   --color-tooltip-bg: rgba(23, 28, 36, 0.94);
   --shadow-card: 0 4px 0 rgba(0, 0, 0, 0.32);
+  --shadow-panel: 0 4px 10px rgba(0, 0, 0, 0.42);
+  --shadow-panel-hover: 0 6px 14px rgba(0, 0, 0, 0.58);
   --shadow-float: 0 16px 30px rgba(0, 0, 0, 0.4);
   color-scheme: dark;
 }
