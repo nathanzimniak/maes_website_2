@@ -5,7 +5,7 @@
   var root = document.documentElement;
   var systemTheme = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
   var moonIconPath = 'M22.81 15.95a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 22.81 15.95Z';
-  var sunIconPath = 'M12 4.5V2m0 20v-2.5M4.5 12H2m20 0h-2.5M6.7 6.7 4.93 4.93m14.14 14.14-1.77-1.77M17.3 6.7l1.77-1.77M4.93 19.07 6.7 17.3M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z';
+  var sunIconPath = 'M12 8a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM11 2h2v4h-2V2Zm0 18h2v4h-2v-4ZM1 12h4v2H1v-2Zm18 0h4v2h-4v-2ZM3.515 5.929l1.414-1.414 2.828 2.828-1.414 1.414-2.828-2.828Zm12.728 12.728 1.414-1.414 2.828 2.828-1.414 1.414-2.828-2.828Zm0-11.314 2.828-2.828 1.414 1.414-2.828 2.828-1.414-1.414ZM3.515 20.071l2.828-2.828 1.414 1.414-2.828 2.828-1.414-1.414Z';
   var themeToggle = null;
 
   function getSavedTheme() {
