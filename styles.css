@@ -2492,8 +2492,8 @@ section {
 
 
 :root[data-theme="dark"] {
-  --color-bg: #0f1218;
-  --color-surface: #171c24;
+  --color-bg: #0F1115;
+  --color-surface: #191d23;
   --color-surface-subtle: #202733;
   --color-surface-muted: #131820;
   --color-text: #eef2f7;
@@ -2507,7 +2507,7 @@ section {
   --color-header-bg: rgba(15, 18, 24, 0.9);
   --color-strong: #e7edf5;
   --color-on-strong: #11161d;
-  --color-neutral: #94a7c5;
+  --color-neutral: #a3badf;
   --color-tooltip-bg: rgba(23, 28, 36, 0.94);
   --shadow-card: 0 4px 0 rgba(0, 0, 0, 0.32);
   --shadow-panel: 0 4px 10px rgba(0, 0, 0, 0.42);
