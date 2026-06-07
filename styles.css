@@ -689,7 +689,6 @@ section {
 .contact__github-link:hover,
 .contact__github-link:focus-visible {
   transform: scale(1.08);
-  opacity: 0.8;
 }
 
 .contact__github-icon {
