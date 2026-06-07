@@ -20,6 +20,8 @@
   --color-strong: #2b2b2b;
   --color-on-strong: #ffffff;
   --color-neutral: #60708f;
+  --color-settings-gear: rgba(96, 112, 143, 0.4);
+  --color-settings-gear-active: rgba(96, 112, 143, 0.6);
   --color-tooltip-bg: rgba(255, 255, 255, 0.9);
   --radius: 16px;
   --radius-1: 10px;
@@ -2509,6 +2511,8 @@ section {
   --color-strong: #e7edf5;
   --color-on-strong: #11161d;
   --color-neutral: #a3badf;
+  --color-settings-gear: rgba(163, 186, 223, 0.55);
+  --color-settings-gear-active: rgba(163, 186, 223, 0.85);
   --color-tooltip-bg: rgba(23, 28, 36, 0.94);
   --shadow-card: 0 4px 0 rgba(0, 0, 0, 0.32);
   --shadow-panel: 0 4px 10px rgba(0, 0, 0, 0.42);
