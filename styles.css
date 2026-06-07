@@ -177,6 +177,7 @@ section {
   box-shadow: none;
   transition: transform 120ms ease, background 120ms ease;
   font-size: 0.8rem;
+  line-height: 0;
 }
 
 .site-header__pill svg {
@@ -185,12 +186,6 @@ section {
   height: 16px;
   fill: currentColor;
   transition: filter 400ms ease;
-  transform: translateY(1px);
-  transform-origin: center;
-}
-
-:root[data-theme="dark"] .site-header__pill svg {
-  transform: translateY(3px);
 }
 
 .site-header__pill:hover svg {
