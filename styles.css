@@ -160,7 +160,7 @@ section {
 }
 
 .site-header__nav a:hover {
-  background: rgba(96, 112, 143, 0.07);
+  background: rgba(96, 112, 143, 0.1);
   color: var(--color-text);
 }
 
