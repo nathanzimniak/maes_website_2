@@ -2495,7 +2495,7 @@ section {
 
 
 :root[data-theme="dark"] {
-  --color-bg: #0F1115;
+  --color-bg: #14171C;
   --color-surface: #191d23;
   --color-surface-subtle: #202733;
   --color-surface-muted: #131820;
@@ -2507,7 +2507,7 @@ section {
   --color-accent-soft: rgba(88, 166, 255, 0.18);
   --color-axis: rgba(220, 229, 240, 0.62);
   --color-axis-label: #d5deea;
-  --color-header-bg: rgba(15, 18, 24, 0.9);
+  --color-header-bg: #14171C;
   --color-strong: #e7edf5;
   --color-on-strong: #11161d;
   --color-neutral: #a3badf;
