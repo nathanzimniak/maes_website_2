@@ -592,7 +592,7 @@ section {
 
 .faq__item[open] {
   border-color: var(--color-neutral);
-  box-shadow: 0 0 0 2px rgba(96, 112, 143, 0.2);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-neutral) 30%, transparent);
 }
 
 .faq__item summary {
