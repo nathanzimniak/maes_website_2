@@ -933,11 +933,12 @@ section {
 .chart__settings-icon svg path {
   fill: #acacac;
   stroke: #0000;
-  transition: fill 500ms ease, stroke 500ms ease;
+  transition: fill 500ms ease, fill-opacity 500ms ease, stroke 500ms ease;
 }
 
 .chart__settings-icon--gear svg path {
-  fill: var(--color-settings-gear);
+  fill: var(--color-neutral);
+  fill-opacity: 0.45;
 }
 
 .chart__download-button {
@@ -985,11 +986,11 @@ section {
 
 .chart__settings-button:hover .chart__settings-icon--gear svg path,
 .chart__settings-button:focus-visible .chart__settings-icon--gear svg path {
-  fill: var(--color-settings-gear-active);
+  fill-opacity: 0.7;
 }
 
 #chart-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path {
-  fill: var(--color-settings-gear-active);
+  fill-opacity: 0.7;
 }
 
 .chart__settings-button:hover .chart__settings-icon--download svg rect,
@@ -2169,7 +2170,7 @@ section {
 .chart__profiles-settings-button:hover .chart__settings-icon--gear svg path,
 .chart__profiles-settings-button:focus-visible .chart__settings-icon--gear svg path,
 #profile-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path {
-  fill: var(--color-settings-gear-active);
+  fill-opacity: 0.7;
 }
 
 .chart__profile-settings {
