@@ -519,119 +519,7 @@
     </p>
   </section>
 
-  <script>
-    (() => {
-      const themeToggle = document.querySelector('.site-header__pill');
-      const themeIconPath = themeToggle?.querySelector('path');
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
-      const moonIconPath = 'M21.684126 14.675874a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 21.684126 14.675874Z';
-      const sunIconPath = 'M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9ZM11 2h2v3.5h-2V2Zm0 16.5h2V22h-2v-3.5ZM2 11h3.5v2H2v-2Zm16.5 0H22v2h-3.5v-2ZM4.293 5.707l1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm11.525 11.525 1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm0-10.464 2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414ZM4.293 18.293l2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414Z';
-
-      const getSavedTheme = () => {
-        try {
-          return localStorage.getItem('maes-theme');
-        } catch {
-          return null;
-        }
-      };
-
-      const saveTheme = (theme) => {
-        try {
-          localStorage.setItem('maes-theme', theme);
-        } catch {
-          // The selected theme still applies for the current page.
-        }
-      };
-
-      const updateThemeToggle = (theme) => {
-        const isDark = theme === 'dark';
-        const label = isDark ? 'Activer le mode clair' : 'Activer le mode sombre';
-        themeToggle?.setAttribute('aria-label', label);
-        themeToggle?.setAttribute('title', label);
-        themeToggle?.setAttribute('aria-pressed', String(isDark));
-        themeIconPath?.setAttribute('d', isDark ? sunIconPath : moonIconPath);
-      };
-
-      const applyTheme = (theme, persist = false) => {
-        document.documentElement.dataset.theme = theme;
-        updateThemeToggle(theme);
-        if (persist) saveTheme(theme);
-        window.dispatchEvent(new CustomEvent('maes:themechange', { detail: { theme } }));
-      };
-
-      updateThemeToggle(document.documentElement.dataset.theme);
-
-      themeToggle?.addEventListener('click', () => {
-        const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-        applyTheme(nextTheme, true);
-      });
-
-      const handleSystemThemeChange = (event) => {
-        if (!getSavedTheme()) {
-          applyTheme(event.matches ? 'dark' : 'light');
-        }
-      };
-
-      if (typeof systemTheme.addEventListener === 'function') {
-        systemTheme.addEventListener('change', handleSystemThemeChange);
-      } else {
-        systemTheme.addListener(handleSystemThemeChange);
-      }
-    })();
-  </script>
-
   <script type="module">
-    const themeToggle = document.querySelector('.site-header__pill');
-    const themeIconPath = themeToggle?.querySelector('path');
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
-    const moonIconPath = 'M21.684126 14.675874a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 21.684126 14.675874Z';
-    const sunIconPath = 'M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9ZM11 2h2v3.5h-2V2Zm0 16.5h2V22h-2v-3.5ZM2 11h3.5v2H2v-2Zm16.5 0H22v2h-3.5v-2ZM4.293 5.707l1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm11.525 11.525 1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm0-10.464 2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414ZM4.293 18.293l2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414Z';
-
-    const getSavedTheme = () => {
-      try {
-        return localStorage.getItem('maes-theme');
-      } catch {
-        return null;
-      }
-    };
-
-    const saveTheme = (theme) => {
-      try {
-        localStorage.setItem('maes-theme', theme);
-      } catch {
-        // The selected theme still applies for the current page.
-      }
-    };
-
-    const updateThemeToggle = (theme) => {
-      const isDark = theme === 'dark';
-      const label = isDark ? 'Activer le mode clair' : 'Activer le mode sombre';
-      themeToggle?.setAttribute('aria-label', label);
-      themeToggle?.setAttribute('title', label);
-      themeToggle?.setAttribute('aria-pressed', String(isDark));
-      themeIconPath?.setAttribute('d', isDark ? sunIconPath : moonIconPath);
-    };
-
-    const applyTheme = (theme, persist = false) => {
-      document.documentElement.dataset.theme = theme;
-      updateThemeToggle(theme);
-      if (persist) saveTheme(theme);
-    };
-
-    updateThemeToggle(document.documentElement.dataset.theme);
-
-    themeToggle?.addEventListener('click', () => {
-      const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-      applyTheme(nextTheme, true);
-      updateChart();
-    });
-
-    systemTheme.addEventListener('change', (event) => {
-      if (!getSavedTheme()) {
-        applyTheme(event.matches ? 'dark' : 'light');
-      }
-    });
-
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     const footerYear = document.getElementById('year');
@@ -2962,7 +2850,10 @@
     }
 
     async function updateChart(options = {}) {
-      const { preserveAxisLimits = false } = options;
+      const {
+        preserveAxisLimits = false,
+        preserveSelection = false,
+      } = options;
       const baseParams = sliders.reduce((acc, slider) => {
         const value = Number(slider.element.value);
         const selectedParameterValue = getSelectedParameterValue(slider.id, value);
@@ -2979,7 +2870,12 @@
       const solutions = await buildSolutions(baseParams, selectedScenario);
       const allScenarioSolutions = await buildSolutions(baseParams, 'SM');
       currentSolutions = solutions;
-      resetProfiles();
+      const hasPreservedSelection = preserveSelection
+        && selectedSolutionIndex !== null
+        && selectedSolutionIndex < currentSolutions.length;
+      if (!hasPreservedSelection) {
+        resetProfiles();
+      }
       restorePinnedValues();
       hideScatterTooltip();
 
@@ -3181,7 +3077,10 @@
     });
 
     window.addEventListener('maes:themechange', () => {
-      updateChart({ preserveAxisLimits: true });
+      updateChart({
+        preserveAxisLimits: true,
+        preserveSelection: true,
+      });
     });
 
     document.addEventListener('click', () => {
