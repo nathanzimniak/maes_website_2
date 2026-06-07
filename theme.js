@@ -4,7 +4,7 @@
   var storageKey = 'maes-theme';
   var root = document.documentElement;
   var systemTheme = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-  var moonIconPath = 'M22.81 15.95a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 22.81 15.95Z';
+  var moonIconPath = 'M21.684126 14.675874a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 21.684126 14.675874Z';
   var sunIconPath = 'M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9ZM11 2h2v3.5h-2V2Zm0 16.5h2V22h-2v-3.5ZM2 11h3.5v2H2v-2Zm16.5 0H22v2h-3.5v-2ZM4.293 5.707l1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm11.525 11.525 1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm0-10.464 2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414ZM4.293 18.293l2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414Z';
   var themeToggle = null;
 
