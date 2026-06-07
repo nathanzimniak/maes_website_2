@@ -614,7 +614,7 @@ section {
   top: 50%;
   width: 12px;
   height: 2px;
-  background: var(--color-muted);
+  background: var(--color-strong);
   transform: translate(-50%, -50%);
   transition: background 150ms ease;
 }
