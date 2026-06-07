@@ -167,7 +167,7 @@ section {
   place-items: center;
   justify-self: end;
   border: none;
-  padding: 8px 10px;
+  padding: 10px 10px;
   border-radius: 10px;
   background: var(--color-strong);
   color: var(--color-on-strong);
