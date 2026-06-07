@@ -2525,7 +2525,7 @@ section {
 }
 
 :root[data-theme="dark"] .site-header__nav a:hover,
-:root[data-theme="dark"] .chart__toggle-button:hover {
+:root[data-theme="dark"] .chart__toggle-button:not(.chart__toggle-button--active):hover {
   background: rgba(148, 167, 197, 0.16);
 }
 
