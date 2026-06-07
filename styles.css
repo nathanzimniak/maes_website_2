@@ -82,7 +82,6 @@ body {
   line-height: 1.6;
   padding-top: 50px;
   letter-spacing: -0.01em;
-  transition: background-color 200ms ease, color 200ms ease;
 }
 
 main,
@@ -1599,7 +1598,6 @@ section {
   font-weight: 600;
   letter-spacing: -0.01em;
   cursor: pointer;
-  transition: background 500ms ease;
   text-align: center;
   font-size: 0.74rem;
 }
@@ -2566,10 +2564,4 @@ section {
 .site-header__pill:focus-visible {
   outline: 3px solid var(--color-accent);
   outline-offset: 3px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body {
-    transition: none;
-  }
 }
