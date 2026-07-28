@@ -62,10 +62,6 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  min-height: 100%;
-}
-
 #chart,
 #faq {
   scroll-snap-align: start;
@@ -202,11 +198,6 @@ section {
   justify-content: center;
   background: var(--color-bg);
   margin: 10px 0px;
-}
-
-.hero__overlay {
-  position: absolute;
-  inset: 0;
 }
 
 .hero__content {
