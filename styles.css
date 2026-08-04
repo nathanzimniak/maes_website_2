@@ -20,6 +20,7 @@
   --color-strong: #2b2b2b;
   --color-on-strong: #ffffff;
   --color-neutral: #60708f;
+  --color-neutral-hover: #8190ad;
   --color-settings-gear: rgba(96, 112, 143, 0.4);
   --color-settings-gear-active: rgba(96, 112, 143, 0.6);
   --color-tooltip-bg: rgba(255, 255, 255, 0.9);
@@ -2404,7 +2405,7 @@ section {
   stroke: none;
   transform-origin: center;
   transform-box: fill-box;
-  transition: transform 200ms ease;
+  transition: transform 200ms ease, fill 200ms ease, fill-opacity 200ms ease;
   cursor: pointer;
   outline: none;
 }
@@ -2412,6 +2413,7 @@ section {
 .chart__point:hover,
 .chart__point:focus-visible {
   transform: scale(1.35);
+  fill: var(--color-neutral-hover);
   fill-opacity: 0.9;
 }
 

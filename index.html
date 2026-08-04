@@ -1698,6 +1698,19 @@
       }
     }
 
+    function bringPointToFront(circle) {
+      if (!circle || circle.parentNode !== pointsGroup) return;
+      pointsGroup.appendChild(circle);
+    }
+
+    function restorePointStackingOrder() {
+      Array.from(pointsGroup.children)
+        .sort((firstCircle, secondCircle) => (
+          Number(firstCircle.dataset.solutionIndex) - Number(secondCircle.dataset.solutionIndex)
+        ))
+        .forEach((circle) => pointsGroup.appendChild(circle));
+    }
+
     function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       pointsGroup.innerHTML = '';
       points.forEach((point, index) => {
@@ -1714,6 +1727,7 @@
         }
 
         circle.addEventListener('pointerenter', () => {
+          bringPointToFront(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           renderHoveredValues(hovered);
           showScatterTooltip(hovered, circle, xKey, yKey);
@@ -1725,16 +1739,19 @@
         });
 
         circle.addEventListener('pointerleave', () => {
+          restorePointStackingOrder();
           restorePinnedValues();
           hideScatterTooltip();
         });
 
         circle.addEventListener('focus', () => {
+          bringPointToFront(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           showScatterTooltip(hovered, circle, xKey, yKey);
         });
 
         circle.addEventListener('blur', () => {
+          restorePointStackingOrder();
           restorePinnedValues();
           hideScatterTooltip();
         });
@@ -2792,8 +2809,8 @@
         setProfilesOverlayVisible(false);
       }
 
-      Array.from(pointsGroup.children).forEach((circle, idx) => {
-        circle.classList.toggle('chart__point--selected', idx === index);
+      Array.from(pointsGroup.children).forEach((circle) => {
+        circle.classList.toggle('chart__point--selected', Number(circle.dataset.solutionIndex) === index);
       });
     }
 
