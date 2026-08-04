@@ -1061,6 +1061,10 @@
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
 
+    const hoverPointGroup = document.createElementNS(svgNS, 'g');
+    hoverPointGroup.setAttribute('aria-hidden', 'true');
+    svg.appendChild(hoverPointGroup);
+
     chartContainer.appendChild(svg);
 
     function resizeChart() {
@@ -1698,8 +1702,22 @@
       }
     }
 
+    function showHoveredPoint(circle) {
+      if (!circle) return;
+      hoverPointGroup.innerHTML = '';
+      const hoveredCircle = circle.cloneNode(false);
+      hoveredCircle.classList.add('chart__point--hovered');
+      hoveredCircle.removeAttribute('tabindex');
+      hoverPointGroup.appendChild(hoveredCircle);
+    }
+
+    function clearHoveredPoint() {
+      hoverPointGroup.innerHTML = '';
+    }
+
     function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       pointsGroup.innerHTML = '';
+      clearHoveredPoint();
       points.forEach((point, index) => {
         const circle = document.createElementNS(svgNS, 'circle');
         circle.classList.add('chart__point');
@@ -1714,6 +1732,7 @@
         }
 
         circle.addEventListener('pointerenter', () => {
+          showHoveredPoint(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           renderHoveredValues(hovered);
           showScatterTooltip(hovered, circle, xKey, yKey);
@@ -1725,16 +1744,19 @@
         });
 
         circle.addEventListener('pointerleave', () => {
+          clearHoveredPoint();
           restorePinnedValues();
           hideScatterTooltip();
         });
 
         circle.addEventListener('focus', () => {
+          showHoveredPoint(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           showScatterTooltip(hovered, circle, xKey, yKey);
         });
 
         circle.addEventListener('blur', () => {
+          clearHoveredPoint();
           restorePinnedValues();
           hideScatterTooltip();
         });
@@ -2792,8 +2814,8 @@
         setProfilesOverlayVisible(false);
       }
 
-      Array.from(pointsGroup.children).forEach((circle, idx) => {
-        circle.classList.toggle('chart__point--selected', idx === index);
+      Array.from(pointsGroup.children).forEach((circle) => {
+        circle.classList.toggle('chart__point--selected', Number(circle.dataset.solutionIndex) === index);
       });
     }
 
