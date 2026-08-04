@@ -2410,11 +2410,20 @@ section {
   outline: none;
 }
 
-.chart__point:hover,
+.chart__point:hover {
+  fill: var(--color-neutral-hover);
+  fill-opacity: 0.9;
+}
+
+.chart__point--hovered,
 .chart__point:focus-visible {
   transform: scale(1.35);
   fill: var(--color-neutral-hover);
   fill-opacity: 0.9;
+}
+
+.chart__point--hovered {
+  pointer-events: none;
 }
 
 .chart__point:focus {

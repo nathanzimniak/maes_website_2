@@ -1061,6 +1061,10 @@
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
 
+    const hoverPointGroup = document.createElementNS(svgNS, 'g');
+    hoverPointGroup.setAttribute('aria-hidden', 'true');
+    svg.appendChild(hoverPointGroup);
+
     chartContainer.appendChild(svg);
 
     function resizeChart() {
@@ -1698,21 +1702,22 @@
       }
     }
 
-    function bringPointToFront(circle) {
-      if (!circle || circle.parentNode !== pointsGroup) return;
-      pointsGroup.appendChild(circle);
+    function showHoveredPoint(circle) {
+      if (!circle) return;
+      hoverPointGroup.innerHTML = '';
+      const hoveredCircle = circle.cloneNode(false);
+      hoveredCircle.classList.add('chart__point--hovered');
+      hoveredCircle.removeAttribute('tabindex');
+      hoverPointGroup.appendChild(hoveredCircle);
     }
 
-    function restorePointStackingOrder() {
-      Array.from(pointsGroup.children)
-        .sort((firstCircle, secondCircle) => (
-          Number(firstCircle.dataset.solutionIndex) - Number(secondCircle.dataset.solutionIndex)
-        ))
-        .forEach((circle) => pointsGroup.appendChild(circle));
+    function clearHoveredPoint() {
+      hoverPointGroup.innerHTML = '';
     }
 
     function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       pointsGroup.innerHTML = '';
+      clearHoveredPoint();
       points.forEach((point, index) => {
         const circle = document.createElementNS(svgNS, 'circle');
         circle.classList.add('chart__point');
@@ -1727,7 +1732,7 @@
         }
 
         circle.addEventListener('pointerenter', () => {
-          bringPointToFront(circle);
+          showHoveredPoint(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           renderHoveredValues(hovered);
           showScatterTooltip(hovered, circle, xKey, yKey);
@@ -1739,19 +1744,19 @@
         });
 
         circle.addEventListener('pointerleave', () => {
-          restorePointStackingOrder();
+          clearHoveredPoint();
           restorePinnedValues();
           hideScatterTooltip();
         });
 
         circle.addEventListener('focus', () => {
-          bringPointToFront(circle);
+          showHoveredPoint(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           showScatterTooltip(hovered, circle, xKey, yKey);
         });
 
         circle.addEventListener('blur', () => {
-          restorePointStackingOrder();
+          clearHoveredPoint();
           restorePinnedValues();
           hideScatterTooltip();
         });
