@@ -1698,6 +1698,11 @@
       }
     }
 
+    function bringPointToFront(circle) {
+      if (!circle || circle.parentNode !== pointsGroup) return;
+      pointsGroup.appendChild(circle);
+    }
+
     function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       pointsGroup.innerHTML = '';
       points.forEach((point, index) => {
@@ -1714,6 +1719,7 @@
         }
 
         circle.addEventListener('pointerenter', () => {
+          bringPointToFront(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           renderHoveredValues(hovered);
           showScatterTooltip(hovered, circle, xKey, yKey);
@@ -1730,6 +1736,7 @@
         });
 
         circle.addEventListener('focus', () => {
+          bringPointToFront(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           showScatterTooltip(hovered, circle, xKey, yKey);
         });
@@ -2792,8 +2799,8 @@
         setProfilesOverlayVisible(false);
       }
 
-      Array.from(pointsGroup.children).forEach((circle, idx) => {
-        circle.classList.toggle('chart__point--selected', idx === index);
+      Array.from(pointsGroup.children).forEach((circle) => {
+        circle.classList.toggle('chart__point--selected', Number(circle.dataset.solutionIndex) === index);
       });
     }
 
