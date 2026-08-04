@@ -1698,17 +1698,6 @@
       }
     }
 
-    function promoteScatterPoint(circle) {
-      if (!circle || circle.parentNode !== pointsGroup) return;
-      pointsGroup.appendChild(circle);
-      circle.classList.add('chart__point--active');
-    }
-
-    function demoteScatterPoint(circle) {
-      if (!circle) return;
-      circle.classList.remove('chart__point--active');
-    }
-
     function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       pointsGroup.innerHTML = '';
       points.forEach((point, index) => {
@@ -1725,7 +1714,6 @@
         }
 
         circle.addEventListener('pointerenter', () => {
-          promoteScatterPoint(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
           renderHoveredValues(hovered);
           showScatterTooltip(hovered, circle, xKey, yKey);
@@ -1737,20 +1725,16 @@
         });
 
         circle.addEventListener('pointerleave', () => {
-          demoteScatterPoint(circle);
           restorePinnedValues();
           hideScatterTooltip();
         });
 
         circle.addEventListener('focus', () => {
-          promoteScatterPoint(circle);
           const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
-          renderHoveredValues(hovered);
           showScatterTooltip(hovered, circle, xKey, yKey);
         });
 
         circle.addEventListener('blur', () => {
-          demoteScatterPoint(circle);
           restorePinnedValues();
           hideScatterTooltip();
         });
@@ -2808,10 +2792,9 @@
         setProfilesOverlayVisible(false);
       }
 
-      Array.from(pointsGroup.children).forEach((circle) => {
-        circle.classList.toggle('chart__point--selected', Number(circle.dataset.solutionIndex) === index);
+      Array.from(pointsGroup.children).forEach((circle, idx) => {
+        circle.classList.toggle('chart__point--selected', idx === index);
       });
-      promoteScatterPoint(pointsGroup.querySelector(`[data-solution-index="${index}"]`));
     }
 
     function resetProfiles() {
