@@ -36,7 +36,7 @@ echo "Taille des lots : $BATCH_SIZE fichiers"
 # Ignorer localement les fichiers propres à macOS et le script lui-même.
 touch .git/info/exclude
 
-for EXCLUDED_FILE in ".DS_Store" "push_changes_batches.sh"; do
+for EXCLUDED_FILE in ".DS_Store" "update.sh"; do
     if ! grep -qxF "$EXCLUDED_FILE" .git/info/exclude; then
         echo "$EXCLUDED_FILE" >> .git/info/exclude
     fi
@@ -184,7 +184,7 @@ print(len(paths))
 
     echo
     echo "Résumé du lot :"
-    git diff --cached --stat
+    git --no-pager diff --cached --stat --stat-count=20
 
     git commit -m "Synchronisation du dépôt — lot $PART"
 
