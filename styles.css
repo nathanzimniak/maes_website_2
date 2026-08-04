@@ -2411,7 +2411,8 @@ section {
 }
 
 .chart__point:hover,
-.chart__point:focus-visible {
+.chart__point:focus-visible,
+.chart__point--active {
   transform: scale(1.35);
   fill: var(--color-neutral-hover);
   fill-opacity: 0.9;
