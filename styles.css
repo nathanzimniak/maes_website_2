@@ -1702,19 +1702,22 @@ section {
 }
 
 
-.chart__figure .chart__eyebrow--sub {
+.chart__figure .chart__eyebrow--sub,
+.chart__profiles .chart__eyebrow--sub {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
 }
 
-.chart__figure .chart__eyebrow--sub::before {
+.chart__figure .chart__eyebrow--sub::before,
+.chart__profiles .chart__eyebrow--sub::before {
   content: "";
   flex: 0 0 24px;
 }
 
-.chart__figure .chart__eyebrow--sub .chart__eyebrow-text {
+.chart__figure .chart__eyebrow--sub .chart__eyebrow-text,
+.chart__profiles .chart__eyebrow--sub .chart__eyebrow-text {
   flex: 1;
   text-align: center;
 }
@@ -1725,42 +1728,13 @@ section {
   transform: none;
 }
 
-.chart__profiles .chart__eyebrow--sub {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-}
-
-.chart__profiles .chart__eyebrow--sub::before {
-  content: "";
-  flex: 0 0 24px;
-}
-
-.chart__profiles .chart__eyebrow--sub .chart__eyebrow-text {
-  flex: 1;
-  text-align: center;
-}
 
 .chart__profiles-settings-button {
   margin-left: auto;
   position: static;
   transform: none;
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  padding: 0px;
-  background: transparent;
-  color: var(--color-text);
-  font-weight: 600;
-  font-size: 0.78rem;
-  cursor: pointer;
-  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
 }
 
-.chart__profiles-settings-button:hover .chart__settings-icon--gear svg path,
-.chart__profiles-settings-button:focus-visible .chart__settings-icon--gear svg path,
 #profile-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path {
   fill-opacity: 0.7;
 }
