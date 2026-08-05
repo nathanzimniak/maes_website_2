@@ -77,33 +77,12 @@ async function parseMaybeCompressedJson(buffer) {
   return parseJsonText(await decompressedStream.text());
 }
 
-const sliders = [
-  {
-    id: 'p1',
-    element: document.getElementById('p1-slider'),
-    labelValue: document.getElementById('p1-label-value')
-  },
-  {
-    id: 'p2',
-    element: document.getElementById('p2-slider'),
-    labelValue: document.getElementById('p2-label-value')
-  },
-  {
-    id: 'p3',
-    element: document.getElementById('p3-slider'),
-    labelValue: document.getElementById('p3-label-value')
-  },
-  {
-    id: 'p4',
-    element: document.getElementById('p4-slider'),
-    labelValue: document.getElementById('p4-label-value')
-  },
-  {
-    id: 'p5',
-    element: document.getElementById('p5-slider'),
-    labelValue: document.getElementById('p5-label-value')
-  },
-];
+const sliderIds = ['p1', 'p2', 'p3', 'p4', 'p5'];
+const sliders = sliderIds.map((id) => ({
+  id,
+  element: document.getElementById(`${id}-slider`),
+  labelValue: document.getElementById(`${id}-label-value`),
+}));
 let xAxisKey = 'g7';
 let yAxisKey = 'g6';
 let xScaleType = 'log';
