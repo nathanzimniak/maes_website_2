@@ -42,7 +42,8 @@
     </div>
   </header>
 
-  <section class="hero">
+  <main>
+    <section class="hero">
     <div class="hero__overlay"></div>
     <div class="hero__content">
       <div class="chart__card">
@@ -187,7 +188,7 @@
             <div class="chart__settings">
               <div class="chart__settings-panel" id="chart-settings-panel" role="group" aria-label="Réglages des axes" hidden>
                 <div class="chart__settings-row">
-                  <label class="chart__settings-label" for="x-scale-select">X-axis</label>
+                  <label class="chart__settings-label" for="x-axis-settings-select">X-axis</label>
                   <div class="chart__settings-controls">
                     <select id="x-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="x" aria-label="Grandeur de l'axe X"></select>
                     <select id="x-scale-select" class="chart__select chart__select--scale" data-scale-select="x" aria-label="Échelle de l'axe X">
@@ -197,7 +198,7 @@
                   </div>
                 </div>
                 <div class="chart__settings-row">
-                  <label class="chart__settings-label" for="y-scale-select">Y-axis</label>
+                  <label class="chart__settings-label" for="y-axis-settings-select">Y-axis</label>
                   <div class="chart__settings-controls">
                     <select id="y-axis-settings-select" class="chart__select chart__select--profile chart__select--axis" data-axis-settings="y" aria-label="Grandeur de l'axe Y"></select>
                     <select id="y-scale-select" class="chart__select chart__select--scale" data-scale-select="y" aria-label="Échelle de l'axe Y">
@@ -512,11 +513,11 @@
     </div>
   </section>
 
-  <section id="profiles" class="footer">
-    <p>
-      © <span id="year"></span> Nathan Zimniak
-    </p>
-  </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> Nathan Zimniak</p>
+  </footer>
 
   <script type="module">
     import * as THREE from 'three';
