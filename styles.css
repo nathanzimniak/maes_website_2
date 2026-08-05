@@ -58,6 +58,15 @@
   box-sizing: border-box;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -547,13 +556,15 @@ section {
   transition: transform 200ms ease-out;
 }
 
-.chart__settings-icon svg path {
+.chart__settings-icon svg path,
+.chart__settings-icon svg use {
   fill: #acacac;
   stroke: #0000;
   transition: fill 500ms ease, fill-opacity 500ms ease, stroke 500ms ease;
 }
 
-.chart__settings-icon--gear svg path {
+.chart__settings-icon--gear svg path,
+.chart__settings-icon--gear svg use {
   fill: var(--color-neutral);
   fill-opacity: 0.45;
 }
@@ -584,11 +595,14 @@ section {
 }
 
 .chart__settings-button:hover .chart__settings-icon--gear svg path,
-.chart__settings-button:focus-visible .chart__settings-icon--gear svg path {
+.chart__settings-button:hover .chart__settings-icon--gear svg use,
+.chart__settings-button:focus-visible .chart__settings-icon--gear svg path,
+.chart__settings-button:focus-visible .chart__settings-icon--gear svg use {
   fill-opacity: 0.7;
 }
 
-#chart-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path {
+#chart-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path,
+#chart-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg use {
   fill-opacity: 0.7;
 }
 
@@ -1727,7 +1741,8 @@ section {
   transform: none;
 }
 
-#profile-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path {
+#profile-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path,
+#profile-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg use {
   fill-opacity: 0.7;
 }
 
