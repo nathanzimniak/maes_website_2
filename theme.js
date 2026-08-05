@@ -1,25 +1,33 @@
 (function () {
   'use strict';
 
-  const storageKey = 'maes-theme';
+  const THEME_STORAGE_KEY = 'maes-theme';
   const root = document.documentElement;
   const systemTheme = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-  const moonIconPath = 'M21.684126 14.675874a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 21.684126 14.675874Z';
-  const sunIconPath = 'M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9ZM11 2h2v3.5h-2V2Zm0 16.5h2V22h-2v-3.5ZM2 11h3.5v2H2v-2Zm16.5 0H22v2h-3.5v-2ZM4.293 5.707l1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm11.525 11.525 1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm0-10.464 2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414ZM4.293 18.293l2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414Z';
+  const MOON_ICON_PATH = 'M21.684126 14.675874a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 21.684126 14.675874Z';
+  const SUN_ICON_PATH = 'M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9ZM11 2h2v3.5h-2V2Zm0 16.5h2V22h-2v-3.5ZM2 11h3.5v2H2v-2Zm16.5 0H22v2h-3.5v-2ZM4.293 5.707l1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm11.525 11.525 1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm0-10.464 2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414ZM4.293 18.293l2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414Z';
   let themeToggle = null;
 
-  function getSavedTheme() {
+  function isSupportedTheme(theme) {
+    return theme === 'dark' || theme === 'light';
+  }
+
+  function readStoredTheme() {
     try {
-      const theme = window.localStorage.getItem(storageKey);
-      return theme === 'dark' || theme === 'light' ? theme : null;
+      return window.localStorage.getItem(THEME_STORAGE_KEY);
     } catch (error) {
       return null;
     }
   }
 
+  function getSavedTheme() {
+    const theme = readStoredTheme();
+    return isSupportedTheme(theme) ? theme : null;
+  }
+
   function saveTheme(theme) {
     try {
-      window.localStorage.setItem(storageKey, theme);
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
     } catch (error) {
       // The theme remains active for the current page when storage is unavailable.
     }
@@ -39,11 +47,11 @@
     themeToggle.setAttribute('aria-label', label);
     themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
     themeToggle.setAttribute('title', label);
-    if (iconPath) iconPath.setAttribute('d', isDark ? sunIconPath : moonIconPath);
+    if (iconPath) iconPath.setAttribute('d', isDark ? SUN_ICON_PATH : MOON_ICON_PATH);
   }
 
   function announceThemeChange(theme) {
-    window.dispatchEvent(new window.CustomEvent('maes:themechange', { detail: { theme: theme } }));
+    window.dispatchEvent(new window.CustomEvent('maes:themechange', { detail: { theme } }));
   }
 
   function applyTheme(theme, persist, announce) {
