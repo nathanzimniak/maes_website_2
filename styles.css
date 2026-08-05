@@ -659,29 +659,6 @@ section {
   padding-bottom: var(--space-2);
 }
 
-.chart__axis-overlay {
-  position: absolute;
-  top: var(--space-3);
-  right: var(--space-3);
-  padding: 0px;
-  border-radius: calc(var(--radius) - 6px);
-  border: none;
-  box-shadow: none;
-  display: grid;
-  gap: var(--space-1);
-  min-width: 170px;
-  z-index: 3;
-}
-
-.chart__axis-title {
-  margin: 0;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  font-weight: 700;
-}
-
 .chart__axis-label {
   display: inline-flex;
   align-items: center;
@@ -766,28 +743,6 @@ section {
   padding: 4px 10px;
 }
 
-.chart__axis-label-math {
-  font-weight: 500;
-  font-style: italic;
-}
-
-.chart__axis-overlay-grid {
-  display: grid;
-  gap: var(--space-1);
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.chart__axis-overlay-labels {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-1);
-  padding: 0 var(--space-1);
-}
-
-.chart__axis-overlay-labels .chart__axis-title {
-  margin-bottom: 0;
-}
-
 .chart__hovered {
   padding: var(--space-5) var(--space-6);
   border-radius: var(--radius);
@@ -826,12 +781,6 @@ section {
   flex-direction: column;
   margin-top: var(--space-2);
   min-height: 0;
-}
-
-.chart__hovered-placeholder {
-  margin: 0;
-  color: var(--color-muted);
-  font-size: 0.95rem;
 }
 
 .chart__hovered-list {
@@ -907,15 +856,6 @@ section {
   border: none;
 }
 
-.chart__hovered-key {
-  color: var(--color-muted);
-  font-weight: 600;
-}
-
-.chart__hovered-value {
-  font-weight: 700;
-}
-
 .chart__figure svg {
   width: 100%;
   height: 100%;
@@ -966,34 +906,6 @@ section {
   max-width: 100%;
 }
 
-.chart__presets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-}
-
-.chart__chip {
-  border: 1px solid var(--color-line);
-  background: var(--color-surface);
-  color: var(--color-text);
-  border-radius: var(--radius);
-  padding: var(--space-2) var(--space-4);
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
-}
-
-.chart__chip:hover {
-  transform: translateY(-1px);
-  border-color: var(--color-accent);
-  background: var(--color-accent-soft);
-}
-
-.chart__chip--ghost {
-  background: transparent;
-  border-style: dashed;
-}
-
 .chart__controls {
   padding: var(--space-5) var(--space-6);
   border-radius: var(--radius);
@@ -1036,11 +948,6 @@ section {
 
 .chart__control-group .chart__eyebrow--sub {
   align-self: stretch;
-}
-
-.chart__group-title {
-  font-weight: 700;
-  letter-spacing: -0.01em;
 }
 
 .chart__slider-grid {
@@ -1174,16 +1081,6 @@ section {
   font-size: 0.80rem;
 }
 
-.chart__label-symbol {
-  font-style: italic;
-}
-
-.chart__label-sub {
-  font-size: 0.7em;
-  vertical-align: sub;
-  margin-left: 0.05em;
-}
-
 .chart__button-row {
   display: flex;
   gap: var(--space-2);
@@ -1295,105 +1192,6 @@ section {
 
 .chart__control input[type="range"]:focus-visible::-moz-range-thumb {
   box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.2);
-}
-
-.chart__controls-note {
-  margin: 2px 0 0;
-  color: var(--color-muted);
-  font-size: 0.92rem;
-}
-
-.chart__axis-selectors {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-3);
-  align-items: stretch;
-}
-
-.chart__axis-control {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: 2px var(--space-3);
-  border-radius: var(--radius);
-  border: none;
-  background: var(--color-surface);
-  box-shadow: none;
-}
-
-.chart__axis-overlay .chart__axis-control {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: center;
-  padding: 0;
-  gap: var(--space-1);
-  background: transparent;
-}
-
-.chart__axis-overlay .chart__axis-row {
-  flex: 1;
-  gap: var(--space-1);
-}
-
-.chart__axis-row {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  flex-wrap: nowrap;
-  width: 100%;
-}
-
-.chart__axis-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.chart__select-label {
-  font-weight: 600;
-  white-space: nowrap;
-  margin-right: var(--space-6);
-}
-
-.chart__scale-toggle {
-  display: inline-flex;
-  gap: var(--space-2);
-  margin-left: 0;
-}
-
-.chart__scale-button {
-  padding: var(--space-2) var(--space-4);
-  min-width: 140px;
-  border-radius: var(--radius);
-  border: none;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-weight: 600;
-  font-size: var(--font-size-sm);
-  text-align: center;
-  cursor: pointer;
-  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
-}
-
-.chart__scale-button:hover {
-  transform: translateY(-1px);
-  border-color: #c9cccb;
-  background: var(--color-surface-muted);
-}
-
-.chart__scale-button--active {
-  background: var(--color-text);
-  border-color: var(--color-text);
-  color: var(--color-on-strong);
-  box-shadow: none;
-}
-
-.chart__scale-button--active:hover {
-  background: var(--color-text);
-  border-color: var(--color-text);
-  color: var(--color-on-strong);
-  transform: translateY(-1px);
 }
 
 .chart__select {
@@ -1611,35 +1409,6 @@ section {
   outline-offset: 2px;
 }
 
-.chart__axis-overlay .chart__select--axis {
-  flex: 0 0 auto;
-  max-width: none;
-  min-width: 0;
-}
-
-.chart__axis-overlay .chart__select-label {
-  margin-right: var(--space-1);
-  font-size: 0.7rem;
-}
-
-.chart__axis-overlay .chart__select {
-  width: 100%;
-  min-width: 0;
-  padding: 4px 6px;
-  border-radius: 10px;
-  font-size: 0.68rem;
-}
-
-.chart__axis-overlay .chart__select--scale {
-  min-width: 120px;
-}
-
-.chart__scale-toggle .chart__select--scale {
-  min-width: 140px;
-  font-weight: 600;
-  font-size: var(--font-size-sm);
-}
-
 .chart__profiles {
   padding: var(--space-5) var(--space-6) var(--space-2) var(--space-6);
   border-radius: var(--radius);
@@ -1707,7 +1476,6 @@ section {
   z-index: 2;
 }
 
-
 .chart__figure .chart__eyebrow--sub,
 .chart__profiles .chart__eyebrow--sub {
   display: flex;
@@ -1734,7 +1502,6 @@ section {
   transform: none;
 }
 
-
 .chart__profiles-settings-button {
   margin-left: auto;
   position: static;
@@ -1759,13 +1526,6 @@ section {
   z-index: 12;
 }
 
-.chart__settings-description {
-  margin: 0;
-  font-size: 0.78rem;
-  line-height: 1.4;
-  color: var(--color-muted);
-}
-
 .chart__eyebrow--sub {
   background: var(--color-bg);
   color: var(--color-neutral);
@@ -1778,17 +1538,6 @@ section {
   position: relative;
   box-shadow: 0px 2px 1px 0px color-mix(in srgb, var(--color-neutral) 30%, transparent);
   font-family: var(--font-heading);
-}
-
-.chart__profiles-title {
-  margin: var(--space-2) 0 var(--space-1);
-  letter-spacing: -0.01em;
-}
-
-.chart__profiles-description {
-  margin: 0;
-  color: var(--color-muted);
-  max-width: 720px;
 }
 
 .chart__profiles-grid {
@@ -2063,7 +1812,6 @@ section {
   }
 }
 
-
 :root[data-theme="dark"] {
   --color-bg: #14171C;
   --color-surface: #191d23;
@@ -2105,7 +1853,6 @@ section {
 :root[data-theme="dark"] .site-header__pill:hover svg {
   filter: drop-shadow(0 0 3px rgba(17, 22, 29, 0.8));
 }
-
 
 :root[data-theme="dark"] .chart__select--profile {
   background-image:

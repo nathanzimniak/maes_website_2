@@ -2393,55 +2393,50 @@ axisSelects.forEach((select) => {
 
 populateAxisSelectOptions();
 
-scaleSelects.forEach((select) => {
-  buildCustomSelect(select, {
-    renderLabel: (label, select) => {
-      const selectedOption = select.options[select.selectedIndex];
-      label.textContent = selectedOption ? selectedOption.textContent : select.value;
-    },
-    renderOption: (item, option) => {
-      item.textContent = option.textContent;
-    },
-  });
-});
-profileLabelSelects.forEach((select) => {
-  const usesMath = select.id === 'profile-title-select-1' || select.id === 'profile-axis-select';
-  buildCustomSelect(select, {
-    usesMath,
-    renderLabel: (label, select) => {
-      const selectedOption = select.options[select.selectedIndex];
-      const latex = selectedOption?.dataset.latex;
-      label.innerHTML = usesMath && latex
-        ? `<span class="math-label" data-latex="${latex}"></span>`
-        : (selectedOption ? selectedOption.textContent : select.value);
-    },
-    renderOption: (item, option) => {
-      const latex = option.dataset.latex;
-      item.innerHTML = usesMath && latex
-        ? `<span class="math-label" data-latex="${latex}"></span>`
-        : option.textContent;
-    },
-  });
-});
+function getSelectedOptionText(select) {
+  return select.options[select.selectedIndex]?.textContent || select.value;
+}
 
-axisSelects.forEach((select) => {
+function renderCustomSelectText(target, text) {
+  target.textContent = text;
+}
+
+function renderCustomSelectMath(target, text, latex) {
+  target.innerHTML = latex
+    ? `<span class="math-label" data-latex="${latex}"></span>`
+    : text;
+}
+
+function buildTextCustomSelect(select) {
+  buildCustomSelect(select, {
+    renderLabel: (label, select) => renderCustomSelectText(label, getSelectedOptionText(select)),
+    renderOption: (item, option) => renderCustomSelectText(item, option.textContent),
+  });
+}
+
+function buildMathCustomSelect(select) {
   buildCustomSelect(select, {
     usesMath: true,
     renderLabel: (label, select) => {
       const selectedOption = select.options[select.selectedIndex];
-      const latex = selectedOption?.dataset.latex;
-      label.innerHTML = latex
-        ? `<span class="math-label" data-latex="${latex}"></span>`
-        : (selectedOption ? selectedOption.textContent : select.value);
+      renderCustomSelectMath(label, getSelectedOptionText(select), selectedOption?.dataset.latex);
     },
     renderOption: (item, option) => {
-      const latex = option.dataset.latex;
-      item.innerHTML = latex
-        ? `<span class="math-label" data-latex="${latex}"></span>`
-        : option.textContent;
+      renderCustomSelectMath(item, option.textContent, option.dataset.latex);
     },
   });
+}
+
+scaleSelects.forEach(buildTextCustomSelect);
+profileLabelSelects.forEach((select) => {
+  const usesMath = select.id === 'profile-title-select-1' || select.id === 'profile-axis-select';
+  if (usesMath) {
+    buildMathCustomSelect(select);
+  } else {
+    buildTextCustomSelect(select);
+  }
 });
+axisSelects.forEach(buildMathCustomSelect);
 
 scheduleSelectWidthRefresh();
 updateScaleSelect('x', xScaleType);
