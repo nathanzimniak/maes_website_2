@@ -1061,6 +1061,12 @@
     const pointsGroup = document.createElementNS(svgNS, 'g');
     svg.appendChild(pointsGroup);
 
+    const hoverOverlay = document.createElementNS(svgNS, 'rect');
+    hoverOverlay.classList.add('chart__hover-overlay');
+    hoverOverlay.setAttribute('fill', 'transparent');
+    hoverOverlay.setAttribute('tabindex', '-1');
+    svg.appendChild(hoverOverlay);
+
     chartContainer.appendChild(svg);
 
     function resizeChart() {
@@ -1109,6 +1115,10 @@
       innerHeight = height - margin.top - margin.bottom;
 
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      hoverOverlay.setAttribute('x', margin.left);
+      hoverOverlay.setAttribute('y', margin.top);
+      hoverOverlay.setAttribute('width', innerWidth);
+      hoverOverlay.setAttribute('height', innerHeight);
 
       if (chartPlot) {
         chartPlot.style.removeProperty('--plot-area-pad-x');
@@ -1698,7 +1708,57 @@
       }
     }
 
+    let hoveredSolutionIndex = null;
+
+    function clearHoveredPoint() {
+      if (hoveredSolutionIndex === null) return;
+
+      const previousCircle = pointsGroup.querySelector(`[data-solution-index="${hoveredSolutionIndex}"]`);
+      if (previousCircle) {
+        previousCircle.classList.remove('chart__point--hovered');
+      }
+      hoveredSolutionIndex = null;
+    }
+
+    function setHoveredPoint(index, xKey, yKey) {
+      const hovered = currentSolutions[index];
+      const circle = pointsGroup.querySelector(`[data-solution-index="${index}"]`);
+      if (!hovered || !circle) return;
+
+      if (hoveredSolutionIndex !== index) {
+        clearHoveredPoint();
+        hoveredSolutionIndex = index;
+        circle.classList.add('chart__point--hovered');
+      }
+
+      renderHoveredValues(hovered);
+      showScatterTooltip(hovered, circle, xKey, yKey);
+    }
+
+    function findNearestPoint(event) {
+      const pointer = svg.createSVGPoint();
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
+      const point = pointer.matrixTransform(svg.getScreenCTM().inverse());
+      let nearest = null;
+      let nearestDistanceSquared = Infinity;
+      const hitRadius = 10;
+
+      Array.from(pointsGroup.children).forEach((circle) => {
+        const dx = Number(circle.getAttribute('cx')) - point.x;
+        const dy = Number(circle.getAttribute('cy')) - point.y;
+        const distanceSquared = dx * dx + dy * dy;
+        if (distanceSquared < nearestDistanceSquared) {
+          nearestDistanceSquared = distanceSquared;
+          nearest = Number(circle.dataset.solutionIndex);
+        }
+      });
+
+      return nearestDistanceSquared <= hitRadius * hitRadius ? nearest : null;
+    }
+
     function renderPoints(points, xKey, yKey, scaleX, scaleY) {
+      clearHoveredPoint();
       pointsGroup.innerHTML = '';
       points.forEach((point, index) => {
         const circle = document.createElementNS(svgNS, 'circle');
@@ -1752,6 +1812,30 @@
 
         pointsGroup.appendChild(circle);
       });
+
+      hoverOverlay.onpointermove = (event) => {
+        const nearestIndex = findNearestPoint(event);
+        if (nearestIndex === null) {
+          clearHoveredPoint();
+          restorePinnedValues();
+          hideScatterTooltip();
+          return;
+        }
+        setHoveredPoint(nearestIndex, xKey, yKey);
+      };
+
+      hoverOverlay.onpointerleave = () => {
+        clearHoveredPoint();
+        restorePinnedValues();
+        hideScatterTooltip();
+      };
+
+      hoverOverlay.onclick = (event) => {
+        const nearestIndex = findNearestPoint(event);
+        if (nearestIndex !== null) {
+          selectSolution(nearestIndex);
+        }
+      };
     }
 
     function buildProfileChart(

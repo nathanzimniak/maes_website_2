@@ -2567,3 +2567,14 @@ section {
   outline: 3px solid var(--color-accent);
   outline-offset: 3px;
 }
+
+.chart__hover-overlay {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.chart__point--hovered {
+  transform: scale(1.35);
+  fill: var(--color-neutral-hover);
+  fill-opacity: 0.9;
+}
