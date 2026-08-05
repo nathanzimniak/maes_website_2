@@ -1318,9 +1318,6 @@ section {
 
 .chart__axis-overlay .chart__axis-row {
   flex: 1;
-}
-
-.chart__axis-overlay .chart__axis-row {
   gap: var(--space-1);
 }
 

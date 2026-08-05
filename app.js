@@ -296,178 +296,139 @@ async function loadRealDataset(folderName) {
 
 const SELECT_CARET_GAP_BUFFER = 4;
 
-const updateScaleSelectWidths = () => {
-  if (!scaleSelects.length) {
-    return;
-  }
-
+function createTextRuler() {
   const ruler = document.createElement('span');
   ruler.setAttribute('aria-hidden', 'true');
-  ruler.style.position = 'absolute';
-  ruler.style.visibility = 'hidden';
-  ruler.style.whiteSpace = 'nowrap';
+  Object.assign(ruler.style, {
+    position: 'absolute',
+    visibility: 'hidden',
+    whiteSpace: 'nowrap',
+    pointerEvents: 'none',
+    left: '-9999px',
+    top: '-9999px',
+  });
   document.body.appendChild(ruler);
+  return ruler;
+}
 
-  const referenceButton = scaleSelects
+function getSelectWidthParts(referenceElement, caretElement) {
+  const styles = window.getComputedStyle(referenceElement);
+  return {
+    styles,
+    paddingLeft: parseFloat(styles.paddingLeft) || 0,
+    paddingRight: parseFloat(styles.paddingRight) || 0,
+    borderLeft: parseFloat(styles.borderLeftWidth) || 0,
+    borderRight: parseFloat(styles.borderRightWidth) || 0,
+    gap: parseFloat(styles.columnGap || styles.gap) || 0,
+    caretWidth: caretElement?.getBoundingClientRect().width || 0,
+  };
+}
+
+function applyTextStyles(ruler, styles) {
+  ruler.style.fontFamily = styles.fontFamily;
+  ruler.style.fontSize = styles.fontSize;
+  ruler.style.fontWeight = styles.fontWeight;
+  ruler.style.letterSpacing = styles.letterSpacing;
+}
+
+function applySelectWidth(select, width, { resizeButton = false } = {}) {
+  const wrapper = select.closest('.chart__latex-select');
+  const button = wrapper?.querySelector('.chart__latex-button');
+
+  if (wrapper) wrapper.style.width = `${width}px`;
+  if (resizeButton && button) button.style.width = `${width}px`;
+  select.style.width = `${width}px`;
+}
+
+function measureSelectTextWidth(select, ruler) {
+  const customSelectState = customSelects.get(select);
+  const measureNode = document.createElement('span');
+  Object.assign(measureNode.style, {
+    display: 'inline-flex',
+    alignItems: 'center',
+    whiteSpace: 'nowrap',
+  });
+  ruler.replaceChildren(measureNode);
+
+  return Array.from(select.options).reduce((maxWidth, option) => {
+    if (customSelectState?.renderOption) {
+      customSelectState.renderOption(measureNode, option);
+      renderMathLabels(measureNode);
+    } else {
+      measureNode.textContent = option.textContent || '';
+    }
+    return Math.max(maxWidth, measureNode.getBoundingClientRect().width);
+  }, 0);
+}
+
+function getSharedSelectWidth(selects) {
+  const ruler = createTextRuler();
+  const referenceButton = selects
     .map((select) => select.parentElement?.querySelector('.chart__latex-button'))
     .find(Boolean);
-
-  const referenceStyles = window.getComputedStyle(referenceButton || scaleSelects[0]);
-  ruler.style.fontFamily = referenceStyles.fontFamily;
-  ruler.style.fontSize = referenceStyles.fontSize;
-  ruler.style.fontWeight = referenceStyles.fontWeight;
-  ruler.style.letterSpacing = referenceStyles.letterSpacing;
-
-  let maxTextWidth = 0;
-  scaleSelects.forEach((select) => {
-    Array.from(select.options).forEach((option) => {
-      ruler.textContent = option.textContent || '';
-      maxTextWidth = Math.max(maxTextWidth, ruler.getBoundingClientRect().width);
-    });
-  });
-
-  const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
-  const paddingRight = parseFloat(referenceStyles.paddingRight) || 0;
-  const borderLeft = parseFloat(referenceStyles.borderLeftWidth) || 0;
-  const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
-  const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
-  const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
-  const targetWidth = Math.ceil(
-    maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + SELECT_CARET_GAP_BUFFER
+  const referenceElement = referenceButton || selects[0];
+  const widthParts = getSelectWidthParts(
+    referenceElement,
+    referenceButton?.querySelector('.chart__latex-button-caret')
   );
 
-  scaleSelects.forEach((select) => {
-    const wrapper = select.closest('.chart__latex-select');
-    if (wrapper) {
-      wrapper.style.width = `${targetWidth}px`;
-    }
-    select.style.width = `${targetWidth}px`;
-  });
-
-  document.body.removeChild(ruler);
-};
-
-const updateAxisSelectWidths = () => {
-  if (!axisSelects.length) {
-    return;
-  }
-
-  const ruler = document.createElement('span');
-  ruler.setAttribute('aria-hidden', 'true');
-  ruler.style.position = 'absolute';
-  ruler.style.visibility = 'hidden';
-  ruler.style.whiteSpace = 'nowrap';
-  document.body.appendChild(ruler);
-
-  const referenceButton = axisSelects
-    .map((select) => select.parentElement?.querySelector('.chart__latex-button'))
-    .find(Boolean);
-
-  const referenceStyles = window.getComputedStyle(referenceButton || axisSelects[0]);
-  ruler.style.fontFamily = referenceStyles.fontFamily;
-  ruler.style.fontSize = referenceStyles.fontSize;
-  ruler.style.fontWeight = referenceStyles.fontWeight;
-  ruler.style.letterSpacing = referenceStyles.letterSpacing;
-
-  let maxTextWidth = 0;
-  axisSelects.forEach((select) => {
-    Array.from(select.options).forEach((option) => {
-      ruler.textContent = option.textContent || '';
-      maxTextWidth = Math.max(maxTextWidth, ruler.getBoundingClientRect().width);
-    });
-  });
-
-  const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
-  const paddingRight = parseFloat(referenceStyles.paddingRight) || 0;
-  const borderLeft = parseFloat(referenceStyles.borderLeftWidth) || 0;
-  const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
-  const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
-  const caretWidth = referenceButton?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
-  const targetWidth = Math.ceil(
-    maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + SELECT_CARET_GAP_BUFFER
+  applyTextStyles(ruler, widthParts.styles);
+  const maxTextWidth = selects.reduce(
+    (maxWidth, select) => Math.max(maxWidth, measureSelectTextWidth(select, ruler)),
+    0
   );
-
-  axisSelects.forEach((select) => {
-    const wrapper = select.closest('.chart__latex-select');
-    const button = wrapper?.querySelector('.chart__latex-button');
-    if (wrapper) {
-      wrapper.style.width = `${targetWidth}px`;
-    }
-    if (button) {
-      button.style.width = `${targetWidth}px`;
-    }
-    select.style.width = `${targetWidth}px`;
-  });
-
   document.body.removeChild(ruler);
-};
-const updateProfile1DSelectWidths = () => {
-  if (!profile1DSelects.length) {
-    return;
-  }
 
-  const ruler = document.createElement('span');
-  ruler.setAttribute('aria-hidden', 'true');
-  ruler.style.position = 'absolute';
-  ruler.style.visibility = 'hidden';
-  ruler.style.whiteSpace = 'nowrap';
-  ruler.style.pointerEvents = 'none';
-  ruler.style.left = '-9999px';
-  ruler.style.top = '-9999px';
-  document.body.appendChild(ruler);
+  return Math.ceil(
+    maxTextWidth
+      + widthParts.paddingLeft
+      + widthParts.paddingRight
+      + widthParts.borderLeft
+      + widthParts.borderRight
+      + widthParts.gap
+      + widthParts.caretWidth
+      + SELECT_CARET_GAP_BUFFER
+  );
+}
 
-  profile1DSelects.forEach((select) => {
+function updateSharedSelectWidths(selects, options = {}) {
+  if (!selects.length) return;
+
+  const targetWidth = getSharedSelectWidth(selects);
+  selects.forEach((select) => applySelectWidth(select, targetWidth, options));
+}
+
+function updateIndividualSelectWidths(selects) {
+  if (!selects.length) return;
+
+  const ruler = createTextRuler();
+  selects.forEach((select) => {
     const wrapper = select.closest('.chart__latex-select');
     const button = wrapper?.querySelector('.chart__latex-button');
     const referenceElement = button || select;
-    const referenceStyles = window.getComputedStyle(referenceElement);
+    const widthParts = getSelectWidthParts(referenceElement, button?.querySelector('.chart__latex-button-caret'));
 
-    ruler.style.fontFamily = referenceStyles.fontFamily;
-    ruler.style.fontSize = referenceStyles.fontSize;
-    ruler.style.fontWeight = referenceStyles.fontWeight;
-    ruler.style.letterSpacing = referenceStyles.letterSpacing;
-
-    const customSelectState = customSelects.get(select);
-    const measureNode = document.createElement('span');
-    measureNode.style.display = 'inline-flex';
-    measureNode.style.alignItems = 'center';
-    measureNode.style.whiteSpace = 'nowrap';
-    ruler.innerHTML = '';
-    ruler.appendChild(measureNode);
-
-    let maxTextWidth = 0;
-    Array.from(select.options).forEach((option) => {
-      if (customSelectState?.renderOption) {
-        customSelectState.renderOption(measureNode, option);
-        renderMathLabels(measureNode);
-      } else {
-        measureNode.textContent = option.textContent || '';
-      }
-      maxTextWidth = Math.max(maxTextWidth, measureNode.getBoundingClientRect().width);
-    });
-
-    const paddingLeft = parseFloat(referenceStyles.paddingLeft) || 0;
-    const paddingRight = parseFloat(referenceStyles.paddingRight) || 0;
-    const borderLeft = parseFloat(referenceStyles.borderLeftWidth) || 0;
-    const borderRight = parseFloat(referenceStyles.borderRightWidth) || 0;
-    const gap = parseFloat(referenceStyles.columnGap || referenceStyles.gap) || 0;
-    const caretWidth = button?.querySelector('.chart__latex-button-caret')?.getBoundingClientRect().width || 0;
-    const caretSpacing = 10;
+    applyTextStyles(ruler, widthParts.styles);
+    const maxTextWidth = measureSelectTextWidth(select, ruler);
     const targetWidth = Math.ceil(
-      maxTextWidth + paddingLeft + paddingRight + borderLeft + borderRight + gap + caretWidth + SELECT_CARET_GAP_BUFFER
+      maxTextWidth
+        + widthParts.paddingLeft
+        + widthParts.paddingRight
+        + widthParts.borderLeft
+        + widthParts.borderRight
+        + widthParts.gap
+        + widthParts.caretWidth
+        + SELECT_CARET_GAP_BUFFER
     );
 
-    if (wrapper) {
-      wrapper.style.width = `${targetWidth}px`;
-    }
-    if (button) {
-      button.style.width = `${targetWidth}px`;
-    }
-    select.style.width = `${targetWidth}px`;
+    applySelectWidth(select, targetWidth, { resizeButton: true });
   });
-
   document.body.removeChild(ruler);
-};
+}
+
+const updateScaleSelectWidths = () => updateSharedSelectWidths(scaleSelects);
+const updateAxisSelectWidths = () => updateSharedSelectWidths(axisSelects, { resizeButton: true });
+const updateProfile1DSelectWidths = () => updateIndividualSelectWidths(profile1DSelects);
 
 const refreshSelectWidths = () => {
   updateScaleSelectWidths();
