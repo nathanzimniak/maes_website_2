@@ -1631,40 +1631,77 @@ function interpolateProfileValue(xValues, yValues, targetX) {
   return prevY;
 }
 
-function createInfernoDensityMapper(densityValues) {
-  const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
-  const densityMin = finitePositiveDensities.length ? Math.min(...finitePositiveDensities) : 1e-10;
-  const densityMax = finitePositiveDensities.length ? Math.max(...finitePositiveDensities) : 1;
-  const logDensityMin = Math.log10(densityMin);
-  const logDensityMax = Math.log10(densityMax);
-  const safeRange = Math.max(logDensityMax - logDensityMin, 1e-6);
-  const infernoBaseStops = [
-    [0.001462, 0.000466, 0.013866], [0.072489, 0.040205, 0.278199], [0.219940, 0.070209, 0.431995],
-    [0.398125, 0.083257, 0.433183], [0.572081, 0.122312, 0.374438], [0.740143, 0.213864, 0.275191],
-    [0.878001, 0.391874, 0.183656], [0.969163, 0.643203, 0.173518], [0.988362, 0.998364, 0.644924],
+const INFERNO_BASE_STOPS = [
+  [0.001462, 0.000466, 0.013866],
+  [0.016561, 0.013136, 0.080282],
+  [0.046915, 0.030324, 0.150164],
+  [0.092990, 0.045583, 0.234358],
+  [0.142378, 0.046242, 0.308553],
+  [0.197297, 0.038400, 0.367535],
+  [0.258234, 0.038571, 0.406485],
+  [0.318195, 0.055634, 0.425116],
+  [0.381047, 0.091017, 0.418647],
+  [0.442910, 0.130438, 0.404045],
+  [0.505851, 0.170642, 0.380989],
+  [0.570920, 0.210721, 0.350404],
+  [0.636902, 0.257270, 0.304148],
+  [0.701769, 0.314749, 0.244608],
+  [0.763675, 0.385407, 0.172684],
+  [0.819651, 0.471133, 0.093752],
+  [0.865006, 0.578000, 0.050383],
+  [0.938675, 0.735683, 0.171529],
+  [0.978422, 0.877281, 0.349178],
+  [0.988362, 0.998364, 0.644924],
+];
+
+const INFERNO_STOPS = Array.from({ length: 256 }, (_, index) => {
+  const scaledIndex = (index / 255) * (INFERNO_BASE_STOPS.length - 1);
+  const lowerIndex = Math.floor(scaledIndex);
+  const upperIndex = Math.min(lowerIndex + 1, INFERNO_BASE_STOPS.length - 1);
+  const progress = scaledIndex - lowerIndex;
+  const lowerColor = INFERNO_BASE_STOPS[lowerIndex];
+  const upperColor = INFERNO_BASE_STOPS[upperIndex];
+
+  return [
+    lowerColor[0] + (upperColor[0] - lowerColor[0]) * progress,
+    lowerColor[1] + (upperColor[1] - lowerColor[1]) * progress,
+    lowerColor[2] + (upperColor[2] - lowerColor[2]) * progress,
   ];
-  const infernoStops = Array.from({ length: 256 }, (_, idx) => {
-    const t = idx / 255;
-    const scaled = t * (infernoBaseStops.length - 1);
-    const i0 = Math.floor(scaled);
-    const i1 = Math.min(i0 + 1, infernoBaseStops.length - 1);
-    const f = scaled - i0;
-    const c0 = infernoBaseStops[i0];
-    const c1 = infernoBaseStops[i1];
-    return [c0[0] + (c1[0] - c0[0]) * f, c0[1] + (c1[1] - c0[1]) * f, c0[2] + (c1[2] - c0[2]) * f];
-  });
+});
+
+function getFinitePositiveValues(values) {
+  return values.filter((value) => Number.isFinite(value) && value > 0);
+}
+
+function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange = 1e-6) {
+  const safeRange = Math.max(logDensityMax - logDensityMin, minimumRange);
+
   return (density) => {
     const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
     const logDensity = Math.log10(safeDensity);
-    const t = Math.min(1, Math.max(0, (logDensity - logDensityMin) / safeRange));
-    const scaled = t * (infernoStops.length - 1);
-    const i0 = Math.floor(scaled);
-    const i1 = Math.min(i0 + 1, infernoStops.length - 1);
-    const frac = scaled - i0;
-    const c0 = infernoStops[i0];
-    const c1 = infernoStops[i1];
-    return new THREE.Color(c0[0] + (c1[0] - c0[0]) * frac, c0[1] + (c1[1] - c0[1]) * frac, c0[2] + (c1[2] - c0[2]) * frac).convertSRGBToLinear();
+    const progress = clamp((logDensity - logDensityMin) / safeRange, 0, 1);
+    const scaledIndex = progress * (INFERNO_STOPS.length - 1);
+    const lowerIndex = Math.floor(scaledIndex);
+    const upperIndex = Math.min(lowerIndex + 1, INFERNO_STOPS.length - 1);
+    const mix = scaledIndex - lowerIndex;
+    const lowerColor = INFERNO_STOPS[lowerIndex];
+    const upperColor = INFERNO_STOPS[upperIndex];
+
+    return new THREE.Color(
+      lowerColor[0] + (upperColor[0] - lowerColor[0]) * mix,
+      lowerColor[1] + (upperColor[1] - lowerColor[1]) * mix,
+      lowerColor[2] + (upperColor[2] - lowerColor[2]) * mix,
+    ).convertSRGBToLinear();
   };
+}
+
+
+function createInfernoDensityMapperFromValues(densityValues) {
+  const finitePositiveDensities = getFinitePositiveValues(densityValues);
+  const densityMin = finitePositiveDensities.length ? Math.min(...finitePositiveDensities) : 1e-10;
+  const densityMax = finitePositiveDensities.length ? Math.max(...finitePositiveDensities) : 1;
+
+  return createInfernoDensityMapper(Math.log10(densityMin), Math.log10(densityMax));
 }
 
 function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMinOverride = null, logDensityMaxOverride = null, reflectAcrossXY = false) {
@@ -1676,72 +1713,13 @@ function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments =
   const positions = [];
   const colors = [];
   const indices = [];
-  const finitePositiveDensities = densityValues.filter((v) => Number.isFinite(v) && v > 0);
+  const finitePositiveDensities = getFinitePositiveValues(densityValues);
   const computedLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : 0;
   const defaultLogDensityMin = computedLogDensityMin - 0.5;
   const defaultLogDensityMax = 0.0;
   const logDensityMin = Number.isFinite(logDensityMinOverride) ? logDensityMinOverride : defaultLogDensityMin;
   const logDensityMax = Number.isFinite(logDensityMaxOverride) ? logDensityMaxOverride : defaultLogDensityMax;
-  const safeRange = Math.max(logDensityMax - logDensityMin, 1e-12);
-
-  // Inferno ramp base stops (sampled from Matplotlib's inferno).
-  const infernoBaseStops = [
-    [0.001462, 0.000466, 0.013866],
-    [0.016561, 0.013136, 0.080282],
-    [0.046915, 0.030324, 0.150164],
-    [0.092990, 0.045583, 0.234358],
-    [0.142378, 0.046242, 0.308553],
-    [0.197297, 0.038400, 0.367535],
-    [0.258234, 0.038571, 0.406485],
-    [0.318195, 0.055634, 0.425116],
-    [0.381047, 0.091017, 0.418647],
-    [0.442910, 0.130438, 0.404045],
-    [0.505851, 0.170642, 0.380989],
-    [0.570920, 0.210721, 0.350404],
-    [0.636902, 0.257270, 0.304148],
-    [0.701769, 0.314749, 0.244608],
-    [0.763675, 0.385407, 0.172684],
-    [0.819651, 0.471133, 0.093752],
-    [0.865006, 0.578000, 0.050383],
-    [0.938675, 0.735683, 0.171529],
-    [0.978422, 0.877281, 0.349178],
-    [0.988362, 0.998364, 0.644924],
-  ];
-
-  // Match Matplotlib's default listed colormap size (256 samples).
-  const infernoStops = Array.from({ length: 256 }, (_, idx) => {
-    const t = idx / 255;
-    const scaled = t * (infernoBaseStops.length - 1);
-    const i0 = Math.floor(scaled);
-    const i1 = Math.min(i0 + 1, infernoBaseStops.length - 1);
-    const f = scaled - i0;
-    const c0 = infernoBaseStops[i0];
-    const c1 = infernoBaseStops[i1];
-    return [
-      c0[0] + (c1[0] - c0[0]) * f,
-      c0[1] + (c1[1] - c0[1]) * f,
-      c0[2] + (c1[2] - c0[2]) * f,
-    ];
-  });
-
-  const densityToColor = (density) => {
-    const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
-    const logDensity = Math.log10(safeDensity);
-    const t = Math.min(1, Math.max(0, (logDensity - logDensityMin) / safeRange));
-    const scaled = t * (infernoStops.length - 1);
-    const i0 = Math.floor(scaled);
-    const i1 = Math.min(i0 + 1, infernoStops.length - 1);
-    const frac = scaled - i0;
-    const c0 = infernoStops[i0];
-    const c1 = infernoStops[i1];
-    const color = new THREE.Color(
-      c0[0] + (c1[0] - c0[0]) * frac,
-      c0[1] + (c1[1] - c0[1]) * frac,
-      c0[2] + (c1[2] - c0[2]) * frac,
-    );
-    // Matplotlib colormap samples are in sRGB; convert to linear for correct Three.js lighting/rendering.
-    return color.convertSRGBToLinear();
-  };
+  const densityToColor = createInfernoDensityMapper(logDensityMin, logDensityMax, 1e-12);
 
   for (let i = 0; i < nz; i += 1) {
     const r = Math.abs(Number(rValues[i]));
@@ -1800,7 +1778,7 @@ function buildDiskSurfaceMesh(rValues, zValues, densityValues = [], nphi = 64, c
   const positions = [];
   const colors = [];
   const indices = [];
-  const densityToColor = createInfernoDensityMapper(densityValues);
+  const densityToColor = createInfernoDensityMapperFromValues(densityValues);
 
   for (let i = 0; i < nz; i += 1) {
     const r = Math.abs(Number(rValues[i]));
@@ -1853,7 +1831,7 @@ function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, cent
   const positions = [];
   const colors = [];
   const indices = [];
-  const densityToColor = createInfernoDensityMapper([densityOuter]);
+  const densityToColor = createInfernoDensityMapperFromValues([densityOuter]);
   const color = densityToColor(densityOuter);
 
   for (let j = 0; j < nphi; j += 1) {
@@ -1940,7 +1918,7 @@ function renderJetSurface(solution) {
   const center = new THREE.Vector3(0, 0, 0);
 
   const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
-  const finitePositiveDensities = densityValues.filter((value) => Number.isFinite(value) && value > 0);
+  const finitePositiveDensities = getFinitePositiveValues(densityValues);
   const zAValue = Number(solution?.g23);
   const rhoPsiAtZA = interpolateProfileValue(zValues, densityValues, zAValue);
   const jetLogDensityMin = solution?.scenario === 'SM'
