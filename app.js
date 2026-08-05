@@ -881,23 +881,26 @@ function closeCustomMenus() {
   });
 }
 
+function setSettingsPanelOpen(panel, button, isOpen) {
+  if (!panel || !button) return false;
+
+  panel.hidden = !isOpen;
+  button.setAttribute('aria-expanded', String(isOpen));
+  return true;
+}
+
 function closeSettingsPanel() {
-  if (!chartSettingsPanel || !chartSettingsButton) return;
-  chartSettingsPanel.hidden = true;
-  chartSettingsButton.setAttribute('aria-expanded', 'false');
+  setSettingsPanelOpen(chartSettingsPanel, chartSettingsButton, false);
 }
 
 function closeProfileSettingsPanel() {
-  if (!profileSettingsPanel || !profileSettingsButton) return;
-  profileSettingsPanel.hidden = true;
-  profileSettingsButton.setAttribute('aria-expanded', 'false');
+  setSettingsPanelOpen(profileSettingsPanel, profileSettingsButton, false);
 }
 
 function toggleSettingsPanel() {
-  if (!chartSettingsPanel || !chartSettingsButton) return;
-  const shouldOpen = chartSettingsPanel.hidden;
-  chartSettingsPanel.hidden = !shouldOpen;
-  chartSettingsButton.setAttribute('aria-expanded', String(shouldOpen));
+  const shouldOpen = chartSettingsPanel?.hidden ?? false;
+  if (!setSettingsPanelOpen(chartSettingsPanel, chartSettingsButton, shouldOpen)) return;
+
   if (shouldOpen) {
     requestAnimationFrame(() => {
       updateScaleSelectWidths();
@@ -908,10 +911,9 @@ function toggleSettingsPanel() {
 }
 
 function toggleProfileSettingsPanel() {
-  if (!profileSettingsPanel || !profileSettingsButton) return;
-  const shouldOpen = profileSettingsPanel.hidden;
-  profileSettingsPanel.hidden = !shouldOpen;
-  profileSettingsButton.setAttribute('aria-expanded', String(shouldOpen));
+  const shouldOpen = profileSettingsPanel?.hidden ?? false;
+  if (!setSettingsPanelOpen(profileSettingsPanel, profileSettingsButton, shouldOpen)) return;
+
   if (shouldOpen) {
     scheduleSelectWidthRefresh();
   }
@@ -2473,20 +2475,25 @@ window.addEventListener('maes:themechange', () => {
   });
 });
 
-document.addEventListener('click', () => {
+function closeFloatingControls() {
   closeCustomMenus();
   closeSettingsPanel();
   closeProfileSettingsPanel();
-});
+}
+
+function stopPanelClickPropagation(event) {
+  event.stopPropagation();
+  closeCustomMenus();
+}
+
+document.addEventListener('click', closeFloatingControls);
 
 if (chartSettingsButton && chartSettingsPanel) {
-  if (profileSettingsButton) {
-    profileSettingsButton.addEventListener('click', (event) => {
-      event.stopPropagation();
-      closeSettingsPanel();
-      toggleProfileSettingsPanel();
-    });
-  }
+  profileSettingsButton?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    closeSettingsPanel();
+    toggleProfileSettingsPanel();
+  });
 
   chartSettingsButton.addEventListener('click', (event) => {
     event.stopPropagation();
@@ -2494,23 +2501,13 @@ if (chartSettingsButton && chartSettingsPanel) {
     toggleSettingsPanel();
   });
 
-  chartSettingsPanel.addEventListener('click', (event) => {
-    event.stopPropagation();
-    closeCustomMenus();
+  [chartSettingsPanel, profileSettingsPanel].forEach((panel) => {
+    panel?.addEventListener('click', stopPanelClickPropagation);
   });
-
-  if (profileSettingsPanel) {
-    profileSettingsPanel.addEventListener('click', (event) => {
-      event.stopPropagation();
-      closeCustomMenus();
-    });
-  }
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
-      closeSettingsPanel();
-      closeProfileSettingsPanel();
-      closeCustomMenus();
+      closeFloatingControls();
     }
   });
 }
