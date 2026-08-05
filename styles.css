@@ -58,7 +58,6 @@
   box-sizing: border-box;
 }
 
-
 html {
   scroll-behavior: smooth;
 }
@@ -227,7 +226,6 @@ section {
   font-size: var(--font-size-sm);
 }
 
-
 .hero__subtitle + .hero__subtitle {
   margin-top: 0;
 }
@@ -273,25 +271,33 @@ section {
   margin-top: 100px;
 }
 
-.faq__card {
+.faq__card,
+.contact__card {
   width: min(100%, 850px);
   padding: var(--card-padding);
   display: grid;
+}
+
+.faq__card {
   gap: var(--space-6);
 }
 
-.faq__header {
+.faq__header,
+.contact__header {
   display: grid;
   gap: var(--space-3);
 }
 
-.faq__title {
+.faq__title,
+.contact__title {
   margin: 0;
   font-family: var(--font-heading);
   font-size: 1.6rem;
-  text-align: center;
 }
 
+.faq__title {
+  text-align: center;
+}
 
 .faq__list {
   display: grid;
@@ -369,22 +375,11 @@ section {
 }
 
 .contact__card {
-  width: min(100%, 850px);
-  padding: var(--card-padding);
-  display: grid;
   gap: var(--space-4);
 }
 
 .contact__header {
-  display: grid;
-  gap: var(--space-3);
   text-align: center;
-}
-
-.contact__title {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-size: 1.6rem;
 }
 
 .contact__intro {
