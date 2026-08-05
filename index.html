@@ -1344,7 +1344,7 @@
         const latex = element.dataset.latex;
         if (!latex) return;
 
-        window.katex.render(latex, element, { throwOnError: false });
+        window.katex.render(latex, element, { throwOnError: false, output: 'html' });
       });
     }
 
@@ -1808,8 +1808,10 @@
       const yMin = rawYMin - yPadding;
       const yMax = rawYMax + yPadding;
       const yRange = yMax - yMin || 1;
-      const plotWidth = width - padding.left - padding.right;
-      const plotHeight = height - padding.top - padding.bottom;
+      const safeWidth = Math.max(width, padding.left + padding.right + 1);
+      const safeHeight = Math.max(height, padding.top + padding.bottom + 1);
+      const plotWidth = safeWidth - padding.left - padding.right;
+      const plotHeight = safeHeight - padding.top - padding.bottom;
       const step = xRange / (xValues.length - 1 || 1);
 
       const positiveVisibleXValues = xValues.filter((x) => x > 0 && x >= xMin && x <= xMax);
@@ -1886,8 +1888,8 @@
       const xGridTicks = xTicks;
 
       return {
-        width,
-        height,
+        width: safeWidth,
+        height: safeHeight,
         padding,
         points,
         areaPath,
