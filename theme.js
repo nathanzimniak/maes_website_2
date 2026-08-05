@@ -1,16 +1,16 @@
 (function () {
   'use strict';
 
-  var storageKey = 'maes-theme';
-  var root = document.documentElement;
-  var systemTheme = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-  var moonIconPath = 'M21.684126 14.675874a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 21.684126 14.675874Z';
-  var sunIconPath = 'M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9ZM11 2h2v3.5h-2V2Zm0 16.5h2V22h-2v-3.5ZM2 11h3.5v2H2v-2Zm16.5 0H22v2h-3.5v-2ZM4.293 5.707l1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm11.525 11.525 1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm0-10.464 2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414ZM4.293 18.293l2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414Z';
-  var themeToggle = null;
+  const storageKey = 'maes-theme';
+  const root = document.documentElement;
+  const systemTheme = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  const moonIconPath = 'M21.684126 14.675874a9.35 9.35 0 0 1-12.36-12.36A9.9 9.9 0 1 0 21.684126 14.675874Z';
+  const sunIconPath = 'M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9ZM11 2h2v3.5h-2V2Zm0 16.5h2V22h-2v-3.5ZM2 11h3.5v2H2v-2Zm16.5 0H22v2h-3.5v-2ZM4.293 5.707l1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm11.525 11.525 1.414-1.414 2.475 2.475-1.414 1.414-2.475-2.475Zm0-10.464 2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414ZM4.293 18.293l2.475-2.475 1.414 1.414-2.475 2.475-1.414-1.414Z';
+  let themeToggle = null;
 
   function getSavedTheme() {
     try {
-      var theme = window.localStorage.getItem(storageKey);
+      const theme = window.localStorage.getItem(storageKey);
       return theme === 'dark' || theme === 'light' ? theme : null;
     } catch (error) {
       return null;
@@ -32,9 +32,9 @@
   function updateToggle(theme) {
     if (!themeToggle) return;
 
-    var isDark = theme === 'dark';
-    var label = isDark ? 'Activer le mode clair' : 'Activer le mode sombre';
-    var iconPath = themeToggle.querySelector('path');
+    const isDark = theme === 'dark';
+    const label = isDark ? 'Activer le mode clair' : 'Activer le mode sombre';
+    const iconPath = themeToggle.querySelector('path');
 
     themeToggle.setAttribute('aria-label', label);
     themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
@@ -43,22 +43,11 @@
   }
 
   function announceThemeChange(theme) {
-    var event;
-
-    if (typeof window.CustomEvent === 'function') {
-      event = new window.CustomEvent('maes:themechange', { detail: { theme: theme } });
-    } else {
-      event = document.createEvent('CustomEvent');
-      event.initCustomEvent('maes:themechange', false, false, { theme: theme });
-    }
-
-    window.dispatchEvent(event);
+    window.dispatchEvent(new window.CustomEvent('maes:themechange', { detail: { theme: theme } }));
   }
 
   function applyTheme(theme, persist, announce) {
     root.setAttribute('data-theme', theme);
-    root.classList.remove('theme-light', 'theme-dark');
-    root.classList.add('theme-' + theme);
     updateToggle(theme);
 
     if (persist) saveTheme(theme);
@@ -72,7 +61,7 @@
     themeToggle.setAttribute('data-theme-bound', 'true');
     updateToggle(root.getAttribute('data-theme') || getSystemTheme());
     themeToggle.addEventListener('click', function () {
-      var nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       applyTheme(nextTheme, true, true);
     });
   }
