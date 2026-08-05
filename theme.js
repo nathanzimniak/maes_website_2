@@ -13,7 +13,7 @@
     try {
       const theme = window.localStorage.getItem(THEME_STORAGE_KEY);
       return theme === 'dark' || theme === 'light' ? theme : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -21,7 +21,7 @@
   function saveTheme(theme) {
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch (error) {
+    } catch {
       // The theme remains active for the current page when storage is unavailable.
     }
   }
