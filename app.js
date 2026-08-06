@@ -1,9 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-const footerYear = document.getElementById('year');
-if (footerYear) {
-  footerYear.textContent = new Date().getFullYear();
-}
+document.getElementById('year')?.replaceChildren(new Date().getFullYear().toString());
 const chartContainer = document.querySelector('.chart__plot-area');
 const chartControls = document.querySelector('.chart__controls');
 const chartFigure = document.querySelector('.chart__figure');
@@ -897,26 +894,21 @@ function closeProfileSettingsPanel() {
   setSettingsPanelOpen(profileSettingsPanel, profileSettingsButton, false);
 }
 
-function toggleSettingsPanel() {
-  const shouldOpen = chartSettingsPanel?.hidden ?? false;
-  if (!setSettingsPanelOpen(chartSettingsPanel, chartSettingsButton, shouldOpen)) return;
+function toggleSettingsPanel(panel, button, onOpen) {
+  const shouldOpen = panel?.hidden ?? false;
+  if (!setSettingsPanelOpen(panel, button, shouldOpen)) return;
 
   if (shouldOpen) {
-    requestAnimationFrame(() => {
-      updateScaleSelectWidths();
-      updateAxisSelectWidths();
-      updateProfile1DSelectWidths();
-    });
+    onOpen?.();
   }
 }
 
-function toggleProfileSettingsPanel() {
-  const shouldOpen = profileSettingsPanel?.hidden ?? false;
-  if (!setSettingsPanelOpen(profileSettingsPanel, profileSettingsButton, shouldOpen)) return;
-
-  if (shouldOpen) {
-    scheduleSelectWidthRefresh();
-  }
+function refreshChartSettingsSelects() {
+  requestAnimationFrame(() => {
+    updateScaleSelectWidths();
+    updateAxisSelectWidths();
+    updateProfile1DSelectWidths();
+  });
 }
 
 function buildCustomSelect(select, { renderLabel, renderOption, usesMath = false, wrapperClass = '' }) {
@@ -2481,31 +2473,39 @@ function stopPanelClickPropagation(event) {
   closeCustomMenus();
 }
 
+function bindSettingsPanel({ button, panel, closeOtherPanel, onOpen }) {
+  if (!button || !panel) return;
+
+  button.addEventListener('click', (event) => {
+    event.stopPropagation();
+    closeOtherPanel();
+    toggleSettingsPanel(panel, button, onOpen);
+  });
+
+  panel.addEventListener('click', stopPanelClickPropagation);
+}
+
 document.addEventListener('click', closeFloatingControls);
 
-if (chartSettingsButton && chartSettingsPanel) {
-  profileSettingsButton?.addEventListener('click', (event) => {
-    event.stopPropagation();
-    closeSettingsPanel();
-    toggleProfileSettingsPanel();
-  });
+bindSettingsPanel({
+  button: profileSettingsButton,
+  panel: profileSettingsPanel,
+  closeOtherPanel: closeSettingsPanel,
+  onOpen: scheduleSelectWidthRefresh,
+});
 
-  chartSettingsButton.addEventListener('click', (event) => {
-    event.stopPropagation();
-    closeProfileSettingsPanel();
-    toggleSettingsPanel();
-  });
+bindSettingsPanel({
+  button: chartSettingsButton,
+  panel: chartSettingsPanel,
+  closeOtherPanel: closeProfileSettingsPanel,
+  onOpen: refreshChartSettingsSelects,
+});
 
-  [chartSettingsPanel, profileSettingsPanel].forEach((panel) => {
-    panel?.addEventListener('click', stopPanelClickPropagation);
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      closeFloatingControls();
-    }
-  });
-}
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeFloatingControls();
+  }
+});
 
 updateChart();
 syncSurfaceHeightWithProfiles();
