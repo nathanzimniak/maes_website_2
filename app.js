@@ -1131,9 +1131,6 @@ function renderPoints(points, xKey, yKey, scaleX, scaleY) {
     }
 
     circle.addEventListener('pointerenter', () => {
-      // SVG elements are painted in DOM order. Move the active point to the
-      // foreground so nearby points cannot cover its enlarged hover state.
-      pointsGroup.appendChild(circle);
       const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
       renderHoveredValues(hovered);
       showScatterTooltip(hovered, circle, xKey, yKey);
@@ -1150,7 +1147,6 @@ function renderPoints(points, xKey, yKey, scaleX, scaleY) {
     });
 
     circle.addEventListener('focus', () => {
-      pointsGroup.appendChild(circle);
       const hovered = currentSolutions[Number(circle.dataset.solutionIndex)];
       showScatterTooltip(hovered, circle, xKey, yKey);
     });
@@ -2173,8 +2169,8 @@ async function selectSolution(index) {
     setProfilesOverlayVisible(false);
   }
 
-  Array.from(pointsGroup.children).forEach((circle) => {
-    circle.classList.toggle('chart__point--selected', Number(circle.dataset.solutionIndex) === index);
+  Array.from(pointsGroup.children).forEach((circle, idx) => {
+    circle.classList.toggle('chart__point--selected', idx === index);
   });
 }
 
