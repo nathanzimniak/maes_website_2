@@ -1328,10 +1328,6 @@ function buildProfileChart(
   };
 }
 
-function clampIndex(value, max) {
-  return Math.min(Math.max(value, 0), max);
-}
-
 function attachSparklineHover({ sparkline, sparklineGrid, tooltip, marker, chart, xValues, yValues, yLabelLatex = 'y', xLabelLatex = 'x' }) {
   if (!sparkline || !tooltip || !marker || !chart) return;
 
@@ -2443,7 +2439,9 @@ scenarioButtons.forEach((button) => {
 
     selectedScenario = scenario;
     scenarioButtons.forEach((btn) => {
-      btn.classList.toggle('chart__toggle-button--active', btn === button);
+      const isActive = btn === button;
+      btn.classList.toggle('chart__toggle-button--active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
     });
     updateChart({ preserveAxisLimits: true });
   });

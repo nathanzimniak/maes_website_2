@@ -597,14 +597,9 @@ section {
 .chart__settings-button:hover .chart__settings-icon--gear svg path,
 .chart__settings-button:hover .chart__settings-icon--gear svg use,
 .chart__settings-button:focus-visible .chart__settings-icon--gear svg path,
-.chart__settings-button:focus-visible .chart__settings-icon--gear svg use {
-  fill-opacity: 0.7;
-}
-
-#chart-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path,
-#chart-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg use,
-#profile-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path,
-#profile-settings-button[aria-expanded="true"] .chart__settings-icon--gear svg use {
+.chart__settings-button:focus-visible .chart__settings-icon--gear svg use,
+.chart__settings-button[aria-expanded="true"] .chart__settings-icon--gear svg path,
+.chart__settings-button[aria-expanded="true"] .chart__settings-icon--gear svg use {
   fill-opacity: 0.7;
 }
 
@@ -1331,30 +1326,15 @@ section {
   border-color: rgba(96, 112, 143, 0.15);
 }
 
-.chart__latex-button:focus-visible {
+.chart__latex-button:focus-visible,
+.chart__settings-button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px var(--color-accent-soft);
 }
 
-#chart-settings-button:focus-visible,
-#profile-settings-button:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px var(--color-accent-soft);
-}
-
-.chart__latex-button[aria-expanded="true"] {
-  border-color: rgba(96, 112, 143, 1.0);
-  box-shadow: 0 0 0 2px rgba(96, 112, 143, 0.2);
-}
-
-#chart-settings-button[aria-expanded="true"] {
-  border-color: rgba(96, 112, 143, 1.0);
-  box-shadow: 0 0 0 2px rgba(96, 112, 143, 0.2);
-}
-
-#profile-settings-button[aria-expanded="true"] {
+.chart__latex-button[aria-expanded="true"],
+.chart__settings-button[aria-expanded="true"] {
   border-color: rgba(96, 112, 143, 1.0);
   box-shadow: 0 0 0 2px rgba(96, 112, 143, 0.2);
 }

@@ -163,9 +163,9 @@
                   <div class="chart__toggle-group">
                     <span class="chart__dropdown-label">Solution type</span>
                     <div class="chart__button-row" role="group" aria-label="Choisir SM, A ou FM">
-                      <button type="button" class="chart__toggle-button" data-scenario="SM">SM</button>
-                      <button type="button" class="chart__toggle-button chart__toggle-button--active" data-scenario="A">A</button>
-                      <button type="button" class="chart__toggle-button" data-scenario="FM">FM</button>
+                      <button type="button" class="chart__toggle-button" data-scenario="SM" aria-pressed="false">SM</button>
+                      <button type="button" class="chart__toggle-button chart__toggle-button--active" data-scenario="A" aria-pressed="true">A</button>
+                      <button type="button" class="chart__toggle-button" data-scenario="FM" aria-pressed="false">FM</button>
                     </div>
                   </div>
                 </div>
@@ -188,7 +188,7 @@
             </p>
             </div>
           </div>
-          <div class="chart__plot" role="img" aria-label="Graphique en nuage de points">
+          <div class="chart__plot" role="group" aria-label="Graphique en nuage de points">
             <div class="chart__settings">
               <div class="chart__settings-panel" id="chart-settings-panel" role="group" aria-label="Réglages des axes" hidden>
                 <div class="chart__settings-row">
