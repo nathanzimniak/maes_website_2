@@ -93,6 +93,7 @@ const customSelects = new Map();
 
 const realDataCache = new Map();
 const solutionProfileCache = new Map();
+const scientificDataBaseUrl = 'https://pub-d2768af1923e4312bbdec32f0c1c222e.r2.dev/data';
 let jetScene = null;
 let jetCamera = null;
 let jetRenderer = null;
@@ -220,7 +221,7 @@ function resolveFolderFromInputs(baseParams) {
 
 async function loadRealDataset(folderName) {
   if (realDataCache.has(folderName)) return realDataCache.get(folderName);
-  const url = `data/${folderName}/${folderName}.json.gz`;
+  const url = `${scientificDataBaseUrl}/${folderName}/${folderName}.json.gz`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Impossible de charger les données réelles (${response.status}) depuis ${url}`);
@@ -1423,7 +1424,7 @@ async function loadSolutionProfiles(solution) {
   const cacheKey = `${solution.folderName}/${solution.profileFileBase}`;
   if (solutionProfileCache.has(cacheKey)) return solutionProfileCache.get(cacheKey);
 
-  const url = `data/${solution.folderName}/${solution.profileFileBase}.json.gz`;
+  const url = `${scientificDataBaseUrl}/${solution.folderName}/${solution.profileFileBase}.json.gz`;
   const response = await fetch(url);
   if (!response.ok) {
     return null;
