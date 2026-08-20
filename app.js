@@ -1714,6 +1714,8 @@ function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments =
   const material = new THREE.MeshBasicMaterial({
     vertexColors: true,
     toneMapped: false,
+    transparent: true,
+    opacity: 0.8,
     side: THREE.DoubleSide,
   });
   const mesh = new THREE.Mesh(geometry, material);
