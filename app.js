@@ -1631,6 +1631,9 @@ const INFERNO_STOPS = Array.from({ length: 256 }, (_, index) => {
 
 // Keep the lowest density visible against the black 3D scene background.
 const INFERNO_MINIMUM_VISIBLE_PROGRESS = 0.1;
+// Compress values below the nominal lower bound into a short, smooth tail.
+const INFERNO_UNDERFLOW_PROGRESS = 0.03;
+const INFERNO_UNDERFLOW_SOFTNESS = 0.25;
 
 function getFinitePositiveValues(values) {
   return values.filter((value) => Number.isFinite(value) && value > 0);
@@ -1642,9 +1645,13 @@ function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange =
   return (density) => {
     const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
     const logDensity = Math.log10(safeDensity);
-    const normalizedProgress = clamp((logDensity - logDensityMin) / safeRange, 0, 1);
-    const progress = INFERNO_MINIMUM_VISIBLE_PROGRESS
-      + normalizedProgress * (1 - INFERNO_MINIMUM_VISIBLE_PROGRESS);
+    const normalizedProgress = (logDensity - logDensityMin) / safeRange;
+    const progress = normalizedProgress < 0
+      ? INFERNO_UNDERFLOW_PROGRESS
+        + (INFERNO_MINIMUM_VISIBLE_PROGRESS - INFERNO_UNDERFLOW_PROGRESS)
+          * Math.exp(normalizedProgress / INFERNO_UNDERFLOW_SOFTNESS)
+      : INFERNO_MINIMUM_VISIBLE_PROGRESS
+        + clamp(normalizedProgress, 0, 1) * (1 - INFERNO_MINIMUM_VISIBLE_PROGRESS);
     const scaledIndex = progress * (INFERNO_STOPS.length - 1);
     const lowerIndex = Math.floor(scaledIndex);
     const upperIndex = Math.min(lowerIndex + 1, INFERNO_STOPS.length - 1);
