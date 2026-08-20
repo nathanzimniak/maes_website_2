@@ -1632,6 +1632,7 @@ const INFERNO_STOPS = Array.from({ length: 256 }, (_, index) => {
 // Keep the lowest density visible against the black 3D scene background.
 const INFERNO_MINIMUM_VISIBLE_PROGRESS = 0.1;
 const JET_COLOR_TRANSITION_SAMPLES = 24;
+const JET_COLOR_TRANSITION_BIAS = 3;
 
 function getFinitePositiveValues(values) {
   return values.filter((value) => Number.isFinite(value) && value > 0);
@@ -1660,7 +1661,9 @@ function taperDensityToFloorAtAltitude(densityValues, zValues, floorDensity, alt
     const density = Number(densityValues[index]);
     if (!Number.isFinite(density) || density <= 0) continue;
     const progress = (index - startIndex) / span;
-    const smoothProgress = progress * progress * (3 - 2 * progress);
+    // Approach the floor early, then change increasingly slowly around z_A.
+    const biasedProgress = 1 - ((1 - progress) ** JET_COLOR_TRANSITION_BIAS);
+    const smoothProgress = biasedProgress * biasedProgress * (3 - 2 * biasedProgress);
     const blendedLogDensity = Math.log10(density) * (1 - smoothProgress) + floorLogDensity * smoothProgress;
     taperedValues[index] = 10 ** blendedLogDensity;
   }
