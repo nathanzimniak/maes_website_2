@@ -105,6 +105,7 @@ let jetMeshMirror = null;
 let jetDiskMesh = null;
 let jetDiskMeshMirror = null;
 let jetDiskOuterMesh = null;
+let jetMagneticFieldLine = null;
 let jetAnimationFrameId = null;
 const datasetDirectories = [
   '0.100_1.0_1.0_1.0_0.0_0_0',
@@ -1827,6 +1828,71 @@ function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, cent
   return mesh;
 }
 
+function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
+  const rValues = profiles?.r;
+  const zValues = profiles?.x;
+  const brValues = profiles?.radialMagneticField;
+  const bphiValues = profiles?.toroidalMagneticField;
+  const bzValues = profiles?.verticalMagneticField;
+  const series = [rValues, zValues, brValues, bphiValues, bzValues];
+  const sampleCount = rValues?.length ?? 0;
+
+  if (sampleCount < 2 || series.some((values) => !Array.isArray(values) || values.length !== sampleCount)) {
+    return null;
+  }
+
+  const points = [];
+  let phi = 0;
+
+  for (let i = 0; i < sampleCount; i += 1) {
+    const r = Math.abs(Number(rValues[i]));
+    const z = Number(zValues[i]);
+    if (!Number.isFinite(r) || !Number.isFinite(z) || r <= 1e-10) continue;
+
+    if (points.length && i > 0) {
+      const previousR = Math.abs(Number(rValues[i - 1]));
+      const previousZ = Number(zValues[i - 1]);
+      const dr = r - previousR;
+      const dz = z - previousZ;
+      const poloidalDistance = Math.hypot(dr, dz);
+      const br = 0.5 * (Number(brValues[i - 1]) + Number(brValues[i]));
+      const bphi = 0.5 * (Number(bphiValues[i - 1]) + Number(bphiValues[i]));
+      const bz = 0.5 * (Number(bzValues[i - 1]) + Number(bzValues[i]));
+      const poloidalField = Math.hypot(br, bz);
+      const midpointRadius = 0.5 * (previousR + r);
+
+      if (
+        Number.isFinite(poloidalDistance)
+        && Number.isFinite(poloidalField)
+        && poloidalField > 1e-12
+        && Number.isFinite(bphi)
+        && midpointRadius > 1e-10
+      ) {
+        // Orient the supplied surface profile consistently with its poloidal field.
+        const direction = Math.sign(br * dr + bz * dz) || 1;
+        phi += direction * (bphi / (midpointRadius * poloidalField)) * poloidalDistance;
+      }
+    }
+
+    const point = new THREE.Vector3(r * Math.cos(phi), r * Math.sin(phi), z);
+    if (center) point.sub(center);
+    points.push(point);
+  }
+
+  if (points.length < 2) return null;
+
+  const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal');
+  const radialExtent = Math.max(...rValues.map((value) => Math.abs(Number(value))).filter(Number.isFinite), 1);
+  const tubeRadius = Math.max(radialExtent * 0.004, 0.002);
+  const geometry = new THREE.TubeGeometry(curve, Math.max(points.length * 2, 64), tubeRadius, 6, false);
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x67e8f9,
+    toneMapped: false,
+  });
+
+  return new THREE.Mesh(geometry, material);
+}
+
 function renderJetSurface(solution) {
   initJetRenderer();
   if (!jetScene || !solution?.profiles?.psi) return;
@@ -1844,6 +1910,7 @@ function renderJetSurface(solution) {
   clearMesh((value) => { jetDiskMesh = value; }, jetDiskMesh);
   clearMesh((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
   clearMesh((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
+  clearMesh((value) => { jetMagneticFieldLine = value; }, jetMagneticFieldLine);
 
   const rValues = solution.profiles.psi.r;
   const zValues = solution.profiles.psi.x;
@@ -1877,6 +1944,9 @@ function renderJetSurface(solution) {
   jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, true);
   if (jetMesh) jetScene.add(jetMesh);
   if (jetMeshMirror) jetScene.add(jetMeshMirror);
+
+  jetMagneticFieldLine = buildMagneticFieldLineOnJetSurface(solution.profiles.psi, center);
+  if (jetMagneticFieldLine) jetScene.add(jetMagneticFieldLine);
 
   if (
     Number.isFinite(epValue)
