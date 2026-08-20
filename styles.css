@@ -741,6 +741,7 @@ section {
 }
 
 .chart__hovered {
+  position: relative;
   padding: var(--space-5) var(--space-6);
   border-radius: var(--radius);
   background: var(--color-surface);
@@ -1526,6 +1527,7 @@ section {
   scroll-padding: var(--space-2);
 }
 
+.chart__solution-loading,
 .chart__profiles-loading,
 .chart__surface3d-loading {
   position: absolute;
@@ -1544,11 +1546,17 @@ section {
   backdrop-filter: blur(2px);
 }
 
+.chart__solution-loading {
+  z-index: 9;
+}
+
+.chart__solution-loading[hidden],
 .chart__profiles-loading[hidden],
 .chart__surface3d-loading[hidden] {
   display: none;
 }
 
+.chart__solution-loading-spinner,
 .chart__profiles-loading-spinner,
 .chart__surface3d-loading-spinner {
   width: 1rem;
@@ -1566,6 +1574,7 @@ section {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .chart__solution-loading-spinner,
   .chart__profiles-loading-spinner,
   .chart__surface3d-loading-spinner {
     animation: none;
