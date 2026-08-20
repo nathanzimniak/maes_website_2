@@ -1638,14 +1638,26 @@ function getFinitePositiveValues(values) {
 
 function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange = 1e-6) {
   const safeRange = Math.max(logDensityMax - logDensityMin, minimumRange);
+  const hasPivot = Number.isFinite(pivot?.logDensity)
+    && pivot.logDensity > logDensityMin
+    && pivot.logDensity < logDensityMax
+    && Number.isFinite(pivot.progress)
+    && pivot.progress > 0
+    && pivot.progress < 1;
 
   return (density) => {
     const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
     // A single logarithmic scale across the full jet avoids a slope break at z_A.
     const logDensity = Math.log10(safeDensity);
     const normalizedProgress = clamp((logDensity - logDensityMin) / safeRange, 0, 1);
-    const progress = INFERNO_MINIMUM_VISIBLE_PROGRESS
+    let progress = INFERNO_MINIMUM_VISIBLE_PROGRESS
       + normalizedProgress * (1 - INFERNO_MINIMUM_VISIBLE_PROGRESS);
+    if (hasPivot) {
+      const pivotNormalized = (pivot.logDensity - logDensityMin) / safeRange;
+      progress = normalizedProgress <= pivotNormalized
+        ? (normalizedProgress / pivotNormalized) * pivot.progress
+        : pivot.progress + ((normalizedProgress - pivotNormalized) / (1 - pivotNormalized)) * (1 - pivot.progress);
+    }
     const scaledIndex = progress * (INFERNO_STOPS.length - 1);
     const lowerIndex = Math.floor(scaledIndex);
     const upperIndex = Math.min(lowerIndex + 1, INFERNO_STOPS.length - 1);
