@@ -1757,6 +1757,7 @@ section {
 
 .chart__point:focus {
   outline: none;
+  fill: var(--color-neutral-hover);
 }
 
 .chart__point:focus-visible {
