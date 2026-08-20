@@ -14,6 +14,7 @@ const chartSettingsPanel = document.getElementById('chart-settings-panel');
 const profileSettingsButton = document.getElementById('profile-settings-button');
 const profileSettingsPanel = document.getElementById('profile-settings-panel');
 const profileContent = document.getElementById('profile-content');
+const profileLoadingStatus = document.getElementById('profile-loading-status');
 const profileAxisSelect = document.getElementById('profile-axis-select');
 const profileFocusSelect = document.getElementById('profile-title-select-1');
 const profileScaleSelect = document.getElementById('profile-title-select-2');
@@ -2157,21 +2158,38 @@ function setProfilesOverlayVisible(visible) {
   chartProfiles.classList.toggle('chart__profiles--empty', visible);
 }
 
+function setProfilesLoading(loading) {
+  if (!chartProfiles || !profileLoadingStatus) return;
+  chartProfiles.setAttribute('aria-busy', String(loading));
+  profileLoadingStatus.hidden = !loading;
+}
+
 async function selectSolution(index) {
   selectedSolutionIndex = index;
   pinnedSolutionIndex = index;
-  const selectedSolution = await ensureSolutionProfiles(currentSolutions[index]);
-  resetJetCameraView();
-  if (selectedSolution?.profiles) {
-    renderProfiles(selectedSolution);
-    renderJetSurface(selectedSolution);
-    renderHoveredValues(selectedSolution);
-    setProfilesOverlayVisible(false);
-  }
-
   Array.from(pointsGroup.children).forEach((circle, idx) => {
     circle.classList.toggle('chart__point--selected', idx === index);
   });
+
+  const solution = currentSolutions[index];
+  setProfilesLoading(Boolean(solution && !solution.profiles));
+
+  try {
+    const selectedSolution = await ensureSolutionProfiles(solution);
+    if (selectedSolutionIndex !== index) return;
+
+    resetJetCameraView();
+    if (selectedSolution?.profiles) {
+      renderProfiles(selectedSolution);
+      renderJetSurface(selectedSolution);
+      renderHoveredValues(selectedSolution);
+      setProfilesOverlayVisible(false);
+    }
+  } finally {
+    if (selectedSolutionIndex === index) {
+      setProfilesLoading(false);
+    }
+  }
 }
 
 function resetProfiles() {

@@ -1525,6 +1525,48 @@ section {
   scroll-padding: var(--space-2);
 }
 
+.chart__profiles-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  color: var(--color-axis-label);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  backdrop-filter: blur(2px);
+}
+
+.chart__profiles-loading[hidden] {
+  display: none;
+}
+
+.chart__profiles-loading-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid color-mix(in srgb, var(--color-neutral) 25%, transparent);
+  border-top-color: var(--color-neutral);
+  border-radius: 50%;
+  animation: profile-loading-spin 700ms linear infinite;
+}
+
+@keyframes profile-loading-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart__profiles-loading-spinner {
+    animation: none;
+  }
+}
+
 .chart__profile-card {
   padding: var(--space-2);
   border-radius: var(--radius-1);
