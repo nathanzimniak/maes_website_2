@@ -15,6 +15,7 @@ const profileSettingsButton = document.getElementById('profile-settings-button')
 const profileSettingsPanel = document.getElementById('profile-settings-panel');
 const profileContent = document.getElementById('profile-content');
 const profileLoadingStatus = document.getElementById('profile-loading-status');
+const jetLoadingStatus = document.getElementById('jet-loading-status');
 const profileAxisSelect = document.getElementById('profile-axis-select');
 const profileFocusSelect = document.getElementById('profile-title-select-1');
 const profileScaleSelect = document.getElementById('profile-title-select-2');
@@ -2158,10 +2159,19 @@ function setProfilesOverlayVisible(visible) {
   chartProfiles.classList.toggle('chart__profiles--empty', visible);
 }
 
-function setProfilesLoading(loading) {
-  if (!chartProfiles || !profileLoadingStatus) return;
-  chartProfiles.setAttribute('aria-busy', String(loading));
-  profileLoadingStatus.hidden = !loading;
+function setSolutionLoading(loading) {
+  if (chartProfiles) {
+    chartProfiles.setAttribute('aria-busy', String(loading));
+  }
+  if (chartSurface3d) {
+    chartSurface3d.setAttribute('aria-busy', String(loading));
+  }
+  if (profileLoadingStatus) {
+    profileLoadingStatus.hidden = !loading;
+  }
+  if (jetLoadingStatus) {
+    jetLoadingStatus.hidden = !loading;
+  }
 }
 
 async function selectSolution(index) {
@@ -2172,7 +2182,7 @@ async function selectSolution(index) {
   });
 
   const solution = currentSolutions[index];
-  setProfilesLoading(Boolean(solution && !solution.profiles));
+  setSolutionLoading(Boolean(solution && !solution.profiles));
 
   try {
     const selectedSolution = await ensureSolutionProfiles(solution);
@@ -2187,7 +2197,7 @@ async function selectSolution(index) {
     }
   } finally {
     if (selectedSolutionIndex === index) {
-      setProfilesLoading(false);
+      setSolutionLoading(false);
     }
   }
 }

@@ -1402,6 +1402,7 @@ section {
 }
 
 .chart__surface3d {
+  position: relative;
   width: 100%;
   padding: var(--space-5) var(--space-6) var(--space-5) var(--space-6);
   box-sizing: border-box;
@@ -1525,7 +1526,8 @@ section {
   scroll-padding: var(--space-2);
 }
 
-.chart__profiles-loading {
+.chart__profiles-loading,
+.chart__surface3d-loading {
   position: absolute;
   inset: 0;
   z-index: 4;
@@ -1542,11 +1544,13 @@ section {
   backdrop-filter: blur(2px);
 }
 
-.chart__profiles-loading[hidden] {
+.chart__profiles-loading[hidden],
+.chart__surface3d-loading[hidden] {
   display: none;
 }
 
-.chart__profiles-loading-spinner {
+.chart__profiles-loading-spinner,
+.chart__surface3d-loading-spinner {
   width: 1rem;
   height: 1rem;
   border: 2px solid color-mix(in srgb, var(--color-neutral) 25%, transparent);
@@ -1562,7 +1566,8 @@ section {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chart__profiles-loading-spinner {
+  .chart__profiles-loading-spinner,
+  .chart__surface3d-loading-spinner {
     animation: none;
   }
 }
