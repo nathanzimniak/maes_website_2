@@ -1690,9 +1690,9 @@ section {
 }
 
 .chart__point {
-  fill: var(--color-neutral);
-  fill-opacity: 0.5;
-  stroke: none;
+  fill: #c1c7d4;
+  fill-opacity: 0.8;
+  stroke: var(--color-neutral);
   transform-origin: center;
   transform-box: fill-box;
   transition: transform 200ms ease, fill 200ms ease, fill-opacity 200ms ease;
