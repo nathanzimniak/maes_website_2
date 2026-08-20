@@ -1876,12 +1876,20 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
     const midpointBz = 0.5 * (previous.bz + current.bz);
     const midpointPoloidalField = Math.hypot(midpointBr, midpointBz);
     const direction = Math.sign(midpointBr * dr + midpointBz * dz) || 1;
-    const estimatedPhiDelta = midpointPoloidalField > 1e-12
-      ? direction * (midpointBphi / (midpointRadius * midpointPoloidalField)) * poloidalDistance
-      : 0;
+    const angularRates = [previous, current].map((sample) => {
+      const poloidalField = Math.hypot(sample.br, sample.bz);
+      return poloidalField > 1e-12
+        ? Math.abs(sample.bphi / (sample.r * poloidalField))
+        : 0;
+    });
+    angularRates.push(midpointPoloidalField > 1e-12
+      ? Math.abs(midpointBphi / (midpointRadius * midpointPoloidalField))
+      : 0);
+    const estimatedAbsolutePhiDelta = Math.max(...angularRates) * poloidalDistance;
     // A profile can be sparse while B_phi winds several turns between two samples.
-    // Subdivide so adjacent rendered points never span more than five degrees.
-    const subdivisions = clamp(Math.ceil(Math.abs(estimatedPhiDelta) / (Math.PI / 36)), 1, 512);
+    // Use the largest endpoint/midpoint winding rate so a quiet midpoint cannot
+    // hide rapid rotation, and keep adjacent points within half a degree.
+    const subdivisions = clamp(Math.ceil(estimatedAbsolutePhiDelta / (Math.PI / 360)), 1, 4096);
 
     for (let step = 1; step <= subdivisions; step += 1) {
       const t0 = (step - 1) / subdivisions;
@@ -1910,7 +1918,7 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
   const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal');
   const radialExtent = Math.max(...rValues.map((value) => Math.abs(Number(value))).filter(Number.isFinite), 1);
   const tubeRadius = Math.max(radialExtent * 0.004, 0.002);
-  const geometry = new THREE.TubeGeometry(curve, Math.max(points.length, 64), tubeRadius, 6, false);
+  const geometry = new THREE.TubeGeometry(curve, Math.max(points.length * 2, 256), tubeRadius, 12, false);
   const material = new THREE.MeshBasicMaterial({
     color: 0x67e8f9,
     toneMapped: false,
