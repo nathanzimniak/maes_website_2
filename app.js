@@ -1631,7 +1631,7 @@ const INFERNO_STOPS = Array.from({ length: 256 }, (_, index) => {
 
 // Keep the lowest density visible against the black 3D scene background.
 const INFERNO_MINIMUM_VISIBLE_PROGRESS = 0.1;
-const SUPER_ALFVENIC_COLORMAP_FRACTION_BELOW_ALFVEN = 0.8;
+const SUPER_ALFVENIC_COLORMAP_FRACTION_BELOW_ALFVEN = 0.5;
 
 function getFinitePositiveValues(values) {
   return values.filter((value) => Number.isFinite(value) && value > 0);
