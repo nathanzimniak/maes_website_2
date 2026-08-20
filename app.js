@@ -1841,42 +1841,68 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
     return null;
   }
 
+  const samples = Array.from({ length: sampleCount }, (_, index) => ({
+    r: Math.abs(Number(rValues[index])),
+    z: Number(zValues[index]),
+    br: Number(brValues[index]),
+    bphi: Number(bphiValues[index]),
+    bz: Number(bzValues[index]),
+  })).filter((sample) => (
+    sample.r > 1e-10
+    && Object.values(sample).every(Number.isFinite)
+  ));
+
+  if (samples.length < 2) return null;
+
   const points = [];
   let phi = 0;
-
-  for (let i = 0; i < sampleCount; i += 1) {
-    const r = Math.abs(Number(rValues[i]));
-    const z = Number(zValues[i]);
-    if (!Number.isFinite(r) || !Number.isFinite(z) || r <= 1e-10) continue;
-
-    if (points.length && i > 0) {
-      const previousR = Math.abs(Number(rValues[i - 1]));
-      const previousZ = Number(zValues[i - 1]);
-      const dr = r - previousR;
-      const dz = z - previousZ;
-      const poloidalDistance = Math.hypot(dr, dz);
-      const br = 0.5 * (Number(brValues[i - 1]) + Number(brValues[i]));
-      const bphi = 0.5 * (Number(bphiValues[i - 1]) + Number(bphiValues[i]));
-      const bz = 0.5 * (Number(bzValues[i - 1]) + Number(bzValues[i]));
-      const poloidalField = Math.hypot(br, bz);
-      const midpointRadius = 0.5 * (previousR + r);
-
-      if (
-        Number.isFinite(poloidalDistance)
-        && Number.isFinite(poloidalField)
-        && poloidalField > 1e-12
-        && Number.isFinite(bphi)
-        && midpointRadius > 1e-10
-      ) {
-        // Orient the supplied surface profile consistently with its poloidal field.
-        const direction = Math.sign(br * dr + bz * dz) || 1;
-        phi += direction * (bphi / (midpointRadius * poloidalField)) * poloidalDistance;
-      }
-    }
-
+  const appendPoint = (r, z) => {
     const point = new THREE.Vector3(r * Math.cos(phi), r * Math.sin(phi), z);
     if (center) point.sub(center);
     points.push(point);
+  };
+
+  appendPoint(samples[0].r, samples[0].z);
+
+  for (let i = 1; i < samples.length; i += 1) {
+    const previous = samples[i - 1];
+    const current = samples[i];
+    const dr = current.r - previous.r;
+    const dz = current.z - previous.z;
+    const poloidalDistance = Math.hypot(dr, dz);
+    const midpointRadius = 0.5 * (previous.r + current.r);
+    const midpointBr = 0.5 * (previous.br + current.br);
+    const midpointBphi = 0.5 * (previous.bphi + current.bphi);
+    const midpointBz = 0.5 * (previous.bz + current.bz);
+    const midpointPoloidalField = Math.hypot(midpointBr, midpointBz);
+    const direction = Math.sign(midpointBr * dr + midpointBz * dz) || 1;
+    const estimatedPhiDelta = midpointPoloidalField > 1e-12
+      ? direction * (midpointBphi / (midpointRadius * midpointPoloidalField)) * poloidalDistance
+      : 0;
+    // A profile can be sparse while B_phi winds several turns between two samples.
+    // Subdivide so adjacent rendered points never span more than five degrees.
+    const subdivisions = clamp(Math.ceil(Math.abs(estimatedPhiDelta) / (Math.PI / 36)), 1, 512);
+
+    for (let step = 1; step <= subdivisions; step += 1) {
+      const t0 = (step - 1) / subdivisions;
+      const t1 = step / subdivisions;
+      const tm = 0.5 * (t0 + t1);
+      const r = previous.r + dr * t1;
+      const z = previous.z + dz * t1;
+      const localRadius = previous.r + dr * tm;
+      const localBr = previous.br + (current.br - previous.br) * tm;
+      const localBphi = previous.bphi + (current.bphi - previous.bphi) * tm;
+      const localBz = previous.bz + (current.bz - previous.bz) * tm;
+      const localPoloidalField = Math.hypot(localBr, localBz);
+
+      if (localPoloidalField > 1e-12 && localRadius > 1e-10) {
+        const localDirection = Math.sign(localBr * dr + localBz * dz) || direction;
+        phi += localDirection
+          * (localBphi / (localRadius * localPoloidalField))
+          * (poloidalDistance / subdivisions);
+      }
+      appendPoint(r, z);
+    }
   }
 
   if (points.length < 2) return null;
@@ -1884,7 +1910,7 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
   const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal');
   const radialExtent = Math.max(...rValues.map((value) => Math.abs(Number(value))).filter(Number.isFinite), 1);
   const tubeRadius = Math.max(radialExtent * 0.004, 0.002);
-  const geometry = new THREE.TubeGeometry(curve, Math.max(points.length * 2, 64), tubeRadius, 6, false);
+  const geometry = new THREE.TubeGeometry(curve, Math.max(points.length, 64), tubeRadius, 6, false);
   const material = new THREE.MeshBasicMaterial({
     color: 0x67e8f9,
     toneMapped: false,
