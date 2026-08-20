@@ -1157,6 +1157,14 @@ function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       hideScatterTooltip();
     });
 
+    circle.addEventListener('pointerdown', (event) => {
+      if (event.isPrimary === false || event.button !== 0) return;
+
+      // Pin the hovered values before focus/leave events can restore the old selection.
+      pinnedSolutionIndex = index;
+      renderHoveredValues(currentSolutions[index]);
+    });
+
     circle.addEventListener('click', () => {
       selectSolution(index);
     });
