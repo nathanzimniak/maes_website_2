@@ -14,7 +14,6 @@ const chartSettingsPanel = document.getElementById('chart-settings-panel');
 const profileSettingsButton = document.getElementById('profile-settings-button');
 const profileSettingsPanel = document.getElementById('profile-settings-panel');
 const profileContent = document.getElementById('profile-content');
-const solutionLoadingStatus = document.getElementById('solution-loading-status');
 const profileLoadingStatus = document.getElementById('profile-loading-status');
 const jetLoadingStatus = document.getElementById('jet-loading-status');
 const profileAxisSelect = document.getElementById('profile-axis-select');
@@ -1158,6 +1157,14 @@ function renderPoints(points, xKey, yKey, scaleX, scaleY) {
       hideScatterTooltip();
     });
 
+    circle.addEventListener('pointerdown', (event) => {
+      if (event.isPrimary === false || event.button !== 0) return;
+
+      // Pin the hovered values before focus/leave events can restore the old selection.
+      pinnedSolutionIndex = index;
+      renderHoveredValues(currentSolutions[index]);
+    });
+
     circle.addEventListener('click', () => {
       selectSolution(index);
     });
@@ -2159,10 +2166,7 @@ function setProfilesOverlayVisible(visible) {
   chartProfiles.classList.toggle('chart__profiles--empty', visible);
 }
 
-function setSolutionLoading(loading) {
-  if (chartHovered) {
-    chartHovered.setAttribute('aria-busy', String(loading));
-  }
+function setDetailedViewsLoading(loading) {
   if (chartProfiles) {
     chartProfiles.setAttribute('aria-busy', String(loading));
   }
@@ -2171,9 +2175,6 @@ function setSolutionLoading(loading) {
   }
   if (profileLoadingStatus) {
     profileLoadingStatus.hidden = !loading;
-  }
-  if (solutionLoadingStatus) {
-    solutionLoadingStatus.hidden = !loading;
   }
   if (jetLoadingStatus) {
     jetLoadingStatus.hidden = !loading;
@@ -2191,7 +2192,7 @@ async function selectSolution(index) {
   if (solution) {
     renderHoveredValues(solution);
   }
-  setSolutionLoading(Boolean(solution && !solution.profiles));
+  setDetailedViewsLoading(Boolean(solution && !solution.profiles));
 
   try {
     const selectedSolution = await ensureSolutionProfiles(solution);
@@ -2205,7 +2206,7 @@ async function selectSolution(index) {
     }
   } finally {
     if (selectedSolutionIndex === index) {
-      setSolutionLoading(false);
+      setDetailedViewsLoading(false);
     }
   }
 }
