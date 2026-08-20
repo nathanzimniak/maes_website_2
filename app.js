@@ -1631,12 +1631,13 @@ const INFERNO_STOPS = Array.from({ length: 256 }, (_, index) => {
 
 // Keep the lowest density visible against the black 3D scene background.
 const INFERNO_MINIMUM_VISIBLE_PROGRESS = 0.1;
+const SUPER_ALFVENIC_COLORMAP_FRACTION_BELOW_ALFVEN = 0.6;
 
 function getFinitePositiveValues(values) {
   return values.filter((value) => Number.isFinite(value) && value > 0);
 }
 
-function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange = 1e-6) {
+function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange = 1e-6, pivot = null) {
   const safeRange = Math.max(logDensityMax - logDensityMin, minimumRange);
   const hasPivot = Number.isFinite(pivot?.logDensity)
     && pivot.logDensity > logDensityMin
@@ -1647,7 +1648,6 @@ function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange =
 
   return (density) => {
     const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
-    // A single logarithmic scale across the full jet avoids a slope break at z_A.
     const logDensity = Math.log10(safeDensity);
     const normalizedProgress = clamp((logDensity - logDensityMin) / safeRange, 0, 1);
     let progress = INFERNO_MINIMUM_VISIBLE_PROGRESS
@@ -1682,7 +1682,7 @@ function createInfernoDensityMapperFromValues(densityValues) {
   return createInfernoDensityMapper(Math.log10(densityMin), Math.log10(densityMax));
 }
 
-function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMinOverride = null, logDensityMaxOverride = null, reflectAcrossXY = false) {
+function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMinOverride = null, logDensityMaxOverride = null, reflectAcrossXY = false, colorPivot = null) {
   if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
   if (!rValues.length || rValues.length !== zValues.length) return null;
 
@@ -1697,7 +1697,7 @@ function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments =
   const defaultLogDensityMax = 0.0;
   const logDensityMin = Number.isFinite(logDensityMinOverride) ? logDensityMinOverride : defaultLogDensityMin;
   const logDensityMax = Number.isFinite(logDensityMaxOverride) ? logDensityMaxOverride : defaultLogDensityMax;
-  const densityToColor = createInfernoDensityMapper(logDensityMin, logDensityMax, 1e-12);
+  const densityToColor = createInfernoDensityMapper(logDensityMin, logDensityMax, 1e-12, colorPivot);
 
   for (let i = 0; i < nz; i += 1) {
     const r = Math.abs(Number(rValues[i]));
@@ -1897,9 +1897,17 @@ function renderJetSurface(solution) {
 
   const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
   const finitePositiveDensities = getFinitePositiveValues(densityValues);
+  const zAValue = Number(solution?.g23);
+  const rhoPsiAtZA = interpolateProfileValue(zValues, densityValues, zAValue);
   const jetLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : null;
-  jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax);
-  jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, true);
+  const colorPivot = solution?.scenario === 'A' && Number.isFinite(rhoPsiAtZA) && rhoPsiAtZA > 0
+    ? {
+        logDensity: Math.log10(rhoPsiAtZA),
+        progress: 1 - SUPER_ALFVENIC_COLORMAP_FRACTION_BELOW_ALFVEN,
+      }
+    : null;
+  jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, false, colorPivot);
+  jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, true, colorPivot);
   if (jetMesh) jetScene.add(jetMesh);
   if (jetMeshMirror) jetScene.add(jetMeshMirror);
 
