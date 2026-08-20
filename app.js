@@ -1634,9 +1634,34 @@ const INFERNO_MINIMUM_VISIBLE_PROGRESS = 0.1;
 // Compress values below the nominal lower bound into a short, smooth tail.
 const INFERNO_UNDERFLOW_PROGRESS = 0.03;
 const INFERNO_UNDERFLOW_SOFTNESS = 0.25;
+const JET_COLOR_SMOOTHING_RADIUS = 6;
 
 function getFinitePositiveValues(values) {
   return values.filter((value) => Number.isFinite(value) && value > 0);
+}
+
+function smoothLogDensityValues(values, radius = JET_COLOR_SMOOTHING_RADIUS) {
+  const sigma = Math.max(radius / 2, 1);
+
+  return values.map((value, index) => {
+    if (!Number.isFinite(value) || value <= 0) return value;
+
+    let weightedLogDensity = 0;
+    let totalWeight = 0;
+    const start = Math.max(0, index - radius);
+    const end = Math.min(values.length - 1, index + radius);
+
+    for (let neighborIndex = start; neighborIndex <= end; neighborIndex += 1) {
+      const neighborDensity = Number(values[neighborIndex]);
+      if (!Number.isFinite(neighborDensity) || neighborDensity <= 0) continue;
+      const distance = neighborIndex - index;
+      const weight = Math.exp(-(distance * distance) / (2 * sigma * sigma));
+      weightedLogDensity += Math.log10(neighborDensity) * weight;
+      totalWeight += weight;
+    }
+
+    return totalWeight > 0 ? 10 ** (weightedLogDensity / totalWeight) : value;
+  });
 }
 
 function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange = 1e-6) {
@@ -1692,12 +1717,13 @@ function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments =
   const logDensityMin = Number.isFinite(logDensityMinOverride) ? logDensityMinOverride : defaultLogDensityMin;
   const logDensityMax = Number.isFinite(logDensityMaxOverride) ? logDensityMaxOverride : defaultLogDensityMax;
   const densityToColor = createInfernoDensityMapper(logDensityMin, logDensityMax, 1e-12);
+  const colorDensityValues = smoothLogDensityValues(densityValues);
 
   for (let i = 0; i < nz; i += 1) {
     const r = Math.abs(Number(rValues[i]));
     const originalZ = Number(zValues[i]);
     const z = reflectAcrossXY ? -originalZ : originalZ;
-    const density = Number(densityValues[i]);
+    const density = Number(colorDensityValues[i]);
     if (!Number.isFinite(r) || !Number.isFinite(z)) continue;
     const vertexColor = densityToColor(density);
     for (let j = 0; j < nphi; j += 1) {
