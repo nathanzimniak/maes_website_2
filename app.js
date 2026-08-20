@@ -1102,7 +1102,7 @@ function showScatterTooltip(point, circle, xKey, yKey) {
   scatterTooltip.classList.add('chart__sparkline-tooltip--visible');
 }
 
-async function restorePinnedValues() {
+function restorePinnedValues() {
   if (pinnedSolutionIndex === null) {
     resetHoveredValues();
     return;
@@ -1110,7 +1110,6 @@ async function restorePinnedValues() {
 
   const pinned = currentSolutions[pinnedSolutionIndex];
   if (pinned) {
-    await ensureSolutionProfiles(pinned);
     renderHoveredValues(pinned);
   } else {
     resetHoveredValues();
@@ -2182,6 +2181,9 @@ async function selectSolution(index) {
   });
 
   const solution = currentSolutions[index];
+  if (solution) {
+    renderHoveredValues(solution);
+  }
   setSolutionLoading(Boolean(solution && !solution.profiles));
 
   try {
@@ -2192,7 +2194,6 @@ async function selectSolution(index) {
     if (selectedSolution?.profiles) {
       renderProfiles(selectedSolution);
       renderJetSurface(selectedSolution);
-      renderHoveredValues(selectedSolution);
       setProfilesOverlayVisible(false);
     }
   } finally {
