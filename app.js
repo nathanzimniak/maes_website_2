@@ -1631,48 +1631,9 @@ const INFERNO_STOPS = Array.from({ length: 256 }, (_, index) => {
 
 // Keep the lowest density visible against the black 3D scene background.
 const INFERNO_MINIMUM_VISIBLE_PROGRESS = 0.1;
-const JET_COLOR_TRANSITION_SAMPLES = 24;
-const JET_COLOR_TRANSITION_BIAS = 3;
 
 function getFinitePositiveValues(values) {
   return values.filter((value) => Number.isFinite(value) && value > 0);
-}
-
-function taperDensityToFloorAtAltitude(densityValues, zValues, floorDensity, altitude, sampleCount = JET_COLOR_TRANSITION_SAMPLES) {
-  if (!Number.isFinite(floorDensity) || floorDensity <= 0 || !Number.isFinite(altitude)) return densityValues;
-
-  let endIndex = -1;
-  let closestDistance = Infinity;
-  zValues.forEach((z, index) => {
-    const distance = Math.abs(Number(z) - altitude);
-    if (Number.isFinite(distance) && distance < closestDistance) {
-      closestDistance = distance;
-      endIndex = index;
-    }
-  });
-  if (endIndex < 1) return densityValues;
-
-  const taperedValues = densityValues.slice();
-  const startIndex = Math.max(0, endIndex - sampleCount);
-  const span = Math.max(endIndex - startIndex, 1);
-  const floorLogDensity = Math.log10(floorDensity);
-
-  for (let index = startIndex; index <= endIndex; index += 1) {
-    const density = Number(densityValues[index]);
-    if (!Number.isFinite(density) || density <= 0) continue;
-    const progress = (index - startIndex) / span;
-    // Approach the floor early, then change increasingly slowly around z_A.
-    const biasedProgress = 1 - ((1 - progress) ** JET_COLOR_TRANSITION_BIAS);
-    const smoothProgress = biasedProgress * biasedProgress * (3 - 2 * biasedProgress);
-    const blendedLogDensity = Math.log10(density) * (1 - smoothProgress) + floorLogDensity * smoothProgress;
-    taperedValues[index] = 10 ** blendedLogDensity;
-  }
-
-  for (let index = endIndex + 1; index < taperedValues.length; index += 1) {
-    taperedValues[index] = floorDensity;
-  }
-
-  return taperedValues;
 }
 
 function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange = 1e-6) {
@@ -1680,6 +1641,7 @@ function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange =
 
   return (density) => {
     const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
+    // A single logarithmic scale across the full jet avoids a slope break at z_A.
     const logDensity = Math.log10(safeDensity);
     const normalizedProgress = clamp((logDensity - logDensityMin) / safeRange, 0, 1);
     const progress = INFERNO_MINIMUM_VISIBLE_PROGRESS
@@ -1708,7 +1670,7 @@ function createInfernoDensityMapperFromValues(densityValues) {
   return createInfernoDensityMapper(Math.log10(densityMin), Math.log10(densityMax));
 }
 
-function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMinOverride = null, logDensityMaxOverride = null, reflectAcrossXY = false, colorTransitionAltitude = null) {
+function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments = 64, center = null, logDensityMinOverride = null, logDensityMaxOverride = null, reflectAcrossXY = false) {
   if (!Array.isArray(rValues) || !Array.isArray(zValues)) return null;
   if (!rValues.length || rValues.length !== zValues.length) return null;
 
@@ -1724,14 +1686,12 @@ function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments =
   const logDensityMin = Number.isFinite(logDensityMinOverride) ? logDensityMinOverride : defaultLogDensityMin;
   const logDensityMax = Number.isFinite(logDensityMaxOverride) ? logDensityMaxOverride : defaultLogDensityMax;
   const densityToColor = createInfernoDensityMapper(logDensityMin, logDensityMax, 1e-12);
-  const floorDensity = 10 ** logDensityMin;
-  const colorDensityValues = taperDensityToFloorAtAltitude(densityValues, zValues, floorDensity, colorTransitionAltitude);
 
   for (let i = 0; i < nz; i += 1) {
     const r = Math.abs(Number(rValues[i]));
     const originalZ = Number(zValues[i]);
     const z = reflectAcrossXY ? -originalZ : originalZ;
-    const density = Number(colorDensityValues[i]);
+    const density = Number(densityValues[i]);
     if (!Number.isFinite(r) || !Number.isFinite(z)) continue;
     const vertexColor = densityToColor(density);
     for (let j = 0; j < nphi; j += 1) {
@@ -1925,14 +1885,9 @@ function renderJetSurface(solution) {
 
   const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
   const finitePositiveDensities = getFinitePositiveValues(densityValues);
-  const zAValue = Number(solution?.g23);
-  const rhoPsiAtZA = interpolateProfileValue(zValues, densityValues, zAValue);
-  const jetLogDensityMin = solution?.scenario === 'SM'
-    ? (finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : null)
-    : (solution?.scenario === 'A' && Number.isFinite(rhoPsiAtZA) && rhoPsiAtZA > 0 ? Math.log10(rhoPsiAtZA) : null);
-  const colorTransitionAltitude = solution?.scenario === 'A' ? zAValue : null;
-  jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, false, colorTransitionAltitude);
-  jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, true, colorTransitionAltitude);
+  const jetLogDensityMin = finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : null;
+  jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax);
+  jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, true);
   if (jetMesh) jetScene.add(jetMesh);
   if (jetMeshMirror) jetScene.add(jetMeshMirror);
 
