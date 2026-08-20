@@ -1917,11 +1917,11 @@ function renderJetSurface(solution) {
 
   const jetLogDensityMax = Number.isFinite(rhoPsiAtZid) && rhoPsiAtZid > 0 ? Math.log10(rhoPsiAtZid) : null;
   const finitePositiveDensities = getFinitePositiveValues(densityValues);
-  const zAValue = Number(solution?.g23);
-  const rhoPsiAtZA = interpolateProfileValue(zValues, densityValues, zAValue);
-  const jetLogDensityMin = solution?.scenario === 'SM'
-    ? (finitePositiveDensities.length ? Math.log10(Math.min(...finitePositiveDensities)) : null)
-    : (solution?.scenario === 'A' && Number.isFinite(rhoPsiAtZA) && rhoPsiAtZA > 0 ? Math.log10(rhoPsiAtZA) : null);
+  // Normalize over the full density profile. Using rho(z_A) as the lower bound
+  // flattened every post-Alfvén value to one color and created a visible seam.
+  const jetLogDensityMin = finitePositiveDensities.length
+    ? Math.log10(Math.min(...finitePositiveDensities))
+    : null;
   jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, false);
   jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, jetLogDensityMin, jetLogDensityMax, true);
   if (jetMesh) jetScene.add(jetMesh);
