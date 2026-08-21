@@ -1976,37 +1976,38 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
   return line;
 }
 
+function clearJetObject(objectRefSetter, object) {
+  if (!object) return;
+
+  jetScene?.remove(object);
+  const geometries = new Set();
+  const materials = new Set();
+  object.traverse((child) => {
+    if (child.geometry) geometries.add(child.geometry);
+    if (Array.isArray(child.material)) {
+      child.material.forEach((material) => materials.add(material));
+    } else if (child.material) {
+      materials.add(child.material);
+    }
+  });
+  geometries.forEach((geometry) => geometry.dispose());
+  materials.forEach((material) => material.dispose());
+  objectRefSetter(null);
+}
+
 function renderJetSurface(solution) {
   initJetRenderer();
   if (!jetScene || !solution?.profiles?.psi) return;
 
-  const clearMesh = (meshRefSetter, mesh) => {
-    if (!mesh) return;
-    jetScene.remove(mesh);
-    const geometries = new Set();
-    const materials = new Set();
-    mesh.traverse((child) => {
-      if (child.geometry) geometries.add(child.geometry);
-      if (Array.isArray(child.material)) {
-        child.material.forEach((material) => materials.add(material));
-      } else if (child.material) {
-        materials.add(child.material);
-      }
-    });
-    geometries.forEach((geometry) => geometry.dispose());
-    materials.forEach((material) => material.dispose());
-    meshRefSetter(null);
-  };
-
-  clearMesh((value) => { jetMesh = value; }, jetMesh);
-  clearMesh((value) => { jetMeshMirror = value; }, jetMeshMirror);
-  clearMesh((value) => { jetDiskMesh = value; }, jetDiskMesh);
-  clearMesh((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
-  clearMesh((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
-  clearMesh((value) => { jetMagneticFieldLine = value; }, jetMagneticFieldLine);
-  clearMesh((value) => { jetMagneticFieldLineSecondary = value; }, jetMagneticFieldLineSecondary);
-  clearMesh((value) => { jetMagneticFieldLineMirror = value; }, jetMagneticFieldLineMirror);
-  clearMesh((value) => { jetMagneticFieldLineMirrorSecondary = value; }, jetMagneticFieldLineMirrorSecondary);
+  clearJetObject((value) => { jetMesh = value; }, jetMesh);
+  clearJetObject((value) => { jetMeshMirror = value; }, jetMeshMirror);
+  clearJetObject((value) => { jetDiskMesh = value; }, jetDiskMesh);
+  clearJetObject((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
+  clearJetObject((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
+  clearJetObject((value) => { jetMagneticFieldLine = value; }, jetMagneticFieldLine);
+  clearJetObject((value) => { jetMagneticFieldLineSecondary = value; }, jetMagneticFieldLineSecondary);
+  clearJetObject((value) => { jetMagneticFieldLineMirror = value; }, jetMagneticFieldLineMirror);
+  clearJetObject((value) => { jetMagneticFieldLineMirrorSecondary = value; }, jetMagneticFieldLineMirrorSecondary);
 
   const rValues = solution.profiles.psi.r;
   const zValues = solution.profiles.psi.x;
@@ -2374,18 +2375,15 @@ async function selectSolution(index) {
 
 function resetProfiles() {
   selectedSolutionIndex = null;
-  const clearResetMesh = (meshRefSetter, mesh) => {
-    if (!jetScene || !mesh) return;
-    jetScene.remove(mesh);
-    mesh.geometry.dispose();
-    mesh.material.dispose();
-    meshRefSetter(null);
-  };
-  clearResetMesh((value) => { jetMesh = value; }, jetMesh);
-  clearResetMesh((value) => { jetMeshMirror = value; }, jetMeshMirror);
-  clearResetMesh((value) => { jetDiskMesh = value; }, jetDiskMesh);
-  clearResetMesh((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
-  clearResetMesh((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
+  clearJetObject((value) => { jetMesh = value; }, jetMesh);
+  clearJetObject((value) => { jetMeshMirror = value; }, jetMeshMirror);
+  clearJetObject((value) => { jetDiskMesh = value; }, jetDiskMesh);
+  clearJetObject((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
+  clearJetObject((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
+  clearJetObject((value) => { jetMagneticFieldLine = value; }, jetMagneticFieldLine);
+  clearJetObject((value) => { jetMagneticFieldLineSecondary = value; }, jetMagneticFieldLineSecondary);
+  clearJetObject((value) => { jetMagneticFieldLineMirror = value; }, jetMagneticFieldLineMirror);
+  clearJetObject((value) => { jetMagneticFieldLineMirrorSecondary = value; }, jetMagneticFieldLineMirrorSecondary);
   pinnedSolutionIndex = null;
   renderFlatProfiles();
   setProfilesOverlayVisible(true);
