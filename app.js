@@ -1950,12 +1950,12 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
   const geometry = new LineGeometry();
   geometry.setPositions(positions);
   const backgroundMaterial = new LineMaterial({
-    color: 0x67e8f9,
+    color: 0xffffff,
     linewidth: 2.5,
     toneMapped: false,
   });
   const foregroundMaterial = new LineMaterial({
-    color: 0x67e8f9,
+    color: 0xffffff,
     linewidth: 2.5,
     // Draw a second pass after the translucent surface. Its depth test keeps
     // only the front-facing turns crisp, while the first pass remains visible
