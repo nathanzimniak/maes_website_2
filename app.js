@@ -1509,7 +1509,7 @@ function initJetRenderer() {
   const width = container.clientWidth || 480;
   const height = container.clientHeight || 320;
   jetCamera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1000000000);
-  jetCamera.position.set(-5.0, -20.0, 10.0);
+  jetCamera.position.set(-20.0, -80.0, 40.0);
   jetCamera.lookAt(0, 0, 0);
 
   // The solution spans many orders of magnitude. A conventional depth buffer
@@ -1552,7 +1552,7 @@ function initJetRenderer() {
 
 function resetJetCameraView() {
   if (!jetCamera || !jetControls) return;
-  jetCamera.position.set(-5.0, -20.0, 10.0);
+  jetCamera.position.set(-20.0, -80.0, 40.0);
   jetControls.target.set(0, 0, 0);
   jetControls.update();
 }
