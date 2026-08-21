@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Line2 } from 'three/addons/lines/Line2.js';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 document.getElementById('year')?.replaceChildren(new Date().getFullYear().toString());
 const chartContainer = document.querySelector('.chart__plot-area');
 const chartControls = document.querySelector('.chart__controls');
@@ -102,9 +105,13 @@ let jetRenderer = null;
 let jetControls = null;
 let jetMesh = null;
 let jetMeshMirror = null;
+let jetOuterMesh = null;
+let jetOuterMeshMirror = null;
 let jetDiskMesh = null;
 let jetDiskMeshMirror = null;
 let jetDiskOuterMesh = null;
+let jetMagneticFieldLine = null;
+let jetOuterMagneticFieldLine = null;
 let jetAnimationFrameId = null;
 const datasetDirectories = [
   '0.100_1.0_1.0_1.0_0.0_0_0',
@@ -1827,6 +1834,118 @@ function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, cent
   return mesh;
 }
 
+function buildMagneticFieldLineOnJetSurface(profiles, center = null, spatialScale = 1) {
+  const rValues = profiles?.r;
+  const zValues = profiles?.x;
+  const brValues = profiles?.radialMagneticField;
+  const bphiValues = profiles?.toroidalMagneticField;
+  const bzValues = profiles?.verticalMagneticField;
+  const series = [rValues, zValues, brValues, bphiValues, bzValues];
+  const sampleCount = rValues?.length ?? 0;
+
+  if (sampleCount < 2 || series.some((values) => !Array.isArray(values) || values.length !== sampleCount)) {
+    return null;
+  }
+
+  const samples = Array.from({ length: sampleCount }, (_, index) => ({
+    r: Math.abs(Number(rValues[index])),
+    z: Number(zValues[index]),
+    br: Number(brValues[index]),
+    bphi: Number(bphiValues[index]),
+    bz: Number(bzValues[index]),
+  })).filter((sample) => (
+    sample.r > 1e-10
+    && Object.values(sample).every(Number.isFinite)
+  ));
+
+  if (samples.length < 2) return null;
+
+  const points = [];
+  const maxRenderedPoints = 50000;
+  let phi = 0;
+  const appendPoint = (r, z) => {
+    const point = new THREE.Vector3(
+      spatialScale * r * Math.cos(phi),
+      spatialScale * r * Math.sin(phi),
+      spatialScale * z,
+    );
+    if (center) point.sub(center);
+    points.push(point);
+  };
+
+  appendPoint(samples[0].r, samples[0].z);
+
+  for (let i = 1; i < samples.length; i += 1) {
+    const previous = samples[i - 1];
+    const current = samples[i];
+    const dr = current.r - previous.r;
+    const dz = current.z - previous.z;
+    const poloidalDistance = Math.hypot(dr, dz);
+    const midpointRadius = 0.5 * (previous.r + current.r);
+    const midpointBr = 0.5 * (previous.br + current.br);
+    const midpointBphi = 0.5 * (previous.bphi + current.bphi);
+    const midpointBz = 0.5 * (previous.bz + current.bz);
+    const midpointPoloidalField = Math.hypot(midpointBr, midpointBz);
+    const direction = Math.sign(midpointBr * dr + midpointBz * dz) || 1;
+    const angularRates = [previous, current].map((sample) => {
+      const poloidalField = Math.hypot(sample.br, sample.bz);
+      return poloidalField > 1e-12
+        ? Math.abs(sample.bphi / (sample.r * poloidalField))
+        : 0;
+    });
+    angularRates.push(midpointPoloidalField > 1e-12
+      ? Math.abs(midpointBphi / (midpointRadius * midpointPoloidalField))
+      : 0);
+    const estimatedAbsolutePhiDelta = Math.max(...angularRates) * poloidalDistance;
+    // A profile can be sparse while B_phi winds several turns between two samples.
+    // Use the largest endpoint/midpoint winding rate so a quiet midpoint cannot
+    // hide rapid rotation, and keep adjacent points within half a degree.
+    const desiredSubdivisions = Math.max(Math.ceil(estimatedAbsolutePhiDelta / (Math.PI / 360)), 1);
+    const remainingIntervals = samples.length - i;
+    const availablePoints = maxRenderedPoints - points.length;
+    const maxSubdivisionsForInterval = Math.max(Math.floor(availablePoints / (remainingIntervals + 1)), 1);
+    const subdivisions = Math.min(desiredSubdivisions, maxSubdivisionsForInterval);
+
+    for (let step = 1; step <= subdivisions; step += 1) {
+      const t0 = (step - 1) / subdivisions;
+      const t1 = step / subdivisions;
+      const tm = 0.5 * (t0 + t1);
+      const r = previous.r + dr * t1;
+      const z = previous.z + dz * t1;
+      const localRadius = previous.r + dr * tm;
+      const localBr = previous.br + (current.br - previous.br) * tm;
+      const localBphi = previous.bphi + (current.bphi - previous.bphi) * tm;
+      const localBz = previous.bz + (current.bz - previous.bz) * tm;
+      const localPoloidalField = Math.hypot(localBr, localBz);
+
+      if (localPoloidalField > 1e-12 && localRadius > 1e-10) {
+        const localDirection = Math.sign(localBr * dr + localBz * dz) || direction;
+        phi += localDirection
+          * (localBphi / (localRadius * localPoloidalField))
+          * (poloidalDistance / subdivisions);
+      }
+      appendPoint(r, z);
+    }
+  }
+
+  if (points.length < 2) return null;
+
+  // Line2 provides a visible screen-space width without the vertex multiplication
+  // and GPU cost of TubeGeometry.
+  const positions = points.flatMap((point) => [point.x, point.y, point.z]);
+  const geometry = new LineGeometry();
+  geometry.setPositions(positions);
+  const material = new LineMaterial({
+    color: 0x67e8f9,
+    linewidth: 2.5,
+    toneMapped: false,
+  });
+  const line = new Line2(geometry, material);
+  line.computeLineDistances();
+
+  return line;
+}
+
 function renderJetSurface(solution) {
   initJetRenderer();
   if (!jetScene || !solution?.profiles?.psi) return;
@@ -1841,9 +1960,13 @@ function renderJetSurface(solution) {
 
   clearMesh((value) => { jetMesh = value; }, jetMesh);
   clearMesh((value) => { jetMeshMirror = value; }, jetMeshMirror);
+  clearMesh((value) => { jetOuterMesh = value; }, jetOuterMesh);
+  clearMesh((value) => { jetOuterMeshMirror = value; }, jetOuterMeshMirror);
   clearMesh((value) => { jetDiskMesh = value; }, jetDiskMesh);
   clearMesh((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
   clearMesh((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
+  clearMesh((value) => { jetMagneticFieldLine = value; }, jetMagneticFieldLine);
+  clearMesh((value) => { jetOuterMagneticFieldLine = value; }, jetOuterMagneticFieldLine);
 
   const rValues = solution.profiles.psi.r;
   const zValues = solution.profiles.psi.x;
@@ -1852,7 +1975,7 @@ function renderJetSurface(solution) {
   const xIdValue = Number(solution?.g17);
   const zIdValue = Number(solution?.g21);
   const diskRMin = Math.abs(interpolateProfileValue(zValues, rValues, zIdValue));
-  const diskRMax = 4.0;
+  const diskRMax = 10.0;
   const diskRadialSamples = 72;
   const diskRValues = Array.from({ length: diskRadialSamples }, (_, i) => {
     const t = diskRadialSamples <= 1 ? 0 : i / (diskRadialSamples - 1);
@@ -1872,11 +1995,32 @@ function renderJetSurface(solution) {
   // We render both +z and mirrored -z branches, so applying an automatic
   // z recentering would offset the combined disk+jet away from (0, 0, 0).
   const center = new THREE.Vector3(0, 0, 0);
+  const outerJetLaunchRadius = 4.0;
+  const outerJetRValues = rValues.map((r) => outerJetLaunchRadius * Number(r));
+  const outerJetZValues = zValues.map((z) => outerJetLaunchRadius * Number(z));
+  const outerJetDensityValues = densityValues.map((density) => (
+    Number.isFinite(Number(density)) && Number.isFinite(exponent)
+      ? Number(density) * (outerJetLaunchRadius ** exponent)
+      : NaN
+  ));
 
   jetMesh = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, false);
   jetMeshMirror = buildJetSurfaceMesh(rValues, zValues, densityValues, 72, center, true);
+  jetOuterMesh = buildJetSurfaceMesh(outerJetRValues, outerJetZValues, outerJetDensityValues, 72, center, false);
+  jetOuterMeshMirror = buildJetSurfaceMesh(outerJetRValues, outerJetZValues, outerJetDensityValues, 72, center, true);
   if (jetMesh) jetScene.add(jetMesh);
   if (jetMeshMirror) jetScene.add(jetMeshMirror);
+  if (jetOuterMesh) jetScene.add(jetOuterMesh);
+  if (jetOuterMeshMirror) jetScene.add(jetOuterMeshMirror);
+
+  jetMagneticFieldLine = buildMagneticFieldLineOnJetSurface(solution.profiles.psi, center);
+  jetOuterMagneticFieldLine = buildMagneticFieldLineOnJetSurface(
+    solution.profiles.psi,
+    center,
+    outerJetLaunchRadius,
+  );
+  if (jetMagneticFieldLine) jetScene.add(jetMagneticFieldLine);
+  if (jetOuterMagneticFieldLine) jetScene.add(jetOuterMagneticFieldLine);
 
   if (
     Number.isFinite(epValue)
