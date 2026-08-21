@@ -2012,7 +2012,7 @@ function renderJetSurface(solution) {
   const xIdValue = Number(solution?.g17);
   const zIdValue = Number(solution?.g21);
   const diskRMin = Math.abs(interpolateProfileValue(zValues, rValues, zIdValue));
-  const diskRMax = 4.0;
+  const diskRMax = 10.0;
   const diskRadialSamples = 72;
   const diskRValues = Array.from({ length: diskRadialSamples }, (_, i) => {
     const t = diskRadialSamples <= 1 ? 0 : i / (diskRadialSamples - 1);
