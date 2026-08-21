@@ -1512,7 +1512,13 @@ function initJetRenderer() {
   jetCamera.position.set(-5.0, -20.0, 10.0);
   jetCamera.lookAt(0, 0, 0);
 
-  jetRenderer = new THREE.WebGLRenderer({ antialias: true });
+  // The solution spans many orders of magnitude. A conventional depth buffer
+  // loses enough precision at wide zoom levels for the field lines and jet
+  // surface to alternate in front of one another (z-fighting).
+  jetRenderer = new THREE.WebGLRenderer({
+    antialias: true,
+    logarithmicDepthBuffer: true,
+  });
   jetRenderer.setSize(width, height);
   jetRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   container.appendChild(jetRenderer.domElement);
@@ -1940,13 +1946,29 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
   const positions = points.flatMap((point) => [point.x, point.y, point.z]);
   const geometry = new LineGeometry();
   geometry.setPositions(positions);
-  const material = new LineMaterial({
+  const backgroundMaterial = new LineMaterial({
     color: 0x67e8f9,
     linewidth: 2.5,
     toneMapped: false,
   });
-  const line = new Line2(geometry, material);
-  line.computeLineDistances();
+  const foregroundMaterial = new LineMaterial({
+    color: 0x67e8f9,
+    linewidth: 2.5,
+    // Draw a second pass after the translucent surface. Its depth test keeps
+    // only the front-facing turns crisp, while the first pass remains visible
+    // through the jet with the surface's natural attenuation.
+    transparent: true,
+    opacity: 1,
+    toneMapped: false,
+  });
+  const backgroundLine = new Line2(geometry, backgroundMaterial);
+  const foregroundLine = new Line2(geometry, foregroundMaterial);
+  foregroundLine.renderOrder = 1;
+  backgroundLine.computeLineDistances();
+  foregroundLine.computeLineDistances();
+
+  const line = new THREE.Group();
+  line.add(backgroundLine, foregroundLine);
 
   return line;
 }
@@ -1958,8 +1980,18 @@ function renderJetSurface(solution) {
   const clearMesh = (meshRefSetter, mesh) => {
     if (!mesh) return;
     jetScene.remove(mesh);
-    mesh.geometry.dispose();
-    mesh.material.dispose();
+    const geometries = new Set();
+    const materials = new Set();
+    mesh.traverse((child) => {
+      if (child.geometry) geometries.add(child.geometry);
+      if (Array.isArray(child.material)) {
+        child.material.forEach((material) => materials.add(material));
+      } else if (child.material) {
+        materials.add(child.material);
+      }
+    });
+    geometries.forEach((geometry) => geometry.dispose());
+    materials.forEach((material) => material.dispose());
     meshRefSetter(null);
   };
 
