@@ -1509,6 +1509,9 @@ function initJetRenderer() {
   const width = container.clientWidth || 480;
   const height = container.clientHeight || 320;
   jetCamera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1000000000);
+  // Match the camera's up direction to the jet's physical symmetry axis so
+  // OrbitControls auto-rotation circles the object around its vertical z-axis.
+  jetCamera.up.set(0, 0, 1);
   jetCamera.position.set(-20.0, -80.0, 40.0);
   jetCamera.lookAt(0, 0, 0);
 
@@ -1525,6 +1528,8 @@ function initJetRenderer() {
   jetControls = new OrbitControls(jetCamera, jetRenderer.domElement);
   jetControls.enableDamping = true;
   jetControls.dampingFactor = 0.08;
+  jetControls.autoRotate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  jetControls.autoRotateSpeed = 0.6;
   jetControls.rotateSpeed = 0.9;
   jetControls.zoomSpeed = 1.1;
   jetControls.panSpeed = 0.7;
