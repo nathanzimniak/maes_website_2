@@ -1512,7 +1512,13 @@ function initJetRenderer() {
   jetCamera.position.set(-5.0, -20.0, 10.0);
   jetCamera.lookAt(0, 0, 0);
 
-  jetRenderer = new THREE.WebGLRenderer({ antialias: true });
+  // The solution spans many orders of magnitude. A conventional depth buffer
+  // loses enough precision at wide zoom levels for the field lines and jet
+  // surface to alternate in front of one another (z-fighting).
+  jetRenderer = new THREE.WebGLRenderer({
+    antialias: true,
+    logarithmicDepthBuffer: true,
+  });
   jetRenderer.setSize(width, height);
   jetRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   container.appendChild(jetRenderer.domElement);
