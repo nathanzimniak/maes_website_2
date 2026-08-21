@@ -1525,8 +1525,6 @@ function initJetRenderer() {
   jetControls = new OrbitControls(jetCamera, jetRenderer.domElement);
   jetControls.enableDamping = true;
   jetControls.dampingFactor = 0.08;
-  jetControls.autoRotate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  jetControls.autoRotateSpeed = 0.6;
   jetControls.rotateSpeed = 0.9;
   jetControls.zoomSpeed = 1.1;
   jetControls.panSpeed = 0.7;
