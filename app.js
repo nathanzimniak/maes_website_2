@@ -1855,6 +1855,7 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
   if (samples.length < 2) return null;
 
   const points = [];
+  const maxRenderedPoints = 50000;
   let phi = 0;
   const appendPoint = (r, z) => {
     const point = new THREE.Vector3(r * Math.cos(phi), r * Math.sin(phi), z);
@@ -1889,7 +1890,11 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
     // A profile can be sparse while B_phi winds several turns between two samples.
     // Use the largest endpoint/midpoint winding rate so a quiet midpoint cannot
     // hide rapid rotation, and keep adjacent points within half a degree.
-    const subdivisions = clamp(Math.ceil(estimatedAbsolutePhiDelta / (Math.PI / 360)), 1, 4096);
+    const desiredSubdivisions = Math.max(Math.ceil(estimatedAbsolutePhiDelta / (Math.PI / 360)), 1);
+    const remainingIntervals = samples.length - i;
+    const availablePoints = maxRenderedPoints - points.length;
+    const maxSubdivisionsForInterval = Math.max(Math.floor(availablePoints / (remainingIntervals + 1)), 1);
+    const subdivisions = Math.min(desiredSubdivisions, maxSubdivisionsForInterval);
 
     for (let step = 1; step <= subdivisions; step += 1) {
       const t0 = (step - 1) / subdivisions;
@@ -1915,16 +1920,15 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
 
   if (points.length < 2) return null;
 
-  const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal');
-  const radialExtent = Math.max(...rValues.map((value) => Math.abs(Number(value))).filter(Number.isFinite), 1);
-  const tubeRadius = Math.max(radialExtent * 0.004, 0.002);
-  const geometry = new THREE.TubeGeometry(curve, Math.max(points.length * 2, 256), tubeRadius, 12, false);
-  const material = new THREE.MeshBasicMaterial({
+  // A line only needs one vertex per sample. TubeGeometry multiplied the adaptive
+  // point count by its longitudinal and radial segments and could exhaust the GPU.
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const material = new THREE.LineBasicMaterial({
     color: 0x67e8f9,
     toneMapped: false,
   });
 
-  return new THREE.Mesh(geometry, material);
+  return new THREE.Line(geometry, material);
 }
 
 function renderJetSurface(solution) {
