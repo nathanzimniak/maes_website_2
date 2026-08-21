@@ -109,6 +109,7 @@ let jetDiskMesh = null;
 let jetDiskMeshMirror = null;
 let jetDiskOuterMesh = null;
 let jetMagneticFieldLine = null;
+let jetMagneticFieldLineMirror = null;
 let jetAnimationFrameId = null;
 const datasetDirectories = [
   '0.100_1.0_1.0_1.0_0.0_0_0',
@@ -1831,7 +1832,7 @@ function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, cent
   return mesh;
 }
 
-function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
+function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = false) {
   const rValues = profiles?.r;
   const zValues = profiles?.x;
   const brValues = profiles?.radialMagneticField;
@@ -1861,7 +1862,7 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
   const maxRenderedPoints = 50000;
   let phi = 0;
   const appendPoint = (r, z) => {
-    const point = new THREE.Vector3(r * Math.cos(phi), r * Math.sin(phi), z);
+    const point = new THREE.Vector3(r * Math.cos(phi), r * Math.sin(phi), mirrorZ ? -z : z);
     if (center) point.sub(center);
     points.push(point);
   };
@@ -1957,6 +1958,7 @@ function renderJetSurface(solution) {
   clearMesh((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
   clearMesh((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
   clearMesh((value) => { jetMagneticFieldLine = value; }, jetMagneticFieldLine);
+  clearMesh((value) => { jetMagneticFieldLineMirror = value; }, jetMagneticFieldLineMirror);
 
   const rValues = solution.profiles.psi.r;
   const zValues = solution.profiles.psi.x;
@@ -1992,7 +1994,9 @@ function renderJetSurface(solution) {
   if (jetMeshMirror) jetScene.add(jetMeshMirror);
 
   jetMagneticFieldLine = buildMagneticFieldLineOnJetSurface(solution.profiles.psi, center);
+  jetMagneticFieldLineMirror = buildMagneticFieldLineOnJetSurface(solution.profiles.psi, center, true);
   if (jetMagneticFieldLine) jetScene.add(jetMagneticFieldLine);
+  if (jetMagneticFieldLineMirror) jetScene.add(jetMagneticFieldLineMirror);
 
   if (
     Number.isFinite(epValue)
