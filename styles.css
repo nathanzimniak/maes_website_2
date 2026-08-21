@@ -1424,36 +1424,6 @@ section {
   width: 100%;
 }
 
-.chart__surface3d-legend {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-4);
-  color: var(--color-muted);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-}
-
-.chart__surface3d-legend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.chart__surface3d-legend-line {
-  width: 22px;
-  height: 0;
-  border-top: 3px solid;
-}
-
-.chart__surface3d-legend-line--magnetic {
-  border-color: #67e8f9;
-}
-
-.chart__surface3d-legend-line--flow {
-  border-color: #facc15;
-  border-top-style: dashed;
-}
-
 .chart__surface3d .chart__eyebrow--sub {
   margin-bottom: var(--space-2);
   display: flex;
