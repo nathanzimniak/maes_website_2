@@ -112,6 +112,10 @@ let jetMagneticFieldLine = null;
 let jetMagneticFieldLineSecondary = null;
 let jetMagneticFieldLineMirror = null;
 let jetMagneticFieldLineMirrorSecondary = null;
+let jetFlowLine = null;
+let jetFlowLineSecondary = null;
+let jetFlowLineMirror = null;
+let jetFlowLineMirrorSecondary = null;
 let jetAnimationFrameId = null;
 const datasetDirectories = [
   '0.100_1.0_1.0_1.0_0.0_0_0',
@@ -1843,12 +1847,12 @@ function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, cent
   return mesh;
 }
 
-function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = false, initialPhi = 0) {
+function buildVectorLineOnJetSurface(profiles, vectorKeys, color, center = null, mirrorZ = false, initialPhi = 0, dashed = false) {
   const rValues = profiles?.r;
   const zValues = profiles?.x;
-  const brValues = profiles?.radialMagneticField;
-  const bphiValues = profiles?.toroidalMagneticField;
-  const bzValues = profiles?.verticalMagneticField;
+  const brValues = profiles?.[vectorKeys.radial];
+  const bphiValues = profiles?.[vectorKeys.toroidal];
+  const bzValues = profiles?.[vectorKeys.vertical];
   const series = [rValues, zValues, brValues, bphiValues, bzValues];
   const sampleCount = rValues?.length ?? 0;
 
@@ -1950,13 +1954,19 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
   const geometry = new LineGeometry();
   geometry.setPositions(positions);
   const backgroundMaterial = new LineMaterial({
-    color: 0x67e8f9,
+    color,
     linewidth: 2.5,
+    dashed,
+    dashSize: 1.4,
+    gapSize: 0.8,
     toneMapped: false,
   });
   const foregroundMaterial = new LineMaterial({
-    color: 0x67e8f9,
+    color,
     linewidth: 2.5,
+    dashed,
+    dashSize: 1.4,
+    gapSize: 0.8,
     // Draw a second pass after the translucent surface. Its depth test keeps
     // only the front-facing turns crisp, while the first pass remains visible
     // through the jet with the surface's natural attenuation.
@@ -1974,6 +1984,26 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
   line.add(backgroundLine, foregroundLine);
 
   return line;
+}
+
+const magneticVectorKeys = {
+  radial: 'radialMagneticField',
+  toroidal: 'toroidalMagneticField',
+  vertical: 'verticalMagneticField',
+};
+
+const flowVectorKeys = {
+  radial: 'radialVelocity',
+  toroidal: 'toroidalVelocity',
+  vertical: 'verticalVelocity',
+};
+
+function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = false, initialPhi = 0) {
+  return buildVectorLineOnJetSurface(profiles, magneticVectorKeys, 0x67e8f9, center, mirrorZ, initialPhi);
+}
+
+function buildFlowLineOnJetSurface(profiles, center = null, mirrorZ = false, initialPhi = Math.PI / 2) {
+  return buildVectorLineOnJetSurface(profiles, flowVectorKeys, 0xfacc15, center, mirrorZ, initialPhi, true);
 }
 
 function renderJetSurface(solution) {
@@ -2007,6 +2037,10 @@ function renderJetSurface(solution) {
   clearMesh((value) => { jetMagneticFieldLineSecondary = value; }, jetMagneticFieldLineSecondary);
   clearMesh((value) => { jetMagneticFieldLineMirror = value; }, jetMagneticFieldLineMirror);
   clearMesh((value) => { jetMagneticFieldLineMirrorSecondary = value; }, jetMagneticFieldLineMirrorSecondary);
+  clearMesh((value) => { jetFlowLine = value; }, jetFlowLine);
+  clearMesh((value) => { jetFlowLineSecondary = value; }, jetFlowLineSecondary);
+  clearMesh((value) => { jetFlowLineMirror = value; }, jetFlowLineMirror);
+  clearMesh((value) => { jetFlowLineMirrorSecondary = value; }, jetFlowLineMirrorSecondary);
 
   const rValues = solution.profiles.psi.r;
   const zValues = solution.profiles.psi.x;
@@ -2049,6 +2083,15 @@ function renderJetSurface(solution) {
   if (jetMagneticFieldLineSecondary) jetScene.add(jetMagneticFieldLineSecondary);
   if (jetMagneticFieldLineMirror) jetScene.add(jetMagneticFieldLineMirror);
   if (jetMagneticFieldLineMirrorSecondary) jetScene.add(jetMagneticFieldLineMirrorSecondary);
+
+  jetFlowLine = buildFlowLineOnJetSurface(solution.profiles.psi, center);
+  jetFlowLineSecondary = buildFlowLineOnJetSurface(solution.profiles.psi, center, false, 3 * Math.PI / 2);
+  jetFlowLineMirror = buildFlowLineOnJetSurface(solution.profiles.psi, center, true);
+  jetFlowLineMirrorSecondary = buildFlowLineOnJetSurface(solution.profiles.psi, center, true, 3 * Math.PI / 2);
+  if (jetFlowLine) jetScene.add(jetFlowLine);
+  if (jetFlowLineSecondary) jetScene.add(jetFlowLineSecondary);
+  if (jetFlowLineMirror) jetScene.add(jetFlowLineMirror);
+  if (jetFlowLineMirrorSecondary) jetScene.add(jetFlowLineMirrorSecondary);
 
   if (
     Number.isFinite(epValue)
