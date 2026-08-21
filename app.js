@@ -1862,16 +1862,11 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
 
   const points = [];
   const maxRenderedPoints = 50000;
-  // Keep the screen-space line slightly above the triangulated jet surface.
-  // Coplanar fragments otherwise compete in the depth buffer and flicker when
-  // the camera moves away from the jet (z-fighting).
-  const surfaceOffsetScale = 1.003;
   let phi = initialPhi;
   const appendPoint = (r, z) => {
-    const displayedRadius = r * surfaceOffsetScale;
     const point = new THREE.Vector3(
-      displayedRadius * Math.cos(phi),
-      displayedRadius * Math.sin(phi),
+      r * Math.cos(phi),
+      r * Math.sin(phi),
       mirrorZ ? -z : z,
     );
     if (center) point.sub(center);
@@ -1943,9 +1938,16 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
   const material = new LineMaterial({
     color: 0x67e8f9,
     linewidth: 2.5,
+    // The jet is translucent and the line lies on its mathematical surface.
+    // Drawing the line as an overlay avoids depth-buffer fragmentation at wide
+    // zoom levels, while alpha-to-coverage smooths its screen-space edges.
+    depthTest: false,
+    depthWrite: false,
+    alphaToCoverage: true,
     toneMapped: false,
   });
   const line = new Line2(geometry, material);
+  line.renderOrder = 1;
   line.computeLineDistances();
 
   return line;
