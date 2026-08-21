@@ -1952,8 +1952,6 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
   const backgroundMaterial = new LineMaterial({
     color: 0xffffff,
     linewidth: 2.5,
-    transparent: true,
-    opacity: 0.5,
     toneMapped: false,
   });
   const foregroundMaterial = new LineMaterial({
@@ -1963,7 +1961,7 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
     // only the front-facing turns crisp, while the first pass remains visible
     // through the jet with the surface's natural attenuation.
     transparent: true,
-    opacity: 0.5,
+    opacity: 1,
     toneMapped: false,
   });
   const backgroundLine = new Line2(geometry, backgroundMaterial);
