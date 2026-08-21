@@ -109,7 +109,9 @@ let jetDiskMesh = null;
 let jetDiskMeshMirror = null;
 let jetDiskOuterMesh = null;
 let jetMagneticFieldLine = null;
+let jetMagneticFieldLineSecondary = null;
 let jetMagneticFieldLineMirror = null;
+let jetMagneticFieldLineMirrorSecondary = null;
 let jetAnimationFrameId = null;
 const datasetDirectories = [
   '0.100_1.0_1.0_1.0_0.0_0_0',
@@ -1832,7 +1834,7 @@ function buildDiskOuterClosureMesh(rOuter, zOuter, densityOuter, nphi = 64, cent
   return mesh;
 }
 
-function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = false) {
+function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = false, initialPhi = 0) {
   const rValues = profiles?.r;
   const zValues = profiles?.x;
   const brValues = profiles?.radialMagneticField;
@@ -1860,7 +1862,7 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
 
   const points = [];
   const maxRenderedPoints = 50000;
-  let phi = 0;
+  let phi = initialPhi;
   const appendPoint = (r, z) => {
     const point = new THREE.Vector3(r * Math.cos(phi), r * Math.sin(phi), mirrorZ ? -z : z);
     if (center) point.sub(center);
@@ -1958,7 +1960,9 @@ function renderJetSurface(solution) {
   clearMesh((value) => { jetDiskMeshMirror = value; }, jetDiskMeshMirror);
   clearMesh((value) => { jetDiskOuterMesh = value; }, jetDiskOuterMesh);
   clearMesh((value) => { jetMagneticFieldLine = value; }, jetMagneticFieldLine);
+  clearMesh((value) => { jetMagneticFieldLineSecondary = value; }, jetMagneticFieldLineSecondary);
   clearMesh((value) => { jetMagneticFieldLineMirror = value; }, jetMagneticFieldLineMirror);
+  clearMesh((value) => { jetMagneticFieldLineMirrorSecondary = value; }, jetMagneticFieldLineMirrorSecondary);
 
   const rValues = solution.profiles.psi.r;
   const zValues = solution.profiles.psi.x;
@@ -1994,9 +1998,13 @@ function renderJetSurface(solution) {
   if (jetMeshMirror) jetScene.add(jetMeshMirror);
 
   jetMagneticFieldLine = buildMagneticFieldLineOnJetSurface(solution.profiles.psi, center);
+  jetMagneticFieldLineSecondary = buildMagneticFieldLineOnJetSurface(solution.profiles.psi, center, false, Math.PI);
   jetMagneticFieldLineMirror = buildMagneticFieldLineOnJetSurface(solution.profiles.psi, center, true);
+  jetMagneticFieldLineMirrorSecondary = buildMagneticFieldLineOnJetSurface(solution.profiles.psi, center, true, Math.PI);
   if (jetMagneticFieldLine) jetScene.add(jetMagneticFieldLine);
+  if (jetMagneticFieldLineSecondary) jetScene.add(jetMagneticFieldLineSecondary);
   if (jetMagneticFieldLineMirror) jetScene.add(jetMagneticFieldLineMirror);
+  if (jetMagneticFieldLineMirrorSecondary) jetScene.add(jetMagneticFieldLineMirrorSecondary);
 
   if (
     Number.isFinite(epValue)
