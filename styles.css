@@ -1769,6 +1769,7 @@ section {
 
 .chart__point--selected {
   transform: scale(1.35);
+  fill: var(--color-neutral-hover);
   fill-opacity: 0.9;
 }
 
