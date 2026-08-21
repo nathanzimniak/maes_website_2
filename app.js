@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Line2 } from 'three/addons/lines/Line2.js';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 document.getElementById('year')?.replaceChildren(new Date().getFullYear().toString());
 const chartContainer = document.querySelector('.chart__plot-area');
 const chartControls = document.querySelector('.chart__controls');
@@ -1920,15 +1923,20 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null) {
 
   if (points.length < 2) return null;
 
-  // A line only needs one vertex per sample. TubeGeometry multiplied the adaptive
-  // point count by its longitudinal and radial segments and could exhaust the GPU.
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
-  const material = new THREE.LineBasicMaterial({
+  // Line2 provides a visible screen-space width without the vertex multiplication
+  // and GPU cost of TubeGeometry.
+  const positions = points.flatMap((point) => [point.x, point.y, point.z]);
+  const geometry = new LineGeometry();
+  geometry.setPositions(positions);
+  const material = new LineMaterial({
     color: 0x67e8f9,
+    linewidth: 2.5,
     toneMapped: false,
   });
+  const line = new Line2(geometry, material);
+  line.computeLineDistances();
 
-  return new THREE.Line(geometry, material);
+  return line;
 }
 
 function renderJetSurface(solution) {
