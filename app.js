@@ -19,6 +19,7 @@ const profileSettingsPanel = document.getElementById('profile-settings-panel');
 const profileContent = document.getElementById('profile-content');
 const profileLoadingStatus = document.getElementById('profile-loading-status');
 const jetLoadingStatus = document.getElementById('jet-loading-status');
+const jetCameraCoordinates = document.getElementById('jet-camera-coordinates');
 const profileAxisSelect = document.getElementById('profile-axis-select');
 const profileFocusSelect = document.getElementById('profile-title-select-1');
 const profileScaleSelect = document.getElementById('profile-title-select-2');
@@ -1539,12 +1540,31 @@ function initJetRenderer() {
   const animate = () => {
     jetAnimationFrameId = requestAnimationFrame(animate);
     if (jetControls) jetControls.update();
+    updateJetCameraCoordinates();
     jetRenderer.render(jetScene, jetCamera);
   };
   animate();
 
   window.addEventListener('resize', () => {
     resizeJetRendererToContainer();
+  });
+}
+
+
+function formatCameraCoordinate(value) {
+  if (!Number.isFinite(value)) return '—';
+  const absoluteValue = Math.abs(value);
+  if (absoluteValue !== 0 && (absoluteValue >= 100000 || absoluteValue < 0.01)) {
+    return value.toExponential(2).replace('-', '−');
+  }
+  return value.toFixed(2).replace('-', '−');
+}
+
+function updateJetCameraCoordinates() {
+  if (!jetCamera || !jetCameraCoordinates) return;
+  ['x', 'y', 'z'].forEach((axis) => {
+    const value = jetCameraCoordinates.querySelector(`[data-camera-axis="${axis}"]`);
+    if (value) value.textContent = formatCameraCoordinate(jetCamera.position[axis]);
   });
 }
 
