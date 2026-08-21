@@ -1512,7 +1512,13 @@ function initJetRenderer() {
   jetCamera.position.set(-5.0, -20.0, 10.0);
   jetCamera.lookAt(0, 0, 0);
 
-  jetRenderer = new THREE.WebGLRenderer({ antialias: true });
+  // The solution spans many orders of magnitude. A conventional depth buffer
+  // loses enough precision at wide zoom levels for the field lines and jet
+  // surface to alternate in front of one another (z-fighting).
+  jetRenderer = new THREE.WebGLRenderer({
+    antialias: true,
+    logarithmicDepthBuffer: true,
+  });
   jetRenderer.setSize(width, height);
   jetRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   container.appendChild(jetRenderer.domElement);
@@ -1943,9 +1949,15 @@ function buildMagneticFieldLineOnJetSurface(profiles, center = null, mirrorZ = f
   const material = new LineMaterial({
     color: 0x67e8f9,
     linewidth: 2.5,
+    // Put the opaque-looking line in Three.js' transparent render pass so the
+    // translucent jet writes its depth first. Rear-facing turns are then
+    // occluded instead of showing through the surface with a purple tint.
+    transparent: true,
+    opacity: 1,
     toneMapped: false,
   });
   const line = new Line2(geometry, material);
+  line.renderOrder = 1;
   line.computeLineDistances();
 
   return line;
