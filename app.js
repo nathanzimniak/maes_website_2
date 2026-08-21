@@ -2022,6 +2022,9 @@ function renderJetSurface(solution) {
   if (jetMagneticFieldLine) jetScene.add(jetMagneticFieldLine);
   if (jetOuterMagneticFieldLine) jetScene.add(jetOuterMagneticFieldLine);
 
+  jetMagneticFieldLine = buildMagneticFieldLineOnJetSurface(solution.profiles.psi, center);
+  if (jetMagneticFieldLine) jetScene.add(jetMagneticFieldLine);
+
   if (
     Number.isFinite(epValue)
     && Number.isFinite(xIdValue)
