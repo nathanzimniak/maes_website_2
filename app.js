@@ -1648,11 +1648,14 @@ function getFinitePositiveValues(values) {
 
 function createInfernoDensityMapper(logDensityMin, logDensityMax, minimumRange = 1e-6) {
   const safeRange = Math.max(logDensityMax - logDensityMin, minimumRange);
+  const colorContrast = 1.35;
 
   return (density) => {
     const safeDensity = Number.isFinite(density) && density > 0 ? density : 10 ** logDensityMin;
     const logDensity = Math.log10(safeDensity);
-    const progress = clamp((logDensity - logDensityMin) / safeRange, 0, 1);
+    const normalizedDensity = clamp((logDensity - logDensityMin) / safeRange, 0, 1);
+    // Expand the middle of the colormap so nearby densities remain visually distinct.
+    const progress = clamp(((normalizedDensity - 0.5) * colorContrast) + 0.5, 0, 1);
     const scaledIndex = progress * (INFERNO_STOPS.length - 1);
     const lowerIndex = Math.floor(scaledIndex);
     const upperIndex = Math.min(lowerIndex + 1, INFERNO_STOPS.length - 1);
@@ -1728,7 +1731,7 @@ function buildJetSurfaceMesh(rValues, zValues, densityValues = [], phiSegments =
     vertexColors: true,
     toneMapped: false,
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.95,
     side: THREE.DoubleSide,
   });
   const mesh = new THREE.Mesh(geometry, material);
