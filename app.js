@@ -114,6 +114,7 @@ let jetMagneticFieldLineMirror = null;
 let jetMagneticFieldLineMirrorSecondary = null;
 let jetAnimationFrameId = null;
 const datasetDirectories = [
+  '0.010_1.0_1.0_1.0_0.0_0_0',
   '0.100_1.0_1.0_1.0_0.0_0_0',
 ];
 const folderParameterKeys = ['ep', 'alpham', 'chim', 'Pm', 'alphap', 'turbulence_profile', 'heat_profile'];
